@@ -9,4 +9,5 @@ import (
 func SetupRoutes(app fiber.App, db *gorm.DB) {
 	app.Post("/register", controllers.Register(db))
 	app.Post("/login", controllers.Login(db))
+
 }
