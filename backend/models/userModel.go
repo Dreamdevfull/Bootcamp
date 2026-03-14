@@ -11,5 +11,5 @@ type Users struct {
 	Role      string    `json:"role" gorm:"type:ENUM('admin', 'reseller')"`
 	Status    string    `json:"status" gorm:"type:ENUM('pending', 'approved', 'rejected')"`
 	Address   string    `json:"address"`
-	Create_at time.Time `json:"created_at"`
+	Create_at time.Time `json:"created_at" gorm:"column:created_at"`
 }

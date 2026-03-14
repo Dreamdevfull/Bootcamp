@@ -6,24 +6,24 @@ import (
 
 	"github.com/Dreamdevfull/Bootcamp/models"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func Register(db *gorm.DB) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		type RegisterRequest struct {
-			Name     string `json:"name"`
-			Email    string `json:"email"`
-			Phone    string `json:"phone"`
-			Password string `json:"password"`
-			ShopName string `json:"shop_name"`
-			Address  string `json:"address"`
+			Name      string `json:"name"`
+			Email     string `json:"email"`
+			Phone     string `json:"phone"`
+			Password  string `json:"password"`
+			Shop_name string `json:"shop_name"`
+			Address   string `json:"address"`
 		}
 
 		var input RegisterRequest
-		if err := c.BodyParser(&input); err != nil {
+		if err := c.Bind().Body(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "Invalid request body",
 			})
@@ -37,13 +37,13 @@ func Register(db *gorm.DB) fiber.Handler {
 		}
 
 		var existingShop models.Shops
-		if err := db.Where("shop_name = ?", input.ShopName).First(&existingShop).Error; err == nil {
+		if err := db.Where("shop_name = ?", input.Shop_name).First(&existingShop).Error; err == nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "Shop name already exists",
 			})
 		}
 
-		shopSlug := strings.ToLower(strings.ReplaceAll(input.ShopName, " ", "-"))
+		shopSlug := strings.ToLower(strings.ReplaceAll(input.Shop_name, " ", "-"))
 
 		err := db.Transaction(func(tx *gorm.DB) error {
 			hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
@@ -65,7 +65,7 @@ func Register(db *gorm.DB) fiber.Handler {
 
 			newShop := models.Shops{
 				User_id:   int(newUser.Id),
-				Shop_name: input.ShopName,
+				Shop_name: input.Shop_name,
 				Shop_slug: shopSlug,
 			}
 			if err := tx.Create(&newShop).Error; err != nil {
