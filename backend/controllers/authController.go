@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/Dreamdevfull/Bootcamp/models"
-
 	"github.com/gofiber/fiber/v3"
+
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -93,8 +93,8 @@ func Logout(db *gorm.DB) fiber.Handler {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"message": "Logged out successfully",
 		})
-  }
-  
+	}
+
 }
 func Login(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {

@@ -9,7 +9,7 @@ import (
 func main() {
 	app := fiber.New()
 	config.DatabaseConnected()
-	routes.SetupRoutes(*app, config.DB)
+	routes.SetupRoutes(app, config.DB)
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.Status(200).JSON(fiber.Map{
 			"message": "Hello, World!",
