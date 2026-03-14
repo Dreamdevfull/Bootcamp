@@ -86,3 +86,50 @@ func Register(db *gorm.DB) fiber.Handler {
 		})
 	}
 }
+
+func Login(db *gorm.DB) fiber.Handler {
+	return func(c fiber.Ctx) error {
+		type LoginRequest struct {
+			Email    string `json:"email"`
+			Password string `json:"password"`
+		}
+
+		var input LoginRequest
+		if err := c.Bind().Body(&input); err != nil {
+			return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
+		}
+		var user models.Users
+		if err := db.Where("email = ?", input.Email).First(&user).Error; err != nil {
+			return c.Status(401).JSON(fiber.Map{"error": "Invalid email or password"})
+		}
+
+		if user.Status != "pending" {
+			return c.Status(403).JSON(fiber.Map{"message": "Your account is pending approval. Please wait for an administrator to review your registration."})
+		}
+
+		if user.Status == "rejected" {
+			return c.Status(403).JSON(fiber.Map{"message": "Your registration has been rejected. Please contact support for more information."})
+		}
+
+		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
+			return c.Status(401).JSON(fiber.Map{"error": "Invalid email or password"})
+		}
+
+		message := ""
+		if user.Role == "admin" {
+			message = "Welcome, admin!"
+		} else {
+			message = "Welcome, reseller!"
+		}
+
+		return c.Status(200).JSON(fiber.Map{
+			"message": message,
+			"user": fiber.Map{
+				"id":    user.Id,
+				"name":  user.Name,
+				"email": user.Email,
+				"role":  user.Role,
+			},
+		})
+	}
+}
