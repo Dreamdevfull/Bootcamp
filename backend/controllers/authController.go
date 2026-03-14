@@ -86,3 +86,13 @@ func Register(db *gorm.DB) fiber.Handler {
 		})
 	}
 }
+
+func Logout(db *gorm.DB) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		c.ClearCookie("jwt")
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"message": "Logged out successfully",
+		})
+
+	}
+}
