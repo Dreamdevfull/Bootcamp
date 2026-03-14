@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type Shop struct {
+type Shops struct {
 	Id        uint   `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
 	User_id   int    `json:"user_id"`
 	Shop_name string `json:"shop_name"`
@@ -10,7 +10,8 @@ type Shop struct {
 }
 
 type Products struct {
-	Id          uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+	Id uint `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Image       string    `json:"image"`
@@ -21,10 +22,9 @@ type Products struct {
 }
 
 type ShopProducts struct {
-	Id            uint    `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Shop_id       int     `json:"shop_id" gorm:"ForeignKey:Shop_id"`
-	Products_id   int     `json:"products_id" gorm:"ForeignKey:Products_id"`
-	Selling_price float64 `json:"selling_price" gorm:"type:decimal(10,2)"`
+	Id          uint `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+	Shop_id     int  `json:"shop_id" gorm:"ForeignKey:Shop_id"`
+	Products_id int  `json:"products_id" gorm:"ForeignKey:Products_id"`
 }
 
 type Orders struct {

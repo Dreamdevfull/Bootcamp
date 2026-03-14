@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type User struct {
+type Users struct {
 	Id        uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email" gorm:"uniqueIndex:idx_email;not null"`
