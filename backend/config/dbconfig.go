@@ -13,26 +13,18 @@ import (
 var DB *gorm.DB
 
 func DatabaseConnected() *gorm.DB {
+
 	godotenv.Load()
 
-	dbhost := os.Getenv("DB_HOST")
-	dbuser := os.Getenv("DB_USER")
-	dbname := os.Getenv("DB_NAME")
-	dbpassword := os.Getenv("DB_PASSWORD")
-	dbport := os.Getenv("DB_PORT")
+	dsn := os.Getenv("DATABASE_URL")
 
-	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Bangkok",
-		dbhost,
-		dbuser,
-		dbpassword,
-		dbname,
-		dbport,
-	)
+	if dsn == "" {
+		panic("DATABASE_URL environment variable is not set")
+	}
 
 	dbConnection, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		panic(fmt.Sprintf("failed to connect database: %v", err))
 	}
 
 	DB = dbConnection
@@ -41,7 +33,6 @@ func DatabaseConnected() *gorm.DB {
 
 	return DB
 }
-
 func AutoMigrate(database *gorm.DB) {
 	database.AutoMigrate(
 		&models.Users{},
