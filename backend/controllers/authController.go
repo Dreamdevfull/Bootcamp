@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/Dreamdevfull/Bootcamp/models"
+	"github.com/golang-jwt/jwt/v5"
+
 	"github.com/gofiber/fiber/v3"
 
 	"golang.org/x/crypto/bcrypt"
@@ -98,46 +100,54 @@ func Logout(db *gorm.DB) fiber.Handler {
 }
 func Login(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
+
 		type LoginRequest struct {
 			Email    string `json:"email"`
 			Password string `json:"password"`
 		}
-
 		var input LoginRequest
 		if err := c.Bind().Body(&input); err != nil {
 			return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
 		}
+
 		var user models.Users
 		if err := db.Where("email = ?", input.Email).First(&user).Error; err != nil {
 			return c.Status(401).JSON(fiber.Map{"error": "Invalid email or password"})
-		}
-
-		if user.Status != "pending" {
-			return c.Status(403).JSON(fiber.Map{"message": "Your account is pending approval. Please wait for an administrator to review your registration."})
-		}
-
-		if user.Status == "rejected" {
-			return c.Status(403).JSON(fiber.Map{"message": "Your registration has been rejected. Please contact support for more information."})
 		}
 
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
 			return c.Status(401).JSON(fiber.Map{"error": "Invalid email or password"})
 		}
 
-		message := ""
-		if user.Role == "admin" {
-			message = "Welcome, admin!"
-		} else {
-			message = "Welcome, reseller!"
+		if user.Role == "reseller" {
+			if user.Status == "pending" {
+				return c.Status(403).JSON(fiber.Map{"message": "Your account is pending approval. Please wait for an administrator."})
+			}
+			if user.Status == "rejected" {
+				return c.Status(403).JSON(fiber.Map{"message": "Your registration has been rejected."})
+			}
+		}
+
+		claims := jwt.MapClaims{
+			"user_id": user.Id,
+			"role":    user.Role,
+			"status":  user.Status,
+			"exp":     time.Now().Add(time.Hour * 24).Unix(),
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		t, err := token.SignedString([]byte("JWT_SECRET"))
+		if err != nil {
+			return c.SendStatus(fiber.StatusInternalServerError)
 		}
 
 		return c.Status(200).JSON(fiber.Map{
-			"message": message,
+			"message": "Login successful",
+			"token":   t,
 			"user": fiber.Map{
-				"id":    user.Id,
-				"name":  user.Name,
-				"email": user.Email,
-				"role":  user.Role,
+				"id":   user.Id,
+				"name": user.Name,
+				"role": user.Role,
 			},
 		})
 	}
