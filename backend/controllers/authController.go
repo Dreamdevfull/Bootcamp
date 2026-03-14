@@ -6,13 +6,13 @@ import (
 
 	"github.com/Dreamdevfull/Bootcamp/models"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func Register(db *gorm.DB) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		type RegisterRequest struct {
 			Name     string `json:"name"`
 			Email    string `json:"email"`
@@ -23,7 +23,7 @@ func Register(db *gorm.DB) fiber.Handler {
 		}
 
 		var input RegisterRequest
-		if err := c.BodyParser(&input); err != nil {
+		if err := c.Bind().Body(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "Invalid request body",
 			})
@@ -88,7 +88,7 @@ func Register(db *gorm.DB) fiber.Handler {
 }
 
 func Logout(db *gorm.DB) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		c.ClearCookie("jwt")
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"message": "Logged out successfully",
