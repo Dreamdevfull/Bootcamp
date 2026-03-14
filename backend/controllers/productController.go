@@ -3,6 +3,7 @@ package controllers
 import (
 	"time"
 
+	"github.com/Dreamdevfull/Bootcamp/models"
 	"github.com/gofiber/fiber/v3"
 	"gorm.io/gorm"
 )
@@ -32,7 +33,7 @@ func AddProduct(db *gorm.DB) fiber.Handler {
 		product := new(models.Products)
 
 		// Parse ข้อมูลจาก JSON Body
-		if err := c.BodyParser(product); err != nil {
+		if err := c.Bind().Body(&product); err != nil {
 			return c.Status(400).JSON(fiber.Map{
 				"message": "failed to parse request body",
 			})
@@ -70,7 +71,7 @@ func UpdateProduct(db *gorm.DB) fiber.Handler {
 		}
 
 		// Parse ข้อมูลใหม่ที่ส่งมา (จะอัปเดตเฉพาะฟิลด์ที่ส่งมา)
-		if err := c.BodyParser(&product); err != nil {
+		if err := c.Bind().Body(&product); err != nil {
 			return c.Status(400).JSON(fiber.Map{
 				"message": "ข้อมูลที่ส่งมาไม่ถูกต้อง",
 			})
