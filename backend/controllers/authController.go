@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"os"
 	"strings"
 	"time"
 
@@ -136,7 +137,7 @@ func Login(db *gorm.DB) fiber.Handler {
 		}
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		t, err := token.SignedString([]byte("JWT_SECRET"))
+		t, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 		if err != nil {
 			return c.SendStatus(fiber.StatusInternalServerError)
 		}
