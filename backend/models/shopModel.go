@@ -2,49 +2,50 @@ package models
 
 import "time"
 
-type Shop struct {
+type Shops struct {
 	Id        uint   `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	User_id   int    `json:"user_id" gorm:"ForeignKey:User_id;UniqueIndex:idx_user_id;not null"`
-	Shop_name string `json:"shop_name" gorm:"type:VARCHAR(255)"`
-	Shop_slug string `json:"shop_slug" gorm:"type:VARCHAR(255);uniqueIndex:idx_shop_slug;not null"`
+	User_id   int    `json:"user_id"`
+	Shop_name string `json:"shop_name"`
+	Shop_slug string `json:"shop_slug" gorm:"uniqueIndex:idx_shop_slug;not null"`
 }
 
 type Products struct {
-	Id          uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Name        string    `json:"name" gorm:"type:VARCHAR(255)"`
-	Description string    `json:"description" gorm:"type:TEXT"`
-	Image_url   string    `json:"image_url" gorm:"type:VARCHAR(500)"`
+	Id uint `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Image       string    `json:"image"`
 	Cost_price  float64   `json:"cost_price" gorm:"type:decimal(10,2)"`
 	Min_price   float64   `json:"min_price" gorm:"type:decimal(10,2)"`
-	Stock       int       `json:"stock" gorm:"type:INT(10) ; DEFAULT:0"`
-	Created_at  time.Time `json:"created_at"`
+	Stock       int       `json:"stock"`
+	Create_at   time.Time `json:"created_at"`
 }
 
 type ShopProducts struct {
-	Id            uint    `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Shop_id       int     `json:"shop_id" gorm:"ForeignKey:Shop_id;not null"`
-	Product_id    int     `json:"product_id" gorm:"ForeignKey:Product_id;not null"`
-	Selling_price float64 `json:"selling_price" gorm:"type:decimal(10,2)"`
+	Id          uint `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+	Shop_id     int  `json:"shop_id" gorm:"ForeignKey:Shop_id"`
+	Products_id int  `json:"products_id" gorm:"ForeignKey:Products_id"`
 }
 
 type Orders struct {
 	Id               uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Order_number     string    `json:"order_number" gorm:"type:VARCHAR(50);uniqueIndex:idx_order_number;not null"`
-	Shop_id          int       `json:"shop_id" gorm:"ForeignKey:Shop_id;not null"`
-	Customer_name    string    `json:"customer_name" gorm:"type:VARCHAR(255)"`
-	Customer_phone   string    `json:"customer_phone" gorm:"type:VARCHAR(20)"`
-	Shipping_address string    `json:"shipping_address" gorm:"type:TEXT"`
+	Order_number     string    `json:"order_number" gorm:"uniqueIndex:idx_order_number;not null"`
+	Shop_id          int       `json:"shop_id" gorm:"ForeignKey:Shop_id"`
+	Customer_name    string    `json:"customer_name"`
+	Customer_phone   string    `json:"customer_phone"`
+	Shipping_address string    `json:"shipping_address"`
 	Total_amount     float64   `json:"total_amount" gorm:"type:decimal(10,2)"`
-	Status           string    `json:"status" gorm:"type:ENUM('pending','shipped', 'completed')"`
-	Created_at       time.Time `json:"created_at" gorm:"autoCreateTime"`
+	Reseller_profit  float64   `json:"reseller_profit" gorm:"type:decimal(10,2)"`
+	Staus            string    `json:"status" gorm:"type:ENUM('pending', 'shipped', 'completed')"`
+	Create_at        time.Time `json:"created_at"`
 }
 
 type OrderItems struct {
 	Id            uint    `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Order_id      int     `json:"order_id" gorm:"ForeignKey:Order_id;not null"`
-	Product_id    int     `json:"product_id" gorm:"ForeignKey:Product_id;not null"`
-	Product_name  string  `json:"product_name" gorm:"type:VARCHAR(255)"`
+	Order_id      int     `json:"order_id" gorm:"ForeignKey:Order_id"`
+	Products_id   int     `json:"products_id" gorm:"ForeignKey:Products_id"`
+	Products_name string  `json:"products_name"`
 	Cost_price    float64 `json:"cost_price" gorm:"type:decimal(10,2)"`
 	Selling_price float64 `json:"selling_price" gorm:"type:decimal(10,2)"`
-	Quantity      int     `json:"quantity" gorm:"type:INT(10)"`
+	Quantity      int     `json:"quantity"`
 }

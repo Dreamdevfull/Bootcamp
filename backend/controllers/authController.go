@@ -1,9 +1,13 @@
 package controllers
 
 import (
+	"strings"
+	"time"
+
 	"github.com/Dreamdevfull/Bootcamp/models"
 
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -39,6 +43,46 @@ func Register(db *gorm.DB) fiber.Handler {
 			})
 		}
 
-		return nil
+		shopSlug := strings.ToLower(strings.ReplaceAll(input.ShopName, " ", "-"))
+
+		err := db.Transaction(func(tx *gorm.DB) error {
+			hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
+
+			newUser := models.Users{
+				Name:      input.Name,
+				Email:     input.Email,
+				Phone:     input.Phone,
+				Password:  string(hashedPassword),
+				Role:      "reseller",
+				Status:    "pending",
+				Address:   input.Address,
+				Create_at: time.Now(),
+			}
+
+			if err := tx.Create(&newUser).Error; err != nil {
+				return err
+			}
+
+			newShop := models.Shops{
+				User_id:   int(newUser.Id),
+				Shop_name: input.ShopName,
+				Shop_slug: shopSlug,
+			}
+			if err := tx.Create(&newShop).Error; err != nil {
+				return err
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Failed to register user",
+			})
+		}
+
+		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+			"message": "User registered successfully, pending approval",
+		})
 	}
 }
