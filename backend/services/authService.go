@@ -2,12 +2,14 @@ package services
 
 import (
 	"errors"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -16,10 +18,7 @@ type AuthService struct {
 	shopRepo repositorys.ShopRepository
 }
 
-func NewAuthService(
-	userRepo repositorys.UserRepository,
-	shopRepo repositorys.ShopRepository,
-) *AuthService {
+func NewAuthService(userRepo repositorys.UserRepository, shopRepo repositorys.ShopRepository) *AuthService {
 	return &AuthService{userRepo, shopRepo}
 }
 
@@ -67,4 +66,58 @@ func (s *AuthService) Register(input dto.RegisterRequest) error {
 	}
 
 	return nil
+}
+
+func (s *AuthService) Login(input dto.LoginRequest) (*dto.LoginResponse, error) {
+
+	user, err := s.userRepo.FindByEmail(input.Email)
+
+	if err != nil {
+		return nil, errors.New("invalid email or password")
+	}
+
+	err = bcrypt.CompareHashAndPassword(
+		[]byte(user.Password),
+		[]byte(input.Password),
+	)
+
+	if err != nil {
+		return nil, errors.New("invalid email or password")
+	}
+
+	if user.Role == "reseller" {
+
+		if user.Status == "pending" {
+			return nil, errors.New("your account is pending approval")
+		}
+
+		if user.Status == "rejected" {
+			return nil, errors.New("your registration has been rejected")
+		}
+	}
+
+	claims := jwt.MapClaims{
+		"user_id": user.Id,
+		"role":    user.Role,
+		"status":  user.Status,
+		"exp":     time.Now().Add(time.Hour * 24).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	t, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.LoginResponse{
+		Message: "Login successful",
+		Token:   t,
+		User: dto.UserSummary{
+			ID:   user.Id,
+			Name: user.Name,
+			Role: user.Role,
+		},
+	}, nil
 }

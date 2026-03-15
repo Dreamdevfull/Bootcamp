@@ -9,7 +9,7 @@ import (
 func SetupRoutes(app *fiber.App, c *container.Container) {
 
 	app.Post("/register", c.AuthController.Register)
-	// app.Post("/login", controllers.Login(db))
+	app.Post("/login", c.AuthController.Login)
 
 	//=========================================
 	adminGroup := app.Group("/admin", middlewares.AuthMiddleware("admin"))
