@@ -7,6 +7,7 @@ import (
 
 type OrderRepository interface {
 	FindAll() ([]models.Orders, error)
+	UpdateStatus(orderID int, status string) error
 }
 
 type orderRepository struct {
@@ -22,4 +23,8 @@ func (r *orderRepository) FindAll() ([]models.Orders, error) {
 
 	err := r.db.Preload("OrderItems").Find(&orders).Error
 	return orders, err
+}
+
+func (r *orderRepository) UpdateStatus(orderID int, status string) error {
+	return r.db.Model(&models.Orders{}).Where("id = ?", orderID).Update("status", status).Error
 }
