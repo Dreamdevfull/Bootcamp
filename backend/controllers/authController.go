@@ -1,17 +1,11 @@
 package controllers
 
 import (
-	"os"
-	"time"
-
 	"github.com/Dreamdevfull/Bootcamp/dto"
-	"github.com/Dreamdevfull/Bootcamp/models"
 	"github.com/Dreamdevfull/Bootcamp/services"
-	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/gofiber/fiber/v3"
 
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -55,57 +49,80 @@ func Logout(db *gorm.DB) fiber.Handler {
 	}
 
 }
-func Login(db *gorm.DB) fiber.Handler {
-	return func(c fiber.Ctx) error {
 
-		type LoginRequest struct {
-			Email    string `json:"email"`
-			Password string `json:"password"`
-		}
-		var input LoginRequest
-		if err := c.Bind().Body(&input); err != nil {
-			return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
-		}
+// func Login(db *gorm.DB) fiber.Handler {
+// 	return func(c fiber.Ctx) error {
 
-		var user models.Users
-		if err := db.Where("email = ?", input.Email).First(&user).Error; err != nil {
-			return c.Status(401).JSON(fiber.Map{"error": "Invalid email or password"})
-		}
+// 		type LoginRequest struct {
+// 			Email    string `json:"email"`
+// 			Password string `json:"password"`
+// 		}
+// 		var input LoginRequest
+// 		if err := c.Bind().Body(&input); err != nil {
+// 			return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
+// 		}
 
-		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
-			return c.Status(401).JSON(fiber.Map{"error": "Invalid email or password"})
-		}
+// 		var user models.Users
+// 		if err := db.Where("email = ?", input.Email).First(&user).Error; err != nil {
+// 			return c.Status(401).JSON(fiber.Map{"error": "Invalid email or password"})
+// 		}
 
-		if user.Role == "reseller" {
-			if user.Status == "pending" {
-				return c.Status(403).JSON(fiber.Map{"message": "Your account is pending approval. Please wait for an administrator."})
-			}
-			if user.Status == "rejected" {
-				return c.Status(403).JSON(fiber.Map{"message": "Your registration has been rejected."})
-			}
-		}
+// 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
+// 			return c.Status(401).JSON(fiber.Map{"error": "Invalid email or password"})
+// 		}
 
-		claims := jwt.MapClaims{
-			"user_id": user.Id,
-			"role":    user.Role,
-			"status":  user.Status,
-			"exp":     time.Now().Add(time.Hour * 24).Unix(),
-		}
+// 		if user.Role == "reseller" {
+// 			if user.Status == "pending" {
+// 				return c.Status(403).JSON(fiber.Map{"message": "Your account is pending approval. Please wait for an administrator."})
+// 			}
+// 			if user.Status == "rejected" {
+// 				return c.Status(403).JSON(fiber.Map{"message": "Your registration has been rejected."})
+// 			}
+// 		}
 
-		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		t, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
-		if err != nil {
-			return c.SendStatus(fiber.StatusInternalServerError)
-		}
+// 		claims := jwt.MapClaims{
+// 			"user_id": user.Id,
+// 			"role":    user.Role,
+// 			"status":  user.Status,
+// 			"exp":     time.Now().Add(time.Hour * 24).Unix(),
+// 		}
 
-		return c.Status(200).JSON(fiber.Map{
-			"message": "Login successful",
-			"token":   t,
-			"user": fiber.Map{
-				"id":   user.Id,
-				"name": user.Name,
-				"role": user.Role,
-			},
+// 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+// 		t, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+// 		if err != nil {
+// 			return c.SendStatus(fiber.StatusInternalServerError)
+// 		}
+
+// 		return c.Status(200).JSON(fiber.Map{
+// 			"message": "Login successful",
+// 			"token":   t,
+// 			"user": fiber.Map{
+// 				"id":   user.Id,
+// 				"name": user.Name,
+// 				"role": user.Role,
+// 			},
+// 		})
+// 	}
+// }
+
+func (a *AuthController) Login(c fiber.Ctx) error {
+
+	var req dto.LoginRequest
+
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid request body",
 		})
 	}
+
+	result, err := a.service.Login(req)
+
+	if err != nil {
+
+		return c.Status(401).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(result)
 }
