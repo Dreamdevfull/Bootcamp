@@ -2,21 +2,25 @@ package main
 
 import (
 	"github.com/Dreamdevfull/Bootcamp/config"
+	"github.com/Dreamdevfull/Bootcamp/container"
 	"github.com/Dreamdevfull/Bootcamp/routes"
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
 func main() {
 	app := fiber.New()
 	config.DatabaseConnected()
-	routes.SetupRoutes(app, config.DB)
-	app.Get("/", func(c fiber.Ctx) error {
-		return c.Status(200).JSON(fiber.Map{
-			"message": "Hello, World!",
-			"status":  "success",
-			"data":    nil,
-		})
-	})
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"GET,POST,PUT,DELETE"},
+		AllowHeaders:     []string{"Origin,Content-Type,Accept,Authorization"},
+		AllowCredentials: true,
+	}))
+
+	container := container.NewContainer(config.DB)
+	routes.SetupRoutes(app, container)
 
 	app.Listen(":8080")
 }
