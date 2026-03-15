@@ -15,7 +15,10 @@ func SetupRoutes(app *fiber.App, db *gorm.DB) {
 	//=========================================
 	adminGroup := app.Group("/admin", middlewares.AuthMiddleware("admin"))
 	adminGroup.Get("/products", controllers.GetProducts(db))
-
+	adminGroup.Post("/products", controllers.AddProduct(db))
+	adminGroup.Patch("/products/:id", controllers.UpdateProduct(db))
+	adminGroup.Get("/resellers", controllers.GetResellers(db))
+	adminGroup.Patch("/resellers/:id", controllers.UpdateResellerStatus(db))
 	// resellerGroup := app.Group("/reseller", middlewares.AuthMiddleware("reseller"))
 
 }
