@@ -14,11 +14,11 @@ type Products struct {
 
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	Image       string    `json:"image"`
+	Image       string    `gorm:"column:image_url"`
 	Cost_price  float64   `json:"cost_price" gorm:"type:decimal(10,2)"`
 	Min_price   float64   `json:"min_price" gorm:"type:decimal(10,2)"`
 	Stock       int       `json:"stock"`
-	Create_at   time.Time `json:"created_at"`
+	Create_at   time.Time `gorm:"column:created_at"`
 }
 
 type ShopProducts struct {
