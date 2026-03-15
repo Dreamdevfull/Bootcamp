@@ -21,7 +21,10 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 
 	//==========================================
 	// adminGroup.Patch("/resellers/:id", controllers.UpdateResellerStatus(db))
+	adminGroup.Patch("/resellers/:id", c.ResellerController.UpdateStatus)
 	adminGroup.Get("/orders", c.OrderController.GetOrders)
+	adminGroup.Patch("/orders/:id/complete", c.OrderController.QuickComplete)
+
 	// resellerGroup := app.Group("/reseller", middlewares.AuthMiddleware("reseller"))
 
 }
