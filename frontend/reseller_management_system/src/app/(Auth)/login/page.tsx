@@ -3,8 +3,9 @@ import React from 'react'
 import Header from '@/app/components/layout/header'
 const LoginPage = () => {
     return (
-    <div className="min-h-screen bg-[#F5F3EE] ">
+    <div className="min-h-screen flex flex-col bg-[#F5F3EE]">
       <Header/>
+      <main className="flex-1 flex justify-center items-center p-4">
       <div className="w-[503px] h-[472px] bg-white rounded-2xl shadow-md border border-gray-200 p-8">
         <h1 className='text-[#0d3d30] text-[24px] text-center'>ผู้ดูแลระบบ(Admin)</h1>
         <p className='text-[#000000] text-[16px] text-center mt-2'>เข้าสู่ระบบเพื่อจัดการระบบทั้งหมด</p>
@@ -37,6 +38,7 @@ const LoginPage = () => {
           เข้าสู่ระบบ
         </button>
       </div>
+      </main>
     </div>
     )
 }
