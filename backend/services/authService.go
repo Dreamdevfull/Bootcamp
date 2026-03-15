@@ -121,3 +121,11 @@ func (s *AuthService) Login(input dto.LoginRequest) (*dto.LoginResponse, error) 
 		},
 	}, nil
 }
+
+func (s *AuthService) Logout() (*dto.LogoutResponse, error) {
+
+	return &dto.LogoutResponse{
+		Status:  "success",
+		Message: "Logged out successfully",
+	}, nil
+}

@@ -5,8 +5,6 @@ import (
 	"github.com/Dreamdevfull/Bootcamp/services"
 
 	"github.com/gofiber/fiber/v3"
-
-	"gorm.io/gorm"
 )
 
 type AuthController struct {
@@ -40,14 +38,19 @@ func (a *AuthController) Register(c fiber.Ctx) error {
 	})
 }
 
-func Logout(db *gorm.DB) fiber.Handler {
-	return func(c fiber.Ctx) error {
-		c.ClearCookie("jwt")
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"message": "Logged out successfully",
+func (a *AuthController) Logout(c fiber.Ctx) error {
+
+	c.ClearCookie("jwt")
+
+	result, err := a.service.Logout()
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"error": err.Error(),
 		})
 	}
 
+	return c.Status(fiber.StatusOK).JSON(result)
 }
 
 // func Login(db *gorm.DB) fiber.Handler {
