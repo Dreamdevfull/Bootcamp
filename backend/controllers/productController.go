@@ -64,26 +64,24 @@ func UpdateProduct(db *gorm.DB) fiber.Handler {
 
 		if err := db.First(&product, id).Error; err != nil {
 			return c.Status(404).JSON(fiber.Map{
-				"message": "ไม่พบสินค้าที่ต้องการแก้ไข",
+				"message": "product not found",
 			})
 		}
 
-		// Parse ข้อมูลใหม่ที่ส่งมา (จะอัปเดตเฉพาะฟิลด์ที่ส่งมา)
 		if err := c.Bind().Body(&product); err != nil {
 			return c.Status(400).JSON(fiber.Map{
-				"message": "ข้อมูลที่ส่งมาไม่ถูกต้อง",
+				"message": "invalid request data",
 			})
 		}
 
-		// บันทึกการเปลี่ยนแปลง
 		if err := db.Save(&product).Error; err != nil {
 			return c.Status(500).JSON(fiber.Map{
-				"message": "ไม่สามารถอัปเดตข้อมูลได้",
+				"message": "failed to update product",
 			})
 		}
 
 		return c.JSON(fiber.Map{
-			"message": "แก้ไขข้อมูลสินค้าสำเร็จ",
+			"message": "product updated successfully",
 			"data":    product,
 		})
 	}
