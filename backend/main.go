@@ -13,7 +13,7 @@ func main() {
 	config.DatabaseConnected()
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:2000",
+		AllowOrigins:     "http://localhost:3000",
 		AllowMethods:     "GET,POST,PUT,DELETE",
 		AllowHeaders:     "Origin,Content-Type,Accept,Authorization",
 		AllowCredentials: true,
