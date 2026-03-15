@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetProducts(db *gorm.DB) fiber.Handler {
+func GetProducts(db gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		var products []models.Products
 
@@ -28,7 +28,7 @@ func GetProducts(db *gorm.DB) fiber.Handler {
 	}
 }
 
-func AddProduct(db *gorm.DB) fiber.Handler {
+func AddProduct(db gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		product := new(models.Products)
 
@@ -57,7 +57,7 @@ func AddProduct(db *gorm.DB) fiber.Handler {
 	}
 }
 
-func UpdateProduct(db *gorm.DB) fiber.Handler {
+func UpdateProduct(db gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		// รับ ID จาก Parameter เช่น /products/:id
 		id := c.Params("id")
