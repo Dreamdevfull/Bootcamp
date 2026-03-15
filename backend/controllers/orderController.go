@@ -1,27 +1,30 @@
 package controllers
 
 import (
-	"github.com/Dreamdevfull/Bootcamp/models"
+	"github.com/Dreamdevfull/Bootcamp/services"
 	"github.com/gofiber/fiber/v3"
-	"gorm.io/gorm"
 )
 
-func GetOrders(db *gorm.DB) fiber.Handler {
-	return func(c fiber.Ctx) error {
-		var orders []models.Orders
+type OrderController struct {
+	service services.OrderService
+}
 
-		result := db.Preload("OrderItems").Find(&orders)
+func NewOrderController(service services.OrderService) *OrderController {
+	return &OrderController{service: service}
+}
 
-		if result.Error != nil {
-			return c.Status(500).JSON(fiber.Map{
-				"status":  "error",
-				"message": "Failed to fetch orders",
-			})
-		}
+func (ctrl *OrderController) GetOrders(c fiber.Ctx) error {
+	orders, err := ctrl.service.GetOrders()
 
-		return c.JSON(fiber.Map{
-			"status": "success",
-			"data":   orders,
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  "error",
+			"message": "can not get orders",
 		})
 	}
+
+	return c.JSON(fiber.Map{
+		"status": "success",
+		"data":   orders,
+	})
 }
