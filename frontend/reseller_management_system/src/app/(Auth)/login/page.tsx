@@ -23,11 +23,10 @@ const LoginPage = () => {
       })
 
       const result = await res.json()
-      console.log(result)
 
       if (res.ok) {
         localStorage.setItem("token", result.token)
-        router.push("/dashboard") // ✅ redirect เฉพาะตอนสำเร็จ
+        router.push("/") // ✅ redirect เฉพาะตอนสำเร็จ
       } else {
         alert(result.message || "Login failed") // ✅ แสดง error แล้วหยุด
       }
