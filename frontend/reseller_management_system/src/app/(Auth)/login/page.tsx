@@ -1,7 +1,42 @@
-import React from 'react'
-
+"use client"
+import React, { useEffect, useState } from 'react'
 import Header from '@/app/components/layout/header'
+
+type Login = {
+  email: string;
+  password: string;
+};
+
 const LoginPage = () => {
+  const {data,setdata} = useState<Login>();
+  const {loading,setLoading} = useState(true);
+
+  const URL = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch(`${URL}/login`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            email: "admin@example.com",
+            password: "password",
+          }),
+        })
+        const result = await res.json()
+        setdata(result)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  if (loading) return <p>Loading...</p>
     return (
     <div className="min-h-screen bg-[#F5F3EE] ">
       <Header/>
