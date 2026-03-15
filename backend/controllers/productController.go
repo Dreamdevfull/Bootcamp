@@ -32,7 +32,6 @@ func AddProduct(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		product := new(models.Products)
 
-		// Parse ข้อมูลจาก JSON Body
 		if err := c.Bind().Body(&product); err != nil {
 			return c.Status(400).JSON(fiber.Map{
 				"message": "failed to parse request body",
