@@ -8,7 +8,8 @@ import (
 )
 
 type Container struct {
-	AuthController *controllers.AuthController
+	AuthController  *controllers.AuthController
+	OrderController *controllers.OrderController
 }
 
 func NewContainer(db *gorm.DB) *Container {
@@ -21,7 +22,12 @@ func NewContainer(db *gorm.DB) *Container {
 
 	authController := controllers.NewAuthController(authService)
 
+	orderRepo := repositorys.NewOrderRepository(db)
+	orderService := services.NewOrderService(orderRepo)
+	orderController := controllers.NewOrderController(orderService)
+
 	return &Container{
-		AuthController: authController,
+		AuthController:  authController,
+		OrderController: orderController,
 	}
 }
