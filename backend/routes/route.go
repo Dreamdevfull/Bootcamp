@@ -10,15 +10,21 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 
 	app.Post("/register", c.AuthController.Register)
 	app.Post("/login", c.AuthController.Login)
-
+	app.Post("/logout", c.AuthController.Logout)
 	//=========================================
 	adminGroup := app.Group("/admin", middlewares.AuthMiddleware("admin"))
-	// adminGroup.Get("/products", controllers.GetProducts(db))
-	// adminGroup.Post("/products", controllers.AddProduct(db))
-	// adminGroup.Patch("/products/:id", controllers.UpdateProduct(db))
+	adminGroup.Get("/products", c.ProductsController.GetProducts)
+	adminGroup.Post("/products/add", c.ProductsController.CreatedProduct)
+	adminGroup.Patch("/products/edit/:id", c.ProductsController.UpdateProduct)
+	adminGroup.Delete("/products/delete/:id", c.ProductsController.DeleteProduct)
 	adminGroup.Get("/resellers", c.ResellerController.GetResellers)
+
+	//==========================================
 	// adminGroup.Patch("/resellers/:id", controllers.UpdateResellerStatus(db))
+	adminGroup.Patch("/resellers/:id", c.ResellerController.UpdateStatus)
 	adminGroup.Get("/orders", c.OrderController.GetOrders)
+	adminGroup.Patch("/orders/:id/complete", c.OrderController.QuickComplete)
+
 	// resellerGroup := app.Group("/reseller", middlewares.AuthMiddleware("reseller"))
 
 }
