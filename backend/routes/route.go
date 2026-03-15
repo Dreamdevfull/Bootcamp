@@ -1,13 +1,12 @@
 package routes
 
 import (
+	"github.com/Dreamdevfull/Bootcamp/container"
 	"github.com/Dreamdevfull/Bootcamp/controllers"
 	"github.com/Dreamdevfull/Bootcamp/middlewares"
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
 	"github.com/Dreamdevfull/Bootcamp/services"
 	"github.com/gofiber/fiber/v3"
-
-	"gorm.io/gorm"
 )
 
 func SetupRoutes(app *fiber.App, db *gorm.DB) {

@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"os"
-	"strings"
 	"time"
 
+	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
+	"github.com/Dreamdevfull/Bootcamp/services"
 	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/gofiber/fiber/v3"
@@ -14,80 +15,35 @@ import (
 	"gorm.io/gorm"
 )
 
-func Register(db *gorm.DB) fiber.Handler {
-	return func(c fiber.Ctx) error {
-		type RegisterRequest struct {
-			Name      string `json:"name"`
-			Email     string `json:"email"`
-			Phone     string `json:"phone"`
-			Password  string `json:"password"`
-			Shop_name string `json:"shop_name"`
-			Address   string `json:"address"`
-		}
+type AuthController struct {
+	service *services.AuthService
+}
 
-		var input RegisterRequest
-		if err := c.Bind().Body(&input); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "Invalid request body",
-			})
-		}
+func NewAuthController(service *services.AuthService) *AuthController {
+	return &AuthController{service}
+}
 
-		var existingUser models.Users
-		if err := db.Where("email = ?", input.Email).First(&existingUser).Error; err == nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "Email already exists",
-			})
-		}
+func (a *AuthController) Register(c fiber.Ctx) error {
 
-		var existingShop models.Shops
-		if err := db.Where("shop_name = ?", input.Shop_name).First(&existingShop).Error; err == nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "Shop name already exists",
-			})
-		}
+	var req dto.RegisterRequest
 
-		shopSlug := strings.ToLower(strings.ReplaceAll(input.Shop_name, " ", "-"))
-
-		err := db.Transaction(func(tx *gorm.DB) error {
-			hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
-
-			newUser := models.Users{
-				Name:      input.Name,
-				Email:     input.Email,
-				Phone:     input.Phone,
-				Password:  string(hashedPassword),
-				Role:      "reseller",
-				Status:    "pending",
-				Address:   input.Address,
-				Create_at: time.Now(),
-			}
-
-			if err := tx.Create(&newUser).Error; err != nil {
-				return err
-			}
-
-			newShop := models.Shops{
-				User_id:   int(newUser.Id),
-				Shop_name: input.Shop_name,
-				Shop_slug: shopSlug,
-			}
-			if err := tx.Create(&newShop).Error; err != nil {
-				return err
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to register user",
-			})
-		}
-
-		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-			"message": "User registered successfully, pending approval",
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "invalid request",
 		})
 	}
+
+	err := a.service.Register(req)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.Status(201).JSON(dto.RegisterResponse{
+		Message: "User registered successfully",
+	})
 }
 
 func Logout(db *gorm.DB) fiber.Handler {
