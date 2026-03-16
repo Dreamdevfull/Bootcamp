@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard", "/profile", "/settings"];
+const adminRoutes = ["/admin"];
+const resellerRoutes = ["/resellers"];
 
-export async function proxy(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const isProtected = protectedRoutes.some((r) => pathname.startsWith(r));
 
-  if (!isProtected) return NextResponse.next();
+  const isAdmin = adminRoutes.some((r) => pathname.startsWith(r));
+  const isReseller = resellerRoutes.some((r) => pathname.startsWith(r));
+
+  if (!isAdmin && !isReseller) return NextResponse.next();
 
   const token = req.cookies.get("token")?.value;
 
@@ -26,9 +29,20 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  const data = await res.json();
+
+  // ป้องกันข้ามสิทธิ์
+  if (isAdmin && data.role !== "admin") {
+    return NextResponse.redirect(new URL("/resellers/dashboard", req.url));
+  }
+
+  if (isReseller && data.role !== "reseller") {
+    return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*", "/settings/:path*"],
+  matcher: ["/admin/:path*", "/resellers/:path*"],
 };
