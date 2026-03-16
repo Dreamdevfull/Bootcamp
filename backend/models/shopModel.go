@@ -22,7 +22,7 @@ type Products struct {
 
 type ShopProducts struct {
 	Id            uint    `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Shop_id       int     `json:"shop_id" gorm:"ForeignKey:Shop_id"`
-	Products_id   int     `json:"products_id" gorm:"ForeignKey:Products_id"`
+	Shop_id       uint    `json:"shop_id" gorm:"column:shop_id"`
+	Products_id   uint    `json:"product_id" gorm:"column:product_id"`
 	Selling_price float64 `json:"selling_price" gorm:"type:decimal(10,2);column:selling_price"`
 }

@@ -1,5 +1,10 @@
 package repositorys
 
+import (
+	"github.com/Dreamdevfull/Bootcamp/models"
+	"gorm.io/gorm"
+)
+
 // type ResellerRepository interface {
 // 	FindResellers() ([]models.Users, error)
 // 	UpdateStatus(id string, status string) error
@@ -46,3 +51,37 @@ package repositorys
 
 // 	return nil
 // }
+
+type ResellerRepository interface {
+	GetCatalog() ([]models.Products, error)
+	GetProductsByID(id uint) (models.Products, error)
+	AddProductToShop(shopProduct *models.ShopProducts) error
+}
+
+type resellerRepository struct {
+	db *gorm.DB
+}
+
+func NewResellerRepository(db *gorm.DB) ResellerRepository {
+	return &resellerRepository{db}
+}
+
+func (r *resellerRepository) GetCatalog() ([]models.Products, error) {
+	var products []models.Products
+	err := r.db.Find(&products).Error
+
+	return products, err
+}
+
+func (r *resellerRepository) GetProductsByID(id uint) (models.Products, error) {
+	var product models.Products
+
+	err := r.db.First(&product, id).Error
+
+	return product, err
+
+}
+
+func (r *resellerRepository) AddProductToShop(shopProduct *models.ShopProducts) error {
+	return r.db.Create(shopProduct).Error
+}
