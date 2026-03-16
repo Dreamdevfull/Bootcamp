@@ -11,11 +11,12 @@ type OrderService interface {
 }
 
 type orderService struct {
-	repo repositorys.OrderRepository
+	repo       repositorys.OrderRepository
+	walletRepo repositorys.WalletRepository
 }
 
-func NewOrderService(r repositorys.OrderRepository) OrderService {
-	return &orderService{repo: r}
+func NewOrderService(r repositorys.OrderRepository, w repositorys.WalletRepository) OrderService {
+	return &orderService{repo: r, walletRepo: w}
 }
 
 func (s *orderService) GetOrders() ([]models.Orders, error) {
@@ -23,5 +24,30 @@ func (s *orderService) GetOrders() ([]models.Orders, error) {
 }
 
 func (s *orderService) QuickComplete(orderID int) error {
-	return s.repo.UpdateStatus(orderID, "shipped")
+	order, err := s.repo.FindByID(orderID)
+	if err != nil {
+		return err
+	}
+
+	items, err := s.repo.GetItemsByOrderID(orderID)
+	if err != nil {
+		return err
+	}
+
+	var totalProfit float64
+	for _, item := range items {
+		profitPerItem := item.Selling_price - item.Cost_price
+		totalProfit += profitPerItem * float64(item.Quantity)
+
+	}
+
+	if err := s.repo.UpdateStatus(orderID, "shipped"); err != nil {
+		return err
+	}
+
+	if err := s.walletRepo.AddBalance(order.Shop_id, totalProfit); err != nil {
+		return err
+	}
+
+	return nil
 }
