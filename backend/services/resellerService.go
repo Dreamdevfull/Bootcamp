@@ -1,39 +1,32 @@
 package services
 
-import (
-	"errors"
+// type ResellerService interface {
+// 	GetResellers() ([]models.Users, error)
+// 	UpdateResellerStatus(id string, status string) error
+// }
 
-	"github.com/Dreamdevfull/Bootcamp/models"
-	"github.com/Dreamdevfull/Bootcamp/repositorys"
-)
+// type resellerService struct {
+// 	resellerRepo repositorys.ResellerRepository
+// }
 
-type ResellerService interface {
-	GetResellers() ([]models.Users, error)
-	UpdateResellerStatus(id string, status string) error
-}
+// func NewResellerService(r repositorys.ResellerRepository) ResellerService {
+// 	return &resellerService{resellerRepo: r}
+// }
 
-type resellerService struct {
-	resellerRepo repositorys.ResellerRepository
-}
+// func (s *resellerService) GetResellers() ([]models.Users, error) {
+// 	return s.resellerRepo.FindResellers()
+// }
 
-func NewResellerService(r repositorys.ResellerRepository) ResellerService {
-	return &resellerService{resellerRepo: r}
-}
+// func (s *resellerService) UpdateResellerStatus(id string, status string) error {
+// 	validStatuses := map[string]bool{
+// 		"pending":  true,
+// 		"approved": true,
+// 		"rejected": true,
+// 	}
 
-func (s *resellerService) GetResellers() ([]models.Users, error) {
-	return s.resellerRepo.FindResellers()
-}
+// 	if !validStatuses[status] {
+// 		return errors.New("invalid status: must be pending, approved, or rejected")
+// 	}
 
-func (s *resellerService) UpdateResellerStatus(id string, status string) error {
-	validStatuses := map[string]bool{
-		"pending":  true,
-		"approved": true,
-		"rejected": true,
-	}
-
-	if !validStatuses[status] {
-		return errors.New("invalid status: must be pending, approved, or rejected")
-	}
-
-	return s.resellerRepo.UpdateStatus(id, status)
-}
+// 	return s.resellerRepo.UpdateStatus(id, status)
+// }
