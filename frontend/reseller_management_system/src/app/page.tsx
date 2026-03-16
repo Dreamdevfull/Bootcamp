@@ -2,6 +2,7 @@
 import React from 'react'
 import Header from './components/layout/header'
 import Image from "next/image";
+import Link from 'next/link';
 
 const Home = () => {
   return (
@@ -19,12 +20,12 @@ const Home = () => {
         <h1 className='text-white text-center text-[50px] leading-tight'>แพลตฟอร์มสำหรับ<br></br>ตัวแทนจำหน่ายสินค้าเด็ก</h1>
         <p className='text-white/50 text-center text-[20px] leading-tight'>เปิดร้านค้าออนไลน์ส่วนตัว ตั้งราคาขายได้เอง<br></br> ไม่ต้องสต็อกสินค้า ไม่ต้องลงทุนสูง</p>
         <div className='flex items-center gap-4'>
-          <button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/20 transition'>
+          <Link href="/register"><button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/20 transition cursor-pointer'>
             เริ่มต้นเป็นตัวแทน→
-          </button>
-          <button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/20 transition font-medium '>
+          </button></Link>
+          <Link href="/login"><button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/20 transition font-medium cursor-pointer'>
             เข้าสู่ระบบ
-          </button>
+          </button></Link>
         </div>
         <div className='flex items-center justify-center gap-8 mt-8'>
 
@@ -145,12 +146,12 @@ const Home = () => {
           <p className='text-white/80 text-center text-sm'>สมัครฟรี ไม่มีค่าใช้จ่าย เริ่มขายได้ทันทีหลังอนุมัติ</p>
 
           <div className='flex items-center gap-4 mt-2'>
-            <button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/20 transition font-medium'>
+            <Link href="/register"><button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/20 transition font-medium cursor-pointer'>
               สมัครเป็นตัวแทน →
-            </button>
-            <button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/30 transition font-medium'>
+            </button></Link>
+            <Link href="/login"><button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/30 transition font-medium cursor-pointer'>
               มีบัญชีแล้ว เข้าสู่ระบบ
-            </button>
+            </button></Link>
           </div>
 
         </div>
