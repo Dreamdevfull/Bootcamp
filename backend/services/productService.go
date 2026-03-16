@@ -48,22 +48,6 @@ func (s *ProductService) CreateProduct(input dto.AddProductRequest) (*dto.Produc
 		Stock:       product.Stock,
 	}, nil
 
-	// product := models.Products{
-	// 	Name:        input.Name,
-	// 	Description: input.Description,
-	// 	Image:       input.ImageURL,
-	// 	Cost_price:  input.CostPrice,
-	// 	Min_price:   input.MinPrice,
-	// 	Stock:       input.Stock,
-	// 	Create_at:   time.Now(),
-	// }
-
-	// err := s.productRepo.Create(&product)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// return &product, nil
 }
 
 func (s *ProductService) GetProducts() ([]models.Products, error) {
