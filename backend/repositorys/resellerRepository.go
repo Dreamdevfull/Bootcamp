@@ -31,7 +31,7 @@ func NewResellerRepository(db *gorm.DB) ResellerRepository {
 func (r *resellerRepository) FindResellers() ([]models.Users, error) {
 	var resellers []models.Users
 
-	err := r.db.Select("id", "name", "email", "phone", "status", "address", "created_at").
+	err := r.db.Select("id", "name", "email", "phone", "role", "status", "address", "created_at").
 		Where("role = ?", "reseller").
 		Find(&resellers).Error
 

@@ -29,3 +29,8 @@ type UserSummary struct {
 	Name string `json:"name"`
 	Role string `json:"role"`
 }
+
+type LogoutResponse struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+}
