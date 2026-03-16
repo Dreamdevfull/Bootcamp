@@ -20,9 +20,9 @@ const Header = () => {
       </div>
       
       <div className="flex gap-4">
-        
-          <Link href="/login"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">เข้าสู่ระบบ</button></Link>
-          <Link href="/register"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">สมัครตัวแทน</button></Link>
+          <Link href="/"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">หน้าหลัก</button></Link>
+          <Link href="/login"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">เข้าสู่ระบบ</button></Link>
+          <Link href="/register"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">สมัครตัวแทน</button></Link>
       </div>
     </nav>
   )

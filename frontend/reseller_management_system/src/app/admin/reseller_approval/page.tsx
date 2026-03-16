@@ -1,11 +1,14 @@
+"use client"
+import HeaderAdmin from '@/app/components/layout/headeradmin'
 import React from 'react'
 
-const page = () => {
+const ResellerApprovalpage = () => {
   return (
     <div>
-      page
+      <HeaderAdmin />
+      <h1>Reseller Approval</h1>
     </div>
   )
 }
 
-export default page
+export default ResellerApprovalpage;
