@@ -8,10 +8,11 @@ import (
 )
 
 type Container struct {
-	AuthController     *controllers.AuthController
-	OrderController    *controllers.OrderController
-	ResellerController *controllers.ResellerController
+	AuthController  *controllers.AuthController
+	OrderController *controllers.OrderController
+	// ResellerController *controllers.ResellerController
 	ProductsController *controllers.ProductsController
+	UserController     *controllers.UserController
 }
 
 func NewContainer(db *gorm.DB) *Container {
@@ -27,23 +28,26 @@ func NewContainer(db *gorm.DB) *Container {
 	//=========================================================
 
 	orderRepo := repositorys.NewOrderRepository(db)
-	orderService := services.NewOrderService(orderRepo)
+	walletRepo := repositorys.NewWalletRepository(db)
+	orderService := services.NewOrderService(orderRepo, walletRepo)
 	orderController := controllers.NewOrderController(orderService)
 
-	resellerRepo := repositorys.NewResellerRepository(db)
-	resellerService := services.NewResellerService(resellerRepo)
-	resellerController := controllers.NewResellerController(resellerService)
+	// resellerRepo := repositorys.NewResellerRepository(db)
+	// resellerService := services.NewResellerService(resellerRepo)
+	// resellerController := controllers.NewResellerController(resellerService)
+
+	userService := services.NewUserService(userRepo)
+	userController := controllers.NewUserController(userService)
 
 	productRepo := repositorys.NewProductRepository(db)
-
 	productService := services.NewProductService(productRepo)
-
 	productsController := controllers.NewProductsController(productService)
 
 	return &Container{
-		AuthController:     authController,
-		OrderController:    orderController,
-		ResellerController: resellerController,
+		AuthController:  authController,
+		OrderController: orderController,
+		// ResellerController: resellerController,
 		ProductsController: productsController,
+		UserController:     userController,
 	}
 }
