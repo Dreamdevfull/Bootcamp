@@ -2,16 +2,43 @@ import { NextRequest, NextResponse } from "next/server";
 
 const adminRoutes = ["/admin"];
 const resellerRoutes = ["/resellers"];
+const authRoutes = ["/login", "/register"]; 
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  const token = req.cookies.get("jwt")?.value;
+
+  if (authRoutes.some((r) => pathname.startsWith(r))) {
+    if (token) {
+      try {
+        // ตรวจ role แล้ว redirect ไปหน้าของคนนั้น
+        const res = await fetch("http://localhost:8080/login", {
+          headers: { Cookie: `jwt=${token}` },
+        });
+        console.log("me status:", res.status)
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("me data:", data)
+          if (data.role === "admin") {
+            return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+          } else if (data.role === "reseller") {
+            return NextResponse.redirect(new URL("/resellers/dashboard", req.url));
+          }
+        }
+      } catch (err) {
+        console.log("fetch error:", err)
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+    }
+    return NextResponse.next();
+  }
 
   const isAdmin = adminRoutes.some((r) => pathname.startsWith(r));
   const isReseller = resellerRoutes.some((r) => pathname.startsWith(r));
 
   if (!isAdmin && !isReseller) return NextResponse.next();
-
-  const token = req.cookies.get("token")?.value;
 
   if (!token) {
     const loginUrl = new URL("/login", req.url);
@@ -19,8 +46,8 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const res = await fetch("http://localhost:8080/api/auth/me", {
-    headers: { Cookie: `token=${token}` },
+  const res = await fetch("http://localhost:8080/login", {
+    headers: { Cookie: `jwt=${token}` },
   });
 
   if (!res.ok) {
@@ -29,20 +56,9 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const data = await res.json();
-
-  // ป้องกันข้ามสิทธิ์
-  if (isAdmin && data.role !== "admin") {
-    return NextResponse.redirect(new URL("/resellers/dashboard", req.url));
-  }
-
-  if (isReseller && data.role !== "reseller") {
-    return NextResponse.redirect(new URL("/admin/dashboard", req.url));
-  }
-
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/resellers/:path*"],
+  matcher: ["/admin/:path*", "/resellers/:path*", "/login", "/register"],
 };
