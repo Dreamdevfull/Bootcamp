@@ -36,14 +36,11 @@ func NewContainer(db *gorm.DB) *Container {
 	// resellerService := services.NewResellerService(resellerRepo)
 	// resellerController := controllers.NewResellerController(resellerService)
 
-	userRepo = repositorys.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
 	userController := controllers.NewUserController(userService)
 
 	productRepo := repositorys.NewProductRepository(db)
-
 	productService := services.NewProductService(productRepo)
-
 	productsController := controllers.NewProductsController(productService)
 
 	return &Container{
