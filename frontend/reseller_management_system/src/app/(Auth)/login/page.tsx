@@ -8,7 +8,8 @@ const LoginPage = () => {
   const [password,setPassword] = useState("");
   const router = useRouter();
   const [loading,setLoading] = useState(false);
-   const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard";
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";;
 
   const URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,7 +20,7 @@ const LoginPage = () => {
     try {
       const res = await fetch(`${URL}/login`, {
         method: "POST",
-        credentials: "include", // ✅ รับ cookie จาก Go
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
@@ -27,10 +28,22 @@ const LoginPage = () => {
       const result = await res.json()
 
       if (res.ok) {
-        const safe = callbackUrl.startsWith("/") && callbackUrl !== "/login"
-        ? callbackUrl
-        : "/";
-        router.push(safe)
+        window.alert(res.status === 200)
+        if (callbackUrl.startsWith("/") && callbackUrl !== "/login") {
+        router.push(callbackUrl);
+        return;
+        }
+
+        const data = result.data;
+        if (data.role === "admin") {
+          router.push("/admin/dashboard");
+        } else if (data.role === "reseller") {
+          router.push("/resellers/dashboard");
+        } else {
+          window.alert("ไม่สามารถเข้าสู่ระบบได้ เนื่องจากบทบาทผู้ใช้ไม่ถูกต้อง");
+          router.push("/");
+        }
+        
       } else {
         alert(result.message || "Login failed")
       }
@@ -40,6 +53,18 @@ const LoginPage = () => {
     } finally {
       setLoading(false)
     }
+  }
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#F5F3EE]"> 
+        <Header/>
+        <main className="flex-1 flex justify-center items-center p-4">  
+          <div className="w-[503px] h-[472px] bg-white rounded-2xl shadow-md border border-gray-200 p-8 flex flex-col justify-center items-center">
+            <h1 className='text-[#0d3d30] text-[24px] text-center'>กำลังเข้าสู่ระบบ...</h1>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   return (
