@@ -10,8 +10,7 @@ type Shops struct {
 }
 
 type Products struct {
-	Id uint `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-
+	Id          uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Image       string    `gorm:"column:image_url"`
