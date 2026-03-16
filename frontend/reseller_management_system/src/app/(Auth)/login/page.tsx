@@ -1,13 +1,14 @@
 "use client"
 import React, { useState } from 'react'
 import Header from '@/app/components/layout/header'
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 const LoginPage = () => {
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
   const router = useRouter();
   const [loading,setLoading] = useState(false);
+   const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard";
 
   const URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,6 +19,7 @@ const LoginPage = () => {
     try {
       const res = await fetch(`${URL}/login`, {
         method: "POST",
+        credentials: "include", // ✅ รับ cookie จาก Go
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
@@ -25,14 +27,16 @@ const LoginPage = () => {
       const result = await res.json()
 
       if (res.ok) {
-        localStorage.setItem("token", result.token)
-        router.push("/") // ✅ redirect เฉพาะตอนสำเร็จ
+        const safe = callbackUrl.startsWith("/") && callbackUrl !== "/login"
+        ? callbackUrl
+        : "/";
+        router.push(safe)
       } else {
-        alert(result.message || "Login failed") // ✅ แสดง error แล้วหยุด
+        alert(result.message || "Login failed")
       }
 
     } catch (err) {
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่") // ✅ จัดการ network error
+      alert("เกิดข้อผิดพลาด กรุณาลองใหม่")
     } finally {
       setLoading(false)
     }
