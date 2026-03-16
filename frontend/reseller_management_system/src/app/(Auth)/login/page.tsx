@@ -1,13 +1,15 @@
 "use client"
 import React, { useState } from 'react'
 import Header from '@/app/components/layout/header'
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 const LoginPage = () => {
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
   const router = useRouter();
   const [loading,setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";;
 
   const URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,6 +20,7 @@ const LoginPage = () => {
     try {
       const res = await fetch(`${URL}/login`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
@@ -25,17 +28,43 @@ const LoginPage = () => {
       const result = await res.json()
 
       if (res.ok) {
-        localStorage.setItem("token", result.token)
-        router.push("/") // ✅ redirect เฉพาะตอนสำเร็จ
+        window.alert(res.status === 200)
+        if (callbackUrl.startsWith("/") && callbackUrl !== "/login") {
+        router.push(callbackUrl);
+        return;
+        }
+
+        const data = result.data;
+        if (data.role === "admin") {
+          router.push("/admin/dashboard");
+        } else if (data.role === "reseller") {
+          router.push("/resellers/dashboard");
+        } else {
+          window.alert("ไม่สามารถเข้าสู่ระบบได้ เนื่องจากบทบาทผู้ใช้ไม่ถูกต้อง");
+          router.push("/");
+        }
+        
       } else {
-        alert(result.message || "Login failed") // ✅ แสดง error แล้วหยุด
+        alert(result.message || "Login failed")
       }
 
     } catch (err) {
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่") // ✅ จัดการ network error
+      alert("เกิดข้อผิดพลาด กรุณาลองใหม่")
     } finally {
       setLoading(false)
     }
+  }
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#F5F3EE]"> 
+        <Header/>
+        <main className="flex-1 flex justify-center items-center p-4">  
+          <div className="w-[503px] h-[472px] bg-white rounded-2xl shadow-md border border-gray-200 p-8 flex flex-col justify-center items-center">
+            <h1 className='text-[#0d3d30] text-[24px] text-center'>กำลังเข้าสู่ระบบ...</h1>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   return (
