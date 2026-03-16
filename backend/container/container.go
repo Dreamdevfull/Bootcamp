@@ -13,6 +13,7 @@ type Container struct {
 	// ResellerController *controllers.ResellerController
 	ProductsController *controllers.ProductsController
 	UserController     *controllers.UserController
+	ShopController     *controllers.ShopController
 }
 
 func NewContainer(db *gorm.DB) *Container {
@@ -20,6 +21,8 @@ func NewContainer(db *gorm.DB) *Container {
 	userRepo := repositorys.NewUserRepository(db)
 
 	shopRepo := repositorys.NewShopRepository(db)
+	shopService := services.NewShopService(shopRepo)
+	shopsController := controllers.NewShopController(shopService)
 
 	authService := services.NewAuthService(userRepo, shopRepo)
 
@@ -49,5 +52,6 @@ func NewContainer(db *gorm.DB) *Container {
 		// ResellerController: resellerController,
 		ProductsController: productsController,
 		UserController:     userController,
+		ShopController:     shopsController,
 	}
 }

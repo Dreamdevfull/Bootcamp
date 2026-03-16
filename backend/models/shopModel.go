@@ -10,8 +10,7 @@ type Shops struct {
 }
 
 type Products struct {
-	Id uint `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-
+	Id          uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Image       string    `gorm:"column:image_url"`
@@ -22,7 +21,8 @@ type Products struct {
 }
 
 type ShopProducts struct {
-	Id          uint `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Shop_id     int  `json:"shop_id" gorm:"ForeignKey:Shop_id"`
-	Products_id int  `json:"products_id" gorm:"ForeignKey:Products_id"`
+	Id            uint    `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+	Shop_id       int     `json:"shop_id" gorm:"ForeignKey:Shop_id"`
+	Products_id   int     `json:"products_id" gorm:"ForeignKey:Products_id"`
+	Selling_price float64 `json:"selling_price" gorm:"type:decimal(10,2);column:selling_price"`
 }
