@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <main className='bg-[#F5F3EE] min-h-screen flex flex-col'>
       <Header />
-      <div className='h-[500px] bg-gradient-to-r from-[#0d3d30] via-[#1a6b5a] to-[#1d9e75] flex flex-col items-center justify-center gap-4'>
+      <div className='h-full py-4 bg-gradient-to-r from-[#0d3d30] via-[#1a6b5a] to-[#1d9e75] flex flex-col items-center justify-center gap-4'>
         <div className='text-white flex items-center gap-2 w-fit border border-white/20 p-2 rounded-3xl bg-white/20'>
           <Image
             src="/bear.webp"
@@ -18,7 +18,6 @@ const Home = () => {
           />สินค้าเด็กคุณภาพ ไม่ต้องมี มอก.
         </div>
         <h1 className='text-white text-center text-[50px] leading-tight'>แพลตฟอร์มสำหรับ<br></br>ตัวแทนจำหน่ายสินค้าเด็ก</h1>
-        <p className='text-white/50 text-center text-[20px] leading-tight'>เปิดร้านค้าออนไลน์ส่วนตัว ตั้งราคาขายได้เอง<br></br> ไม่ต้องสต็อกสินค้า ไม่ต้องลงทุนสูง</p>
         <div className='flex items-center gap-4'>
           <Link href="/register"><button className='text-white border border-white px-7 py-3 rounded-xl hover:bg-white/20 transition cursor-pointer'>
             เริ่มต้นเป็นตัวแทน→
@@ -27,7 +26,7 @@ const Home = () => {
             เข้าสู่ระบบ
           </button></Link>
         </div>
-        <div className='flex items-center justify-center gap-8 mt-8'>
+        {/* <div className='flex items-center justify-center gap-8 mt-8'>
 
           <div className='text-center'>
             <p className='text-white text-4xl font-bold'>120+</p>
@@ -47,7 +46,7 @@ const Home = () => {
             <p className='text-white text-4xl font-bold'>3,200+</p>
             <p className='text-white/70 text-sm'>ออเดอร์สำเร็จ</p>
           </div>
-        </div>
+        </div> */}
       </div>
       <section className='max-w-5xl mx-auto w-full px-6 py-4 text-center'>
         <h2 className='text-xl mb-2'>สินค้าที่ขายในแพลตฟอร์ม</h2>
@@ -79,33 +78,7 @@ const Home = () => {
           </div>
 
         </div>
-      </section>
-      <section className='max-w-5xl mx-auto w-full px-6 py-3'>
-        <h2 className='text-xl text-center mb-5'>
-          ทำไมต้องเลือก TinyStore?
-        </h2>
-        <div className='grid grid-cols-3 gap-6'>
-
-          <div className='bg-white rounded-2xl p-6 shadow-sm'>
-            <span className='text-4xl mb-4 block'>🏪</span>
-            <h3 className='text-lg'>ร้านส่วนตัวของคุณ</h3>
-            <p className='text-gray-400 text-sm'>URL เฉพาะของคุณ /shop/ชื่อร้าน แชร์ให้ลูกค้าได้เลย</p>
-          </div>
-
-          <div className='bg-white rounded-2xl p-6 shadow-sm'>
-            <span className='text-4xl mb-4 block'>💰</span>
-            <h3 className='text-lg'>ตั้งราคาได้เอง</h3>
-            <p className='text-gray-400 text-sm'>กำหนดกำไรเองได้อิสระ มีราคาขั้นต่ำคุ้มครอง</p>
-          </div>
-
-          <div className='bg-white rounded-2xl p-6 shadow-sm'>
-            <span className='text-4xl mb-4 block'>👛</span>
-            <h3 className='text-lg'>ติดตามกำไร</h3>
-            <p className='text-gray-400 text-sm'>Wallet จำลองแสดงกำไรสะสมทุกออเดอร์</p>
-          </div>
-
-        </div>
-      </section>
+      </section>     
       <section className='max-w-5xl mx-auto w-full px-6 py-3'>
         <div className='bg-white rounded-2xl p-8 shadow-sm flex flex-col gap-6'>
           <h2 className='text-xl text-center mb-2'>เริ่มต้นง่ายๆ 3 ขั้นตอน</h2>
