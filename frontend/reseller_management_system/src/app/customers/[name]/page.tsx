@@ -5,13 +5,14 @@ const p = () => {
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
       <HeaderCustomers />
-      <div className='w-full h-[275px] bg-gradient-to-r from-[#0d3d30] to-[#1d9e75]'>
+      <div className='w-full h-[275px] bg-gradient-to-r from-[#0d3d30] via-[#1a6b5a] to-[#1d9e75]'>
         <h1 className='text-white text-center text-[60px] pt-8'>ShopName</h1>
         <p className='text-white text-center text-[25px] pt-2'>คำอธิบายของแต่ละร้าน</p>
 
       </div>
       <div className='bg-white h-[780px] p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
         <div className='bg-[#f5f3ee] h-auto p-6 m-3 shadow-md border border-gray-100 flex justify-between items-center rounded-xl'>
+
           {/* search bar */}
           <div className="relative w-full max-w-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

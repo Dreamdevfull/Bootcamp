@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const headerCustomers = () => {
   return (
-    <nav className="w-full h-20 bg-gradient-to-r from-[#1d9e75] to-[#0d3d30] text-white flex items-center justify-between px-8 shadow-md">
+    <nav className="w-full h-20 bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white flex items-center justify-between px-8 shadow-md">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-white/20 rounded-lg">
           <Image
