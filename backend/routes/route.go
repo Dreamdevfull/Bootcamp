@@ -18,11 +18,11 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	adminGroup.Post("/products/add", c.ProductsController.CreatedProduct)
 	adminGroup.Patch("/products/edit/:id", c.ProductsController.UpdateProduct)
 	adminGroup.Delete("/products/delete/:id", c.ProductsController.DeleteProduct)
-	adminGroup.Get("/resellers", c.ResellerController.GetResellers)
+	adminGroup.Get("/resellers", c.UserController.GetResellers)
 
 	//==========================================
 	// adminGroup.Patch("/resellers/:id", controllers.UpdateResellerStatus(db))
-	adminGroup.Patch("/resellers/:id", c.ResellerController.UpdateStatus)
+	adminGroup.Patch("/resellers/:id", c.UserController.UpdateStatus)
 	adminGroup.Get("/orders", c.OrderController.GetOrders)
 	adminGroup.Patch("/orders/:id/complete", c.OrderController.QuickComplete)
 
