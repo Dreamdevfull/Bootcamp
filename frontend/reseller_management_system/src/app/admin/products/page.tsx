@@ -1,11 +1,14 @@
+"use client"
+import HeaderAdmin from '@/app/components/layout/headeradmin'
 import React from 'react'
 
-const ProductPage = () => {
+const ProductsPage = () => {
   return (
     <div>
-        page
+      <HeaderAdmin />
+      <h1>Products</h1>
     </div>
   )
 }
 
-export default ProductPage;
+export default ProductsPage

@@ -19,8 +19,8 @@ const headerCustomers = () => {
         </div>
       </div>
       <div className="flex gap-4">
-        <button className="w-[140px] h-[60px] text-[#000000]px-6 py-2 rounded-lg hover:bg-[#1d9e75] transition cursor-pointer">หน้าร้าน</button>
-        <button className="w-[162px] h-[60px] text-[#000000]px-6 py-2 rounded-lg hover:bg-[#1d9e75] transition cursor-pointer">ตรวจสอบสถานะ</button>
+        <button className="w-[140px] h-[60px] text-[#000000]px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">หน้าร้าน</button>
+        <button className="w-[162px] h-[60px] text-[#000000]px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">ตรวจสอบสถานะ</button>
         <button className="flex items-center gap-2 bg-[#ef9f27] text-black border border-black px-6 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">
           <svg
             className="w-5 h-5"
