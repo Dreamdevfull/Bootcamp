@@ -12,7 +12,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	app.Post("/login", c.AuthController.Login)
 	app.Post("/logout", c.AuthController.Logout)
 	//=========================================
-	app.Get("/api/auth/me", middlewares.AuthMiddleware(""), c.AuthController.Login)
+	app.Get("/api/auth/me", middlewares.AuthMiddleware(""), c.AuthController.Me)
 	adminGroup := app.Group("/admin", middlewares.AuthMiddleware("admin"))
 
 	adminGroup.Get("/products", c.ProductsController.GetProducts)

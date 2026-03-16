@@ -138,3 +138,20 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 
 	return c.Status(200).JSON(result)
 }
+
+// ME
+func (a *AuthController) Me(c fiber.Ctx) error {
+	role := c.Locals("role")
+	userID := c.Locals("user_id")
+
+	if role == nil || userID == nil {
+		return c.Status(401).JSON(fiber.Map{
+			"error": "Unauthorized",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"user_id": userID,
+		"role":    role,
+	})
+}
