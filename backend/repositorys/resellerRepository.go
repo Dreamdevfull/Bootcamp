@@ -1,55 +1,48 @@
 package repositorys
 
-import (
-	"errors"
+// type ResellerRepository interface {
+// 	FindResellers() ([]models.Users, error)
+// 	UpdateStatus(id string, status string) error
+// }
 
-	"github.com/Dreamdevfull/Bootcamp/models"
-	"gorm.io/gorm"
-)
+// func (r *resellerRepository) Create(user *models.Users) error {
+// 	panic("unimplemented")
+// }
 
-type ResellerRepository interface {
-	FindResellers() ([]models.Users, error)
-	UpdateStatus(id string, status string) error
-}
+// func (r *resellerRepository) FindByEmail(email string) (*models.Users, error) {
+// 	panic("unimplemented")
+// }
 
-func (r *resellerRepository) Create(user *models.Users) error {
-	panic("unimplemented")
-}
+// type resellerRepository struct {
+// 	db *gorm.DB
+// }
 
-func (r *resellerRepository) FindByEmail(email string) (*models.Users, error) {
-	panic("unimplemented")
-}
+// func NewResellerRepository(db *gorm.DB) ResellerRepository {
+// 	return &resellerRepository{db}
+// }
 
-type resellerRepository struct {
-	db *gorm.DB
-}
+// func (r *resellerRepository) FindResellers() ([]models.Users, error) {
+// 	var resellers []models.Users
 
-func NewResellerRepository(db *gorm.DB) ResellerRepository {
-	return &resellerRepository{db}
-}
+// 	err := r.db.Select("id", "name", "email", "phone", "role", "status", "address", "created_at").
+// 		Where("role = ?", "reseller").
+// 		Find(&resellers).Error
 
-func (r *resellerRepository) FindResellers() ([]models.Users, error) {
-	var resellers []models.Users
+// 	return resellers, err
+// }
 
-	err := r.db.Select("id", "name", "email", "phone", "role", "status", "address", "created_at").
-		Where("role = ?", "reseller").
-		Find(&resellers).Error
+// func (r *resellerRepository) UpdateStatus(id string, status string) error {
+// 	result := r.db.Model(&models.Users{}).
+// 		Where("id = ? AND role = ?", id, "reseller").
+// 		Update("status", status)
 
-	return resellers, err
-}
+// 	if result.Error != nil {
+// 		return result.Error
+// 	}
 
-func (r *resellerRepository) UpdateStatus(id string, status string) error {
-	result := r.db.Model(&models.Users{}).
-		Where("id = ? AND role = ?", id, "reseller").
-		Update("status", status)
+// 	if result.RowsAffected == 0 {
+// 		return errors.New("reseller not found or no changes made")
+// 	}
 
-	if result.Error != nil {
-		return result.Error
-	}
-
-	if result.RowsAffected == 0 {
-		return errors.New("reseller not found or no changes made")
-	}
-
-	return nil
-}
+// 	return nil
+// }

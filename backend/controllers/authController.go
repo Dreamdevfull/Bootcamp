@@ -127,5 +127,14 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 		})
 	}
 
+	c.Cookie(&fiber.Cookie{
+		Name:     "jwt",
+		Value:    result.Token,
+		HTTPOnly: true,
+		Secure:   false, // true ถ้าใช้ https
+		SameSite: "Lax",
+		MaxAge:   86400,
+	})
+
 	return c.Status(200).JSON(result)
 }
