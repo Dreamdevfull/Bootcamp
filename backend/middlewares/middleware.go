@@ -94,10 +94,10 @@ func AuthMiddleware(requiredRole string) fiber.Handler {
 	return func(c fiber.Ctx) error {
 
 		tokenString := c.Cookies("jwt")
-		fmt.Println("COOKIE:", c.Cookies("jwt"))
-		fmt.Println("HEADER:", c.Get("Authorization"))
-		fmt.Println("ALL:", c.Get("Cookie"))
-		fmt.Println("SECRET:", os.Getenv("JWT_SECRET"))
+		// fmt.Println("COOKIE:", c.Cookies("jwt"))
+		// fmt.Println("HEADER:", c.Get("Authorization"))
+		// fmt.Println("ALL:", c.Get("Cookie"))
+		// fmt.Println("SECRET:", os.Getenv("JWT_SECRET"))
 
 		if tokenString == "" {
 

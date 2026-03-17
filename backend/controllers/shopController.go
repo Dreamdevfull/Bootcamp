@@ -1,65 +1,33 @@
 package controllers
 
 import (
-	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/services"
 	"github.com/gofiber/fiber/v3"
 )
 
 type ShopController struct {
-	service *services.ShopService
+	svc services.ShopService
 }
 
-func NewShopController(service *services.ShopService) *ShopController {
-	return &ShopController{service}
+func NewShopController(svc services.ShopService) *ShopController {
+	return &ShopController{svc}
 }
 
-func (c *ShopController) GetShop(ctx fiber.Ctx) error {
-
+func (c *ShopController) GetShopFront(ctx fiber.Ctx) error {
 	slug := ctx.Params("shop_slug")
 
-	products, shopName, err := c.service.GetShop(slug)
+	// ตรวจสอบว่า slug ว่างหรือไม่
+	if slug == "" {
+		return ctx.Status(400).JSON(fiber.Map{"error": "Shop name is required"})
+	}
 
+	data, err := c.svc.GetShopFrontData(slug)
 	if err != nil {
-		return ctx.Status(404).JSON(fiber.Map{
-			"error": "shop not found",
-		})
+
+		if err.Error() == "record not found" {
+			return ctx.Status(404).JSON(fiber.Map{"error": "Shop not found"})
+		}
+		return ctx.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
-
-	var result []dto.ShopProductResponse
-
-	for _, p := range products {
-
-		result = append(result, dto.ShopProductResponse{
-			ProductID:   p.Id,
-			Name:        p.Name,
-			Description: p.Description,
-			Image:       p.Image,
-			Price:       p.Min_price,
-			Stock:       p.Stock,
-		})
-	}
-
-	return ctx.JSON(dto.ShopResponse{
-		ShopName: shopName,
-		Products: result,
-	})
-}
-
-func (c *ShopController) MyShop(ctx fiber.Ctx) error {
-
-	userID := ctx.Locals("user_id")
-
-	shopName, shopURL, err := c.service.GetMyShop(userID)
-
-	if err != nil {
-		return ctx.Status(404).JSON(fiber.Map{
-			"error": "shop not found",
-		})
-	}
-
-	return ctx.JSON(fiber.Map{
-		"shop_name": shopName,
-		"shop_url":  shopURL,
-	})
+	return ctx.JSON(data)
 }
