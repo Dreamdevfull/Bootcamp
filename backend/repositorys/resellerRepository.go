@@ -92,6 +92,7 @@ func (r *resellerRepository) AddProductToShop(shopProduct *models.ShopProducts) 
 func (r *resellerRepository) GetMyShopProducts(shopID uint) ([]models.ShopProducts, error) {
 	var myProducts []models.ShopProducts
 	err := r.db.Preload("Product").
+		Preload("Shop").
 		Where("shop_id = ?", shopID).
 		Find(&myProducts).Error
 	return myProducts, err
@@ -107,8 +108,8 @@ func (r *resellerRepository) UpdatePrice(shopProductID uint, newPrice float64) e
 	return r.db.Model(&models.ShopProducts{}).
 		Where("id = ?", shopProductID).
 		Update("selling_price", newPrice).Error
+}
 func (r *productRepository) DeleteFromShop(shopID uint, productID uint) error {
-	// ใช้ .Unscoped() เพื่อสั่ง DELETE FROM ... ในฐานข้อมูลจริงๆ
 	return r.db.Unscoped().
 		Where("shop_id = ? AND product_id = ?", shopID, productID).
 		Delete(&models.ShopProducts{}).Error
