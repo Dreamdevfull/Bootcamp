@@ -4,8 +4,8 @@ import HeaderCustomers from '@/app/components/layout/headerCustomers'
 import { useState } from "react"
 
 
-const p = () => {
-  const [count, setCount] = useState(1)
+const Customers = () => {
+  const [count, setCount] = useState(1);
 
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
@@ -90,4 +90,4 @@ const p = () => {
   )
 }
 
-export default p
+export default Customers
