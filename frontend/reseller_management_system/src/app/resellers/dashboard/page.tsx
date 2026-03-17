@@ -1,9 +1,11 @@
+"use client"
 import React from 'react'
+import HeaderReseller from '@/app/components/layout/headerReseller'
 
 const s = () => {
   return (
-    <div>
-        s
+    <div className="min-h-screen bg-[#F5F3EE]">
+      <HeaderReseller/>
     </div>
   )
 }
