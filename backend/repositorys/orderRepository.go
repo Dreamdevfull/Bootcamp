@@ -10,7 +10,7 @@ type OrderRepository interface {
 	UpdateStatus(orderID int, status string) error
 	FindByID(id int) (*models.Orders, error)
 	GetItemsByOrderID(orderID int) ([]models.OrderItems, error)
-	CreateOrder(order *models.Orders, items []models.OrderItems) error
+	CreateOrderWithItems(order *models.Orders, items []models.OrderItems) error
 }
 
 type orderRepository struct {
@@ -46,14 +46,16 @@ func (r *orderRepository) GetItemsByOrderID(orderID int) ([]models.OrderItems, e
 	return items, err
 }
 
-func (r *orderRepository) CreateOrder(order *models.Orders, items []models.OrderItems) error {
-	// ใช้ Transaction เพื่อความปลอดภัย: ถ้าบันทึกอย่างใดอย่างหนึ่งพลาด ให้ Rollback ทั้งหมด
+func (r *orderRepository) CreateOrderWithItems(order *models.Orders, items []models.OrderItems) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
+		// บันทึก Order หลักก่อน
 		if err := tx.Create(order).Error; err != nil {
 			return err
 		}
+
+		// วนลูปบันทึก OrderItems โดยผูกกับ Order ID ที่เพิ่งสร้าง
 		for i := range items {
-			items[i].Order_id = int(order.Id) // เชื่อม FK Order [cite: 8]
+			items[i].Order_id = int(order.Id) // เชื่อม FK
 			if err := tx.Create(&items[i]).Error; err != nil {
 				return err
 			}
