@@ -11,6 +11,7 @@ import (
 func main() {
 	app := fiber.New()
 	config.DatabaseConnected()
+	// config.AutoMigrate(config.DB)
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"},

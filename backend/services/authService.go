@@ -56,7 +56,7 @@ func (s *AuthService) Register(input dto.RegisterRequest) error {
 	slug := strings.ToLower(strings.ReplaceAll(input.Shop_name, " ", "-"))
 
 	shop := models.Shops{
-		User_id:   int(user.Id),
+		User_id:   uint(user.Id),
 		Shop_name: input.Shop_name,
 		Shop_slug: slug,
 	}

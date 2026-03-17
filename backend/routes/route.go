@@ -13,12 +13,16 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	app.Post("/logout", c.AuthController.Logout)
 	//=========================================
 	app.Get("/api/auth/me", middlewares.AuthMiddleware(""), c.AuthController.Me)
-	adminGroup := app.Group("/admin", middlewares.AuthMiddleware("admin"))
 
+	adminGroup := app.Group("/admin", middlewares.AuthMiddleware("admin"))
 	adminGroup.Get("/products", c.ProductsController.GetProducts)
 	adminGroup.Post("/products/add", c.ProductsController.CreatedProduct)
 	adminGroup.Patch("/products/edit/:id", c.ProductsController.UpdateProduct)
+	//=================
 	adminGroup.Delete("/products/delete/:id", c.ProductsController.DeleteProduct)
+	adminGroup.Post("/products/:id/restore", c.ProductsController.Restore)
+	adminGroup.Post("/products/empty-garbage", c.ProductsController.EmptyGarbage)
+
 	adminGroup.Get("/resellers", c.UserController.GetResellers)
 
 	//==========================================
@@ -27,6 +31,18 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	adminGroup.Get("/orders", c.OrderController.GetOrders)
 	adminGroup.Patch("/orders/:id/complete", c.OrderController.QuickComplete)
 
-	// resellerGroup := app.Group("/reseller", middlewares.AuthMiddleware("reseller"))
+	// --------------------------------------------------
+	resellerGroup := app.Group("/reseller", middlewares.AuthMiddleware("reseller"))
+	resellerGroup.Get("/catalog", c.ResellerController.GetCatalog)
+	resellerGroup.Post("/catalog/add", c.ResellerController.AddProductToShop)
+	resellerGroup.Get("/my-products", c.ResellerController.GetMyShopProducts)
+	resellerGroup.Patch("/my-products/update-price", c.ResellerController.UpdateProductPrice)
+	// resellerGroup.Get("/shop", c.ShopController.MyShop)
 
+	app.Get("/shop/:shop_slug", c.ShopController.GetShopFront)
+	app.Post("/cart/add", c.OrderController.AddToCart)
+
+	app.Get("/test/:name", func(c fiber.Ctx) error {
+		return c.SendString("Value is: " + c.Params("name"))
+	})
 }

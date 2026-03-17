@@ -10,6 +10,7 @@ type OrderRepository interface {
 	UpdateStatus(orderID int, status string) error
 	FindByID(id int) (*models.Orders, error)
 	GetItemsByOrderID(orderID int) ([]models.OrderItems, error)
+	CreateOrderWithItems(order *models.Orders, items []models.OrderItems) error
 }
 
 type orderRepository struct {
@@ -43,4 +44,22 @@ func (r *orderRepository) GetItemsByOrderID(orderID int) ([]models.OrderItems, e
 
 	err := r.db.Where("order_id = ?", orderID).Find(&items).Error
 	return items, err
+}
+
+func (r *orderRepository) CreateOrderWithItems(order *models.Orders, items []models.OrderItems) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		// บันทึก Order หลักก่อน
+		if err := tx.Create(order).Error; err != nil {
+			return err
+		}
+
+		// วนลูปบันทึก OrderItems โดยผูกกับ Order ID ที่เพิ่งสร้าง
+		for i := range items {
+			items[i].Order_id = int(order.Id) // เชื่อม FK
+			if err := tx.Create(&items[i]).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
