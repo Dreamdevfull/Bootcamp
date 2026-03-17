@@ -1,13 +1,16 @@
 package dto
 
-type CheckoutRequest struct {
-	ProductID       uint   `json:"product_id" validate:"required"`
-	Quantity        int    `json:"quantity" validate:"required,min=1"`
-	CustomerName    string `json:"customer_name" validate:"required"`
-	CustomerPhone   string `json:"customer_phone" validate:"required,len=10"`
-	ShippingAddress string `json:"shipping_address" validate:"required"`
+type CartItem struct {
+	ProductID uint `json:"product_id"`
+	Quantity  int  `json:"quantity"`
 }
 
+type CheckoutRequest struct {
+	Items           []CartItem `json:"items"` // รองรับสินค้าหลายชนิด
+	CustomerName    string     `json:"customer_name"`
+	CustomerPhone   string     `json:"customer_phone"`
+	ShippingAddress string     `json:"shipping_address"`
+}
 type CheckoutResponse struct {
 	OrderNumber string `json:"order_number"`
 	Message     string `json:"message"`

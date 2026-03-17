@@ -107,6 +107,7 @@ func (r *resellerRepository) UpdatePrice(shopProductID uint, newPrice float64) e
 	return r.db.Model(&models.ShopProducts{}).
 		Where("id = ?", shopProductID).
 		Update("selling_price", newPrice).Error
+}
 func (r *productRepository) DeleteFromShop(shopID uint, productID uint) error {
 	// ใช้ .Unscoped() เพื่อสั่ง DELETE FROM ... ในฐานข้อมูลจริงๆ
 	return r.db.Unscoped().
