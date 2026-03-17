@@ -140,7 +140,7 @@ func (s *orderService) ProcessCheckout(slug string, req dto.CheckoutRequest) (*m
 		Shipping_address: req.ShippingAddress,
 		Total_amount:     totalAmount,
 		Reseller_profit:  totalProfit,
-		Status:           "pending",
+		Status:           "awaiting_payment",
 		OrderItems:       items,
 	}
 
@@ -156,8 +156,8 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		return nil, errors.New("ไม่พบออเดอร์")
 	}
 
-	if order.Status != "pending" {
-		return nil, errors.New("ออเดอร์นี้ชำระเงินไปแล้ว")
+	if order.Status != "awaiting_payment" {
+		return nil, errors.New("ออเดอร์นี้ได้ทำการชำระเงินเรียบร้อยแล้ว")
 	}
 
 	// BR-29: ตัดสต็อกสินค้า
