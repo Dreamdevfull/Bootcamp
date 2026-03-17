@@ -3,6 +3,7 @@ import HeaderAdmin from '@/app/components/layout/headeradmin'
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from 'react'
 import { DataTable } from '@/app/components/ui/datatable';
+import Main from '@/app/components/layout/main';
 
 interface orders {
   id: number,
@@ -40,7 +41,8 @@ const OrdersPage = () => {
   return (
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
-      <div className='p-5'>
+      <Main />
+      <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading} />
       </div>
     </div>

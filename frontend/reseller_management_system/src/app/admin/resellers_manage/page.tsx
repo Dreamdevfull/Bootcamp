@@ -1,30 +1,29 @@
 "use client"
 import HeaderAdmin from '@/app/components/layout/headeradmin'
-import { useEffect, useState } from 'react';
-import { DataTable } from '@/app/components/ui/datatable';
-import { productColumns as columns } from '@/app/components/columns/productadmin';
-import Main from '@/app/components/layout/main';
+import Main from '@/app/components/layout/main'
+import { DataTable } from '@/app/components/ui/datatable'
+import { ResellersManage as columns } from '@/app/components/columns/resellersmanage';
+import  { useEffect, useState } from 'react';
 
-interface Product {
+interface Approval {
   id: number;
   name: string;
-  description: string;
-  Image: string;
-  cost_price: number;
-  min_price: number;
-  stock: number;
-  Create_at: string;
+  email: string;
+  phone: string;
+  status: string;
+  address: string;
+  created_at: string;
 }
 
-const ProductsPage = () => {
-  const [data, setData] = useState<Product[]>([]);
+const ResellersManagepage = () => {
+  const [data, setData] = useState<Approval[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${API_URL}/admin/products`, {
+        const res = await fetch(`${API_URL}/admin/resellers`, {
           credentials: "include",
         });
         const result = await res.json();
@@ -49,4 +48,4 @@ const ProductsPage = () => {
   )
 }
 
-export default ProductsPage
+export default ResellersManagepage;
