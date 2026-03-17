@@ -53,16 +53,24 @@ func (ctrl *OrderController) QuickComplete(c fiber.Ctx) error {
 	})
 }
 
-func (c *OrderController) Checkout(ctx fiber.Ctx) error {
-	slug := ctx.Params("slug")
-	var req dto.CheckoutRequest
-	if err := ctx.Bind().Body(&req); err != nil {
-		return ctx.Status(400).JSON(fiber.Map{"error": "ข้อมูลไม่ถูกต้อง"})
+// controllers/order_controller.go
+
+func (oc *OrderController) AddToCart(c fiber.Ctx) error {
+	slug := c.Params("slug")
+	var req dto.CartItem
+
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "ข้อมูลไม่ถูกต้อง"})
 	}
 
-	res, err := c.service.ProcessCheckout(slug, req)
+	item, err := oc.service.AddItemToCart(slug, req)
 	if err != nil {
-		return ctx.Status(400).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
-	return ctx.JSON(res)
+
+	// ส่งข้อมูลสินค้าที่เตรียมไว้กลับไปให้ลูกค้า (เพื่อไปแสดงในหน้าตะกร้า)
+	return c.JSON(fiber.Map{
+		"message": "เพิ่มสินค้าลงตะกร้าแล้ว",
+		"item":    item,
+	})
 }
