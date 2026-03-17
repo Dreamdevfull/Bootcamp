@@ -90,56 +90,104 @@ import (
 // 	}
 // }
 
+// func AuthMiddleware(requiredRole string) fiber.Handler {
+// 	return func(c fiber.Ctx) error {
+
+// 		tokenString := c.Cookies("jwt")
+// 		// fmt.Println("COOKIE:", c.Cookies("jwt"))
+// 		// fmt.Println("HEADER:", c.Get("Authorization"))
+// 		// fmt.Println("ALL:", c.Get("Cookie"))
+// 		// fmt.Println("SECRET:", os.Getenv("JWT_SECRET"))
+
+// 		if tokenString == "" {
+
+// 			authHeader := c.Get("Authorization")
+
+// 			if strings.HasPrefix(authHeader, "Bearer ") {
+// 				tokenString = strings.TrimPrefix(authHeader, "Bearer ")
+// 			}
+// 		}
+
+// 		if tokenString == "" {
+// 			return c.Status(401).JSON(fiber.Map{
+// 				"error": "Unauthorized: Please login first",
+// 			})
+// 		}
+
+// 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
+// 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+// 				return nil, fmt.Errorf("unexpected signing method")
+// 			}
+
+// 			return []byte(os.Getenv("JWT_SECRET")), nil
+// 		})
+
+// 		if err != nil || !token.Valid {
+// 			return c.Status(401).JSON(fiber.Map{
+// 				"error": "Invalid token",
+// 			})
+// 		}
+
+// 		claims := token.Claims.(jwt.MapClaims)
+
+// 		role := claims["role"].(string)
+
+// 		if requiredRole != "" && role != requiredRole {
+// 			return c.Status(403).JSON(fiber.Map{
+// 				"error": "Forbidden",
+// 			})
+// 		}
+
+// 		c.Locals("user_id", claims["user_id"])
+// 		c.Locals("role", role)
+
+// 		return c.Next()
+// 	}
+// }
+
 func AuthMiddleware(requiredRole string) fiber.Handler {
 	return func(c fiber.Ctx) error {
 
 		tokenString := c.Cookies("jwt")
-		// fmt.Println("COOKIE:", c.Cookies("jwt"))
-		// fmt.Println("HEADER:", c.Get("Authorization"))
-		// fmt.Println("ALL:", c.Get("Cookie"))
-		// fmt.Println("SECRET:", os.Getenv("JWT_SECRET"))
-
 		if tokenString == "" {
-
 			authHeader := c.Get("Authorization")
-
 			if strings.HasPrefix(authHeader, "Bearer ") {
 				tokenString = strings.TrimPrefix(authHeader, "Bearer ")
 			}
 		}
 
 		if tokenString == "" {
-			return c.Status(401).JSON(fiber.Map{
-				"error": "Unauthorized: Please login first",
-			})
+			return c.Status(401).JSON(fiber.Map{"error": "Unauthorized: Please login first"})
 		}
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method")
 			}
-
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
 
 		if err != nil || !token.Valid {
-			return c.Status(401).JSON(fiber.Map{
-				"error": "Invalid token",
-			})
+			return c.Status(401).JSON(fiber.Map{"error": "Invalid token"})
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
 
-		role := claims["role"].(string)
-
+		role, _ := claims["role"].(string)
 		if requiredRole != "" && role != requiredRole {
-			return c.Status(403).JSON(fiber.Map{
-				"error": "Forbidden",
-			})
+			return c.Status(403).JSON(fiber.Map{"error": "Forbidden"})
 		}
 
-		c.Locals("user_id", claims["user_id"])
+		var userID uint
+		if idVal, ok := claims["user_id"]; ok {
+
+			if val, ok := idVal.(float64); ok {
+				userID = uint(val)
+			}
+		}
+
+		c.Locals("user_id", userID)
 		c.Locals("role", role)
 
 		return c.Next()

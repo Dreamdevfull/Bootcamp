@@ -56,6 +56,9 @@ type ResellerRepository interface {
 	GetCatalog() ([]models.Products, error)
 	GetProductsByID(id uint) (models.Products, error)
 	AddProductToShop(shopProduct *models.ShopProducts) error
+	GetMyShopProducts(shopID uint) ([]models.ShopProducts, error)
+	GetShopProductByID(id uint) (models.ShopProducts, error)
+	UpdatePrice(shopProductID uint, resellingPrice float64) error
 }
 
 type resellerRepository struct {
@@ -84,4 +87,24 @@ func (r *resellerRepository) GetProductsByID(id uint) (models.Products, error) {
 
 func (r *resellerRepository) AddProductToShop(shopProduct *models.ShopProducts) error {
 	return r.db.Create(shopProduct).Error
+}
+
+func (r *resellerRepository) GetMyShopProducts(shopID uint) ([]models.ShopProducts, error) {
+	var myProducts []models.ShopProducts
+	err := r.db.Preload("Product").
+		Where("shop_id = ?", shopID).
+		Find(&myProducts).Error
+	return myProducts, err
+}
+
+func (r *resellerRepository) GetShopProductByID(id uint) (models.ShopProducts, error) {
+	var data models.ShopProducts
+	err := r.db.Preload("Product").First(&data, id).Error
+	return data, err
+}
+
+func (r *resellerRepository) UpdatePrice(shopProductID uint, newPrice float64) error {
+	return r.db.Model(&models.ShopProducts{}).
+		Where("id = ?", shopProductID).
+		Update("selling_price", newPrice).Error
 }
