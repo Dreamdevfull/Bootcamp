@@ -57,7 +57,7 @@ func (s *orderService) QuickComplete(orderID int) error {
 		return err
 	}
 
-	if err := s.walletRepo.AddBalance(order.Shop_id, totalProfit); err != nil {
+	if err := s.walletRepo.AddBalance(order.Shop_id, totalProfit, uint(orderID)); err != nil {
 		return err
 	}
 
