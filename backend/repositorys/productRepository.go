@@ -1,6 +1,8 @@
 package repositorys
 
 import (
+	"time"
+
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"gorm.io/gorm"
 )
@@ -12,6 +14,9 @@ type ProductRepository interface {
 	Update(product *models.Products) error
 	HasActiveOrder(productID uint) (bool, error)
 	Delete(product *models.Products) error
+	GetProductForCheckout(shopID uint, productID uint) (*models.ShopProducts, error)
+	Restore(id uint) error
+	HardDeleteOldRecords(days int) error
 }
 
 type productRepository struct {
@@ -76,4 +81,29 @@ func (r *productRepository) HasActiveOrder(productID uint) (bool, error) {
 func (r *productRepository) Delete(product *models.Products) error {
 
 	return r.db.Delete(product).Error
+}
+func (r *productRepository) GetDeletedProducts() ([]models.Products, error) {
+	var products []models.Products
+	err := r.db.Unscoped().Where("deleted_at IS NOT NULL").Find(&products).Error
+	return products, err
+}
+func (r *productRepository) Restore(id uint) error {
+	// ต้อง Unscoped() เพื่อให้ GORM หาข้อมูลที่ถูกลบเจอ แล้วเซต deleted_at เป็น null
+	return r.db.Unscoped().Model(&models.Products{}).Where("id = ?", id).Update("deleted_at", nil).Error
+}
+
+func (r *productRepository) HardDeleteOldRecords(days int) error {
+	limitDate := time.Now().AddDate(0, 0, -days)
+	// ต้อง Unscoped() เพื่อสั่ง DELETE จริงๆ ออกจากฐานข้อมูล
+	return r.db.Unscoped().Where("deleted_at <= ?", limitDate).Delete(&models.Products{}).Error
+}
+
+func (r *productRepository) GetProductForCheckout(shopID uint, productID uint) (*models.ShopProducts, error) {
+	var shopProduct models.ShopProducts
+
+	err := r.db.Preload("Product").
+		Where("shop_id = ? AND product_id = ?", shopID, productID).
+		First(&shopProduct).Error
+
+	return &shopProduct, err
 }
