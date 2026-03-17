@@ -25,7 +25,7 @@ const HeaderAdmin = () => {
       <div className="flex gap-4">
         <Link href="/admin/dashboard"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">แดชบอร์ด</button></Link>
         <Link href="/admin/products"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">จัดการสินค้า</button></Link>
-        <Link href="/admin/reseller_approval"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">อนุมัติตัวแทน</button></Link>
+        <Link href="/admin/resellers_manage"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">อนุมัติตัวแทน</button></Link>
         <Link href="/admin/orders"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">จัดการออเดอร์</button></Link>
         <ButtonLogout />
       </div>
