@@ -19,13 +19,12 @@ func NewShopService(repo repositorys.ShopRepository, productRepo repositorys.Pro
 }
 
 func (s *shopService) GetShopFrontData(slug string) (*dto.ShopFrontResponse, error) {
-	// 1. หาข้อมูลร้านค้าจาก ShopRepository [cite: 1]
+
 	shop, err := s.repo.GetBySlug(slug)
 	if err != nil {
 		return nil, err
 	}
 
-	// 2. ดึงรายการสินค้าในร้านจาก ProductRepository [cite: 3]
 	shopItems, err := s.repo.GetShopProductsByShopID(shop.Id)
 	if err != nil {
 		return nil, err
@@ -33,7 +32,7 @@ func (s *shopService) GetShopFrontData(slug string) (*dto.ShopFrontResponse, err
 
 	var productList []dto.ShopProductResponse
 	for _, item := range shopItems {
-		// 3. ใช้ ProductRepository ดึงรายละเอียดสินค้าแทนการทำเอง
+
 		p, _ := s.productRepo.FindByID(item.Products_id)
 		productList = append(productList, dto.ShopProductResponse{
 			ProductID:    item.Products_id,
