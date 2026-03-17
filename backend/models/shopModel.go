@@ -4,7 +4,7 @@ import "time"
 
 type Shops struct {
 	Id        uint   `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	User_id   int    `json:"user_id"`
+	User_id   int    `json:"users_id" gorm:"ForeignKey:users_id"`
 	Shop_name string `json:"shop_name"`
 	Shop_slug string `json:"shop_slug" gorm:"uniqueIndex:idx_shop_slug;not null"`
 }
@@ -16,7 +16,7 @@ type Products struct {
 	Image       string    `gorm:"column:image_url"`
 	Cost_price  float64   `json:"cost_price" gorm:"type:decimal(10,2)"`
 	Min_price   float64   `json:"min_price" gorm:"type:decimal(10,2)"`
-	Stock       int       `json:"stock"`
+	Stock       int       `json:"stock" gorm:"type:int;default:0"`
 	Create_at   time.Time `gorm:"column:created_at"`
 }
 
