@@ -100,3 +100,62 @@ func (ctrl *ResellerController) AddProductToShop(c fiber.Ctx) error {
 		"message": "Product added to shop successfully",
 	})
 }
+
+func (ctrl *ResellerController) GetMyShopProducts(c fiber.Ctx) error {
+	userID, ok := c.Locals("user_id").(uint)
+
+	if !ok {
+		return c.Status(401).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Unaunthorized: Invalid user context",
+		})
+	}
+
+	shopID := userID
+
+	data, err := ctrl.services.GetMyShopProducts(shopID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to retieve shop products",
+			"error":   err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status": "success",
+		"total":  len(data),
+		"data":   data,
+	})
+
+}
+
+func (ctrl *ResellerController) UpdateProductPrice(c fiber.Ctx) error {
+	var req dto.UpdatePriceRequest
+
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Invalid request body",
+		})
+
+	}
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Invalid request body",
+		})
+	}
+
+	if err := ctrl.services.UpdateProductPrice(req.ID, req.ResellingPrice); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Price updated successfully",
+	})
+}

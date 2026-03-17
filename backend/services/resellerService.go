@@ -43,6 +43,8 @@ type ResellerService interface {
 	GetCatalog() ([]models.Products, error)
 	GetProductsByID(id uint) (models.Products, error)
 	AddProductToShop(req dto.AddProductToShopRequest) error
+	GetMyShopProducts(shopID uint) ([]models.ShopProducts, error)
+	UpdateProductPrice(shopProductID uint, newPrice float64) error
 }
 
 type resellerService struct {
@@ -83,4 +85,22 @@ func (s *resellerService) AddProductToShop(req dto.AddProductToShopRequest) erro
 		Selling_price: req.Price,
 	}
 	return s.repo.AddProductToShop(&shopProduct)
+}
+
+func (s *resellerService) GetMyShopProducts(shopID uint) ([]models.ShopProducts, error) {
+	return s.repo.GetMyShopProducts(shopID)
+}
+
+func (s *resellerService) UpdateProductPrice(shopProductID uint, resellingPrice float64) error {
+	shopProduct, err := s.repo.GetShopProductByID(shopProductID)
+
+	if err != nil {
+		return errors.New("shop product not found")
+	}
+
+	if resellingPrice < shopProduct.Product.Min_price {
+		return errors.New("price must be at least the minimum price")
+	}
+
+	return s.repo.UpdatePrice(shopProductID, resellingPrice)
 }
