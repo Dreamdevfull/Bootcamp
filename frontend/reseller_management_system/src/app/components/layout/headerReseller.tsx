@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import ButtonLogout from '../ui/button/logout'
 const HeaderReseller = () => {
   return (
     <nav className="sticky top-0 z-50 w-full h-20 bg-[#0d3d30] text-white flex items-center justify-between px-8 shadow-md">
@@ -20,11 +21,12 @@ const HeaderReseller = () => {
       </div>
       
       <div className="flex gap-4">
-        <Link href="/Reseller/dashboard"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">แดชบอร์ด</button></Link>
-        <Link href="/Reseller/products"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">สินค้าส่วนกลาง</button></Link>
-        <Link href="/Reseller/catalog"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">จัดการหน้าร้าน</button></Link>
-        <Link href="/Reseller/orders"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">ออเดอร์ของฉัน</button></Link>
-        <Link href="/Reseller/wallet"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">กระเป๋าเงิน</button></Link>
+        <Link href="/resellers/dashboard"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">แดชบอร์ด</button></Link>
+        <Link href="/resellers/catalog"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">สินค้าส่วนกลาง</button></Link>
+        <Link href="/resellers/shop"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">จัดการหน้าร้าน</button></Link>
+        <Link href="/resellers/orders"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">ออเดอร์ของฉัน</button></Link>
+        <Link href="/resellers/wallet"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">กระเป๋าเงิน</button></Link>
+        <ButtonLogout />
       </div>
     </nav>
   )
