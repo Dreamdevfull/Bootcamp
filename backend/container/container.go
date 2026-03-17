@@ -20,14 +20,16 @@ func NewContainer(db *gorm.DB) *Container {
 
 	userRepo := repositorys.NewUserRepository(db)
 
+	productRepo := repositorys.NewProductRepository(db)
+	productService := services.NewProductService(productRepo)
+	productsController := controllers.NewProductsController(productService)
+
 	shopRepo := repositorys.NewShopRepository(db)
-	shopService := services.NewShopService(shopRepo)
+	shopService := services.NewShopService(shopRepo, productRepo)
 	shopsController := controllers.NewShopController(shopService)
 
 	authService := services.NewAuthService(userRepo, shopRepo)
-
 	authController := controllers.NewAuthController(authService)
-
 	//=========================================================
 
 	orderRepo := repositorys.NewOrderRepository(db)
@@ -41,10 +43,6 @@ func NewContainer(db *gorm.DB) *Container {
 
 	userService := services.NewUserService(userRepo)
 	userController := controllers.NewUserController(userService)
-
-	productRepo := repositorys.NewProductRepository(db)
-	productService := services.NewProductService(productRepo)
-	productsController := controllers.NewProductsController(productService)
 
 	return &Container{
 		AuthController:     authController,
