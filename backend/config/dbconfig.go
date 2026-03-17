@@ -36,13 +36,13 @@ func DatabaseConnected() *gorm.DB {
 }
 func AutoMigrate(database *gorm.DB) {
 	database.AutoMigrate(
-		&models.Users{},
-		&models.Shops{},
-		&models.ShopProducts{},
+		// &models.Users{},
+		// &models.Shops{},
+		// &models.ShopProducts{},
 		&models.Products{},
-		&models.Orders{},
-		&models.OrderItems{},
-		&models.Wallet{},
-		models.WalletLog{},
+		// &models.Orders{},
+		// &models.OrderItems{},
+		// &models.Wallet{},
+		// models.WalletLog{},
 	)
 }
