@@ -4,7 +4,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div>
+    <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
       <h1>Admin Page</h1>
     </div>
