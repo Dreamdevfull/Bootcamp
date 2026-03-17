@@ -95,7 +95,6 @@ func (s *ProductService) DeleteProduct(id uint) error {
 		return errors.New("product not found")
 	}
 
-	// ตรวจว่ามี order ที่ยังไม่เสร็จหรือไม่
 	hasActiveOrder, err := s.productRepo.HasActiveOrder(id)
 	if err != nil {
 		return err
