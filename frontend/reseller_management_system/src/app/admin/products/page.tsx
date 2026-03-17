@@ -2,7 +2,7 @@
 import HeaderAdmin from '@/app/components/layout/headeradmin'
 import { useEffect, useState } from 'react';
 import { DataTable } from '@/app/components/ui/datatable';
-import { ColumnDef } from '@tanstack/table-core';
+import { productColumns as columns } from '@/app/components/columns/productadmin';
 
 interface Product {
   id: number;
@@ -14,12 +14,6 @@ interface Product {
   stock: number;
   Create_at: string;
 }
-
-const columns: ColumnDef<Product>[] = [
-  { accessorKey: "name", header: "ชื่อ" },
-  { accessorKey: "cost_price", header: "ราคาทุน" },
-  { accessorKey: "description", header: "รายละเอียด" },
-];
 
 const ProductsPage = () => {
   const [data, setData] = useState<Product[]>([]);

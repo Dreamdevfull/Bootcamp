@@ -16,7 +16,13 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel(),});
 
-  if (loading) return <p>กำลังโหลด...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-48">
+        <span className="text-gray-500">กำลังโหลด...</span>
+      </div>
+    );
+  };
 
   return (
     <div className="rounded-md border">

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import ButtonLogout from '../ui/buttonlogout';
+import ButtonLogout from '@/app/components/ui/button/logout';
 
 const HeaderAdmin = () => {
   
