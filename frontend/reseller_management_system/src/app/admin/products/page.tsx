@@ -38,10 +38,10 @@ const ProductsPage = () => {
       fetchData();
     }, [API_URL]);
   return (
-    <div>
+    <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
       <div className='p-8'>
-        <DataTable columns={columns} data={data} loading={loading} />
+        <DataTable columns={columns} data={data} loading={loading}  />
       </div>
     </div>
   )

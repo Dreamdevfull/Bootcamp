@@ -4,7 +4,7 @@ import React from 'react'
 
 const ResellerApprovalpage = () => {
   return (
-    <div>
+    <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
       <h1>Reseller Approval</h1>
     </div>

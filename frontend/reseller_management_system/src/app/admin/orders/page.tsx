@@ -38,7 +38,7 @@ const OrdersPage = () => {
   }, [API_URL]);
 
   return (
-    <div>
+    <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
       <div className='p-5'>
         <DataTable columns={columns} data={data} loading={loading} />
