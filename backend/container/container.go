@@ -35,7 +35,7 @@ func NewContainer(db *gorm.DB) *Container {
 	orderRepo := repositorys.NewOrderRepository(db)
 	walletRepo := repositorys.NewWalletRepository(db)
 	orderService := services.NewOrderService(orderRepo, walletRepo, productRepo, shopRepo)
-	orderController := controllers.NewOrderController(orderService)
+	orderController := controllers.NewOrderController(orderService, shopService)
 
 	resellerRepo := repositorys.NewResellerRepository(db)
 	resellerService := services.NewResellerService(resellerRepo)
