@@ -32,7 +32,11 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	resellerGroup.Get("/catalog", c.ResellerController.GetCatalog)
 	resellerGroup.Post("/catalog/add", c.ResellerController.AddProductToShop)
 
-	resellerGroup.Get("/shop", c.ShopController.MyShop)
+	// resellerGroup.Get("/shop", c.ShopController.MyShop)
 
-	app.Get("/shop/:shop_slug", c.ShopController.GetShop)
+	app.Get("/shop/:shop_slug", c.ShopController.GetShopFront)
+
+	app.Get("/test/:name", func(c fiber.Ctx) error {
+		return c.SendString("Value is: " + c.Params("name"))
+	})
 }

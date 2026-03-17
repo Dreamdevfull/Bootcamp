@@ -1,34 +1,52 @@
 package services
 
 import (
-	"os"
-
-	"github.com/Dreamdevfull/Bootcamp/models"
+	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
 )
 
-type ShopService struct {
-	repo repositorys.ShopRepository
+type ShopService interface {
+	GetShopFrontData(slug string) (*dto.ShopFrontResponse, error)
 }
 
-func NewShopService(repo repositorys.ShopRepository) *ShopService {
-	return &ShopService{repo}
+type shopService struct {
+	repo        repositorys.ShopRepository
+	productRepo repositorys.ProductRepository
 }
 
-func (s *ShopService) GetShop(slug string) ([]models.Products, string, error) {
-	return s.repo.GetShopProducts(slug)
+func NewShopService(repo repositorys.ShopRepository, productRepo repositorys.ProductRepository) ShopService {
+	return &shopService{repo, productRepo}
 }
 
-func (s *ShopService) GetMyShop(userID interface{}) (string, string, error) {
-
-	shop, err := s.repo.FindByUserID(userID)
+func (s *shopService) GetShopFrontData(slug string) (*dto.ShopFrontResponse, error) {
+	// 1. หาข้อมูลร้านค้าจาก ShopRepository [cite: 1]
+	shop, err := s.repo.GetBySlug(slug)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
-	baseURL := os.Getenv("FRONTEND_URL")
+	// 2. ดึงรายการสินค้าในร้านจาก ProductRepository [cite: 3]
+	shopItems, err := s.repo.GetShopProductsByShopID(shop.Id)
+	if err != nil {
+		return nil, err
+	}
 
-	shopURL := baseURL + "/shop/" + shop.Shop_slug
+	var productList []dto.ShopProductResponse
+	for _, item := range shopItems {
+		// 3. ใช้ ProductRepository ดึงรายละเอียดสินค้าแทนการทำเอง
+		p, _ := s.productRepo.FindByID(item.Products_id)
+		productList = append(productList, dto.ShopProductResponse{
+			ProductID:    item.Products_id,
+			ProductName:  p.Name,
+			Description:  p.Description,
+			ImageUrl:     p.Image,
+			SellingPrice: item.Selling_price,
+			Stock:        p.Stock,
+		})
+	}
 
-	return shop.Shop_name, shopURL, nil
+	return &dto.ShopFrontResponse{
+		ShopName: shop.Shop_name,
+		Products: productList,
+	}, nil
 }
