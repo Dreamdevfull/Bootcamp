@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"github.com/Dreamdevfull/Bootcamp/dto"
@@ -105,4 +106,30 @@ func (s *ProductService) DeleteProduct(id uint) error {
 	}
 
 	return s.productRepo.Delete(product)
+}
+
+// 1. ฟังก์ชันสั่งลบจริง (ล้างถังขยะ)
+func (s *ProductService) EmptyGarbage() error {
+	const daysToKeep = 30 // กำหนดตรงนี้เลยว่ากี่วันลบ
+	log.Printf("Service: กำลังล้างสินค้าที่ถูก Soft Delete เกิน %d วัน", daysToKeep)
+	return s.productRepo.HardDeleteOldRecords(daysToKeep)
+}
+
+// 2. ฟังก์ชันตั้งเวลาที่จะให้ระบบรันเอง (Background Task)
+func (s *ProductService) StartCleanupScheduler() {
+	go func() {
+		// รันทุกๆ 24 ชั่วโมง
+		ticker := time.NewTicker(24 * time.Hour)
+		for range ticker.C {
+			err := s.EmptyGarbage()
+			if err != nil {
+				log.Println("Scheduler Error:", err)
+			}
+		}
+	}()
+}
+
+// ฟังก์ชันกู้คืนสินค้า
+func (s *ProductService) RestoreProduct(id uint) error {
+	return s.productRepo.Restore(id)
 }
