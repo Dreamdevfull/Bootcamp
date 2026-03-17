@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Shops struct {
 	Id        uint   `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
@@ -10,14 +14,15 @@ type Shops struct {
 }
 
 type Products struct {
-	Id          uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Image       string    `gorm:"column:image_url"`
-	Cost_price  float64   `json:"cost_price" gorm:"type:decimal(10,2)"`
-	Min_price   float64   `json:"min_price" gorm:"type:decimal(10,2)"`
-	Stock       int       `json:"stock" gorm:"type:int;default:0"`
-	Create_at   time.Time `gorm:"column:created_at"`
+	Id          uint           `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+	Name        string         `json:"name"`
+	Description string         `json:"description"`
+	Image       string         `gorm:"column:image_url"`
+	Cost_price  float64        `json:"cost_price" gorm:"type:decimal(10,2)"`
+	Min_price   float64        `json:"min_price" gorm:"type:decimal(10,2)"`
+	Stock       int            `json:"stock" gorm:"type:int;default:0"`
+	Create_at   time.Time      `gorm:"column:created_at"`
+	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
 type ShopProducts struct {

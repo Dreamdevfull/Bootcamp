@@ -109,3 +109,8 @@ func (r *resellerRepository) UpdatePrice(shopProductID uint, newPrice float64) e
 		Where("id = ?", shopProductID).
 		Update("selling_price", newPrice).Error
 }
+func (r *productRepository) DeleteFromShop(shopID uint, productID uint) error {
+	return r.db.Unscoped().
+		Where("shop_id = ? AND product_id = ?", shopID, productID).
+		Delete(&models.ShopProducts{}).Error
+}

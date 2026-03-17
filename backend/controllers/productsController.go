@@ -133,3 +133,18 @@ func (p *ProductsController) DeleteProduct(c fiber.Ctx) error {
 		"message": "product deleted successfully",
 	})
 }
+func (p *ProductsController) Restore(ctx fiber.Ctx) error {
+	id, _ := strconv.Atoi(ctx.Params("id"))
+
+	if err := p.service.RestoreProduct(uint(id)); err != nil {
+		return ctx.Status(400).JSON(fiber.Map{"error": "cant restore product"})
+	}
+
+	return ctx.JSON(fiber.Map{"message": "restore product successfully"})
+}
+func (p *ProductsController) EmptyGarbage(c fiber.Ctx) error {
+	if err := p.service.EmptyGarbage(); err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "cant empty garbage"})
+	}
+	return c.JSON(fiber.Map{"message": "empty garbage successfully"})
+}
