@@ -193,6 +193,21 @@ func (ctrl *ResellerController) RemoveProductFromShop(c fiber.Ctx) error {
 	})
 }
 
+func (p *ResellerController) GetOrdersForReseller(c fiber.Ctx) error {
+	// ดึง userId จาก Middleware (JWT)
+	resellerID := c.Locals("user_id").(uint)
+
+	result, err := p.services.GetOrdersForReseller(resellerID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"message": "ไม่สามารถดึงข้อมูลออเดอร์ได้"})
+	}
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"data":    result,
+  })
+} 
+    
 func (ctrl *ResellerController) GetWallet(c fiber.Ctx) error {
 	userID, ok := c.Locals("user_id").(uint)
 	if !ok {

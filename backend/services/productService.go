@@ -35,7 +35,7 @@ func (s *ProductService) CreateProduct(input dto.AddProductRequest, imageBytes [
 	product := models.Products{
 		Name:        input.Name,
 		Description: input.Description,
-		Image:       imagePath,
+		Image:       imagePath, //input.ImageURL, // เปลี่ยนมาใช้ path ที่ได้จากการอัปโหลด
 		Cost_price:  input.CostPrice,
 		Min_price:   input.MinPrice,
 		Stock:       input.Stock,
