@@ -44,8 +44,9 @@ type ResellerService interface {
 	GetProductsByID(id uint) (models.Products, error)
 	AddProductToShop(req dto.AddProductToShopRequest) error
 	GetMyShopProducts(shopID uint) ([]models.ShopProducts, error)
-	UpdateProductPrice(shopProductID uint, newPrice float64) error
+	UpdateProductPrice(userID uint, shopProductID uint, newPrice float64) error
 	RemoveProductFromShop(userID uint, productID uint) error
+	GetWalletByUserID(userID uint) (*models.Wallet, error)
 }
 
 type resellerService struct {
@@ -92,7 +93,7 @@ func (s *resellerService) GetMyShopProducts(shopID uint) ([]models.ShopProducts,
 	return s.repo.GetMyShopProducts(shopID)
 }
 
-func (s *resellerService) UpdateProductPrice(shopProductID uint, resellingPrice float64) error {
+func (s *resellerService) UpdateProductPrice(userID uint, shopProductID uint, resellingPrice float64) error {
 	shopProduct, err := s.repo.GetShopProductByID(shopProductID)
 
 	if err != nil {
@@ -117,4 +118,9 @@ func (s *resellerService) RemoveProductFromShop(userID uint, productID uint) err
 
 	return s.repo.DeleteFromShop(userID, productID)
 
+}
+
+func (s *resellerService) GetWalletByUserID(userID uint) (*models.Wallet, error) {
+
+	return s.repo.GetWalletByUserID(userID)
 }

@@ -3,9 +3,10 @@ package models
 import "time"
 
 type Wallet struct {
-	Id      uint    `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	User_id int     `json:"user_id" gorm:"ForeignKey:User_id;UniqueIndex:idx_user_id;not null"`
-	Balance float64 `json:"balance" gorm:"type:decimal(10,2)"`
+	Id         uint        `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+	User_id    int         `json:"user_id" gorm:"ForeignKey:User_id;UniqueIndex:idx_user_id;not null"`
+	Balance    float64     `json:"balance" gorm:"type:decimal(10,2)"`
+	WalletLogs []WalletLog `json:"wallet_logs" gorm:"foreignKey:Wallet_id"`
 }
 
 type WalletLog struct {

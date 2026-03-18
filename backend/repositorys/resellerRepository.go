@@ -61,6 +61,8 @@ type ResellerRepository interface {
 	UpdatePrice(shopProductID uint, resellingPrice float64) error
 	DeleteFromShop(shopID uint, productID uint) error
 	HasActiveOrder(productID uint, shopID uint) (bool, error)
+	GetWalletByUserID(userID uint) (*models.Wallet, error)
+	CreateWallet(wallet *models.Wallet) error
 }
 
 type resellerRepository struct {
@@ -136,4 +138,19 @@ func (r *resellerRepository) HasActiveOrder(productID uint, shopID uint) (bool, 
 	}
 
 	return count > 0, nil
+}
+
+func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {
+	var wallet models.Wallet
+
+	err := r.db.Preload("WalletLogs").Where("user_id = ?", userID).First(&wallet).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &wallet, nil
+}
+
+func (r *resellerRepository) CreateWallet(wallet *models.Wallet) error {
+	return r.db.Create(wallet).Error
 }
