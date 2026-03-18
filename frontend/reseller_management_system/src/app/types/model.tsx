@@ -37,7 +37,7 @@ export interface Orders {
   }[];
 }
 
-interface Approval {
+export interface Approval {
   id: number;
   name: string;
   email: string;
@@ -81,4 +81,24 @@ export interface ShopProducts {
     Create_at: string
   }
   selling_price: number
+}
+
+export interface OrderReseller {
+  order_number: string;
+  customer_name: string;
+  items: string;
+  total_amount: number;
+  my_profit: number;
+  status: string;
+}
+
+export interface Wallet {
+  balance: number;
+  history: {
+    id: number;
+    wallet_id: number;
+    order_id: number;
+    amount: number;
+    created_at: string;
+  }[]
 }
