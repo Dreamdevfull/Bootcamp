@@ -149,7 +149,8 @@ func (ctrl *ResellerController) UpdateProductPrice(c fiber.Ctx) error {
 		})
 	}
 
-	if err := ctrl.services.UpdateProductPrice(req.ID, req.ResellingPrice); err != nil {
+	userID, _ := c.Locals("user_id").(uint)
+	if err := ctrl.services.UpdateProductPrice(userID, req.ID, req.ResellingPrice); err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": err.Error(),
@@ -204,5 +205,30 @@ func (p *ResellerController) GetOrdersForReseller(c fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"success": true,
 		"data":    result,
+  })
+} 
+    
+func (ctrl *ResellerController) GetWallet(c fiber.Ctx) error {
+	userID, ok := c.Locals("user_id").(uint)
+	if !ok {
+		return c.Status(401).JSON(fiber.Map{
+			"message": "Unauthorized",
+		})
+	}
+
+	wallet, err := ctrl.services.GetWalletByUserID(userID)
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"status":  "error",
+			"message": "ไม่พบข้อมูลกระเป๋าเงิน",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status": "success",
+		"data": fiber.Map{
+			"balance": wallet.Balance,
+			"history": wallet.WalletLogs,
+		},
 	})
 }
