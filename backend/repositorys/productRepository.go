@@ -12,6 +12,7 @@ type ProductRepository interface {
 	GetProducts() ([]models.Products, error)
 	FindByID(id uint) (*models.Products, error)
 	Update(product *models.Products) error
+	UpdateStock(productID uint, quantity int) error
 	HasActiveOrder(productID uint) (bool, error)
 	Delete(product *models.Products) error
 	GetProductForCheckout(shopID uint, productID uint) (*models.ShopProducts, error)
@@ -59,6 +60,13 @@ func (r *productRepository) FindByID(id uint) (*models.Products, error) {
 func (r *productRepository) Update(product *models.Products) error {
 
 	return r.db.Save(product).Error
+}
+
+func (r *productRepository) UpdateStock(productID uint, quantity int) error {
+
+	return r.db.Model(&models.Products{}).
+		Where("id = ?", productID).
+		Update("stock", gorm.Expr("stock + ?", quantity)).Error
 }
 
 func (r *productRepository) HasActiveOrder(productID uint) (bool, error) {
