@@ -1,6 +1,6 @@
 "use client"
 import { ColumnDef } from '@tanstack/table-core';
-import CompletedButton from '@/app/components/ui/button/order/completedbutton';
+import CompletedButton from '@/app/components/ui/admin/button/order/completedbutton';
 
 interface Orders {
   id: number;

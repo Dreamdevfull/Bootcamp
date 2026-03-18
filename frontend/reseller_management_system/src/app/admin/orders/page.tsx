@@ -1,6 +1,6 @@
 "use client"
 import HeaderAdmin from '@/app/components/layout/headeradmin'
-import { ManageOrderAdmin as columns } from "@/app/components/columns/manageorderadmin";
+import { ManageOrderAdmin as columns } from "@/app/components/columnsadmin/manageorderadmin";
 import { useEffect, useState } from 'react'
 import { DataTable } from '@/app/components/ui/datatable';
 import Main from '@/app/components/layout/main';
