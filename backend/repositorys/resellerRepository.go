@@ -59,6 +59,8 @@ type ResellerRepository interface {
 	GetMyShopProducts(shopID uint) ([]models.ShopProducts, error)
 	GetShopProductByID(id uint) (models.ShopProducts, error)
 	UpdatePrice(shopProductID uint, resellingPrice float64) error
+	DeleteFromShop(shopID uint, productID uint) error
+	HasActiveOrder(productID uint, shopID uint) (bool, error)
 }
 
 type resellerRepository struct {
@@ -109,8 +111,29 @@ func (r *resellerRepository) UpdatePrice(shopProductID uint, newPrice float64) e
 		Where("id = ?", shopProductID).
 		Update("selling_price", newPrice).Error
 }
-func (r *productRepository) DeleteFromShop(shopID uint, productID uint) error {
+
+// func (r *productRepository) DeleteFromShop(shopID uint, productID uint) error {
+// 	return r.db.Unscoped().
+// 		Where("shop_id = ? AND product_id = ?", shopID, productID).
+// 		Delete(&models.ShopProducts{}).Error
+// }
+
+func (r *resellerRepository) DeleteFromShop(shopID uint, productID uint) error {
 	return r.db.Unscoped().
 		Where("shop_id = ? AND product_id = ?", shopID, productID).
 		Delete(&models.ShopProducts{}).Error
+}
+
+func (r *resellerRepository) HasActiveOrder(productID uint, shopID uint) (bool, error) {
+	var count int64
+	err := r.db.Table("order_items").
+		Joins("JOIN orders ON orders.id = order_items.order_id").
+		Where("order_items.product_id = ? AND orders.shop_id = ? AND orders.status != ?", productID, shopID, "completed").
+		Count(&count).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
 }

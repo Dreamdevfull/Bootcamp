@@ -47,6 +47,12 @@ func (p *ProductsController) CreatedProduct(c fiber.Ctx) error {
 		})
 	}
 
+	if req.ImageURL == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "product image is required",
+		})
+	}
+
 	if req.CostPrice <= 0 {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "cost price must be greater than 0",
