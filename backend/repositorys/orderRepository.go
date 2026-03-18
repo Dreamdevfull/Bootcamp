@@ -13,6 +13,7 @@ type OrderRepository interface {
 	CreateOrder(order *models.Orders) error
 	FindOrderByID(id uint) (*models.Orders, error)
 	UpdateOrderStatus(id uint, status string) error
+	FindByOrderNumber(orderNumber string) (*models.Orders, error)
 }
 
 type orderRepository struct {
@@ -60,4 +61,12 @@ func (r *orderRepository) FindOrderByID(id uint) (*models.Orders, error) {
 }
 func (r *orderRepository) UpdateOrderStatus(id uint, status string) error {
 	return r.db.Model(&models.Orders{}).Where("id = ?", id).Update("status", status).Error
+}
+func (r *orderRepository) FindByOrderNumber(orderNumber string) (*models.Orders, error) {
+	var order models.Orders
+	err := r.db.Preload("OrderItems").
+		Where("order_number = ?", orderNumber).
+		First(&order).Error
+
+	return &order, err
 }
