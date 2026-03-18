@@ -141,7 +141,7 @@ func (s *orderService) ProcessCheckout(slug string, req dto.CheckoutRequest) (*m
 		Shipping_address: req.ShippingAddress,
 		Total_amount:     totalAmount,
 		Reseller_profit:  totalProfit,
-		Status:           "awaiting_payment",
+		Status:           "pending",
 		OrderItems:       items,
 	}
 
@@ -157,7 +157,7 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		return nil, errors.New("ไม่พบออเดอร์")
 	}
 
-	if order.Status != "awaiting_payment" {
+	if order.Status != "pending" {
 		return nil, errors.New("ออเดอร์นี้ได้ทำการชำระเงินเรียบร้อยแล้ว")
 	}
 
@@ -167,7 +167,8 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		}
 	}
 
-	order.Status = "pending"
+	// BR-28: อัปเดตสถานะเป็น completed (หรือตาม ENUM ที่คุณตั้ง)
+	order.Status = "shipped"
 	if err := s.repo.UpdateOrderStatus(orderID, order.Status); err != nil {
 		return nil, err
 	}

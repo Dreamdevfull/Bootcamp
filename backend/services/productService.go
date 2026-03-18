@@ -8,6 +8,7 @@ import (
 	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
+	"github.com/Dreamdevfull/Bootcamp/utils"
 )
 
 type ProductService struct {
@@ -18,12 +19,23 @@ func NewProductService(repo repositorys.ProductRepository) *ProductService {
 	return &ProductService{repo}
 }
 
-func (s *ProductService) CreateProduct(input dto.AddProductRequest) (*dto.ProductResponse, error) {
+func (s *ProductService) CreateProduct(input dto.AddProductRequest, imageBytes []byte) (*dto.ProductResponse, error) {
+
+	var imagePath string
+
+	if len(imageBytes) > 0 {
+		// เก็บไว้ในโฟลเดอร์ public/uploads/products
+		path, err := utils.SaveImageAsWebP(imageBytes, "public/uploads/products")
+		if err != nil {
+			return nil, err
+		}
+		imagePath = path
+	}
 
 	product := models.Products{
 		Name:        input.Name,
 		Description: input.Description,
-		Image:       input.ImageURL,
+		Image:       imagePath,
 		Cost_price:  input.CostPrice,
 		Min_price:   input.MinPrice,
 		Stock:       input.Stock,
