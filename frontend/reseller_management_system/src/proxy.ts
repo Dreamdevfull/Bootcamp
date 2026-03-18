@@ -2,25 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 
 const adminRoutes = ["/admin"];
 const resellerRoutes = ["/resellers"];
-const authRoutes = ["/login", "/register"]; 
+const authRoutes = ["/login", "/register", "/"]; 
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const token = req.cookies.get("jwt")?.value;
 
-  if (authRoutes.some((r) => pathname.startsWith(r))) {
+  if (authRoutes.some((r) => pathname === r)) {
     if (token) {
       try {
         // ตรวจ role แล้ว redirect ไปหน้าของคนนั้น
         const res = await fetch("http://localhost:8080/api/auth/me", {
           headers: { Cookie: `jwt=${token}` },
         });
-        console.log("me status:", res.status)
+        console.log("status:", res.status)
 
         if (res.ok) {
           const data = await res.json();
-          console.log("me data:", data)
+          console.log("data:", data)
           if (data.role === "admin") {
             return NextResponse.redirect(new URL("/admin/dashboard", req.url));
           } else if (data.role === "reseller") {
@@ -42,7 +42,6 @@ export default async function proxy(req: NextRequest) {
 
   if (!token) {
     const loginUrl = new URL("/login", req.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -52,7 +51,6 @@ export default async function proxy(req: NextRequest) {
 
   if (!res.ok) {
     const loginUrl = new URL("/login", req.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -60,5 +58,5 @@ export default async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/resellers/:path*", "/login", "/register"],
+  matcher: ["/admin/:path*", "/resellers/:path*", "/login", "/register", "/"],
 };

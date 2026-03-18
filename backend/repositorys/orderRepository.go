@@ -26,7 +26,7 @@ func NewOrderRepository(db *gorm.DB) OrderRepository {
 func (r *orderRepository) FindAll() ([]models.Orders, error) {
 	var orders []models.Orders
 
-	err := r.db.Preload("OrderItems").Find(&orders).Error
+	err := r.db.Preload("Shop").Preload("OrderItems").Find(&orders).Error
 	return orders, err
 }
 

@@ -14,6 +14,7 @@ type Orders struct {
 	Status           string       `json:"status" gorm:"type:ENUM('pending', 'shipped', 'completed')"`
 	Created_at       time.Time    `json:"created_at" gorm:"column:created_at;autoCreateTime"`
 	OrderItems       []OrderItems `json:"order_items" gorm:"foreignKey:Order_id"`
+	Shop             Shops        `json:"shop" gorm:"foreignKey:Shop_id"`
 }
 
 type OrderItems struct {
