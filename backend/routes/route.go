@@ -22,7 +22,6 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	adminGroup.Delete("/products/delete/:id", c.ProductsController.DeleteProduct)
 	adminGroup.Post("/products/:id/restore", c.ProductsController.Restore)
 	adminGroup.Post("/products/empty-garbage", c.ProductsController.EmptyGarbage)
-
 	adminGroup.Get("/resellers", c.UserController.GetResellers)
 
 	//==========================================
@@ -42,6 +41,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	app.Get("/shop/:shop_slug", c.ShopController.GetShopFront)
 	app.Post("/shop/:shop_slug/checkout", c.OrderController.Checkout)
 	app.Post("/shop/:shop_slug/payment/:order_id", c.OrderController.SimulatePayment)
+	app.Get("/track-order", c.OrderController.TrackOrder)
 	// app.Post("/shop/:sh")
 
 	app.Get("/test/:name", func(c fiber.Ctx) error {

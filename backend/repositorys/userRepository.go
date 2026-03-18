@@ -42,7 +42,7 @@ func (r *userRepository) Create(user *models.Users) error {
 func (r *userRepository) FindResellers() ([]models.Users, error) {
 	var resellers []models.Users
 
-	err := r.db.Select("id", "name", "email", "phone", "role", "status", "address", "created_at").
+	err := r.db.Select("id", "name", "email", "phone", "status", "address", "created_at").
 		Where("role = ?", "reseller").
 		Find(&resellers).Error
 

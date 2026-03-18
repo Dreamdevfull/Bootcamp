@@ -21,7 +21,7 @@ export const productColumns: ColumnDef<Product>[] = [
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex;
       const pageSize = table.getState().pagination.pageSize;
-       const pageRowIndex = table.getRowModel().rows.findIndex(r => r.id === row.id);
+      const pageRowIndex = table.getRowModel().rows.findIndex(r => r.id === row.id);
       return (
         <div className="text-center">
           {pageIndex * pageSize + pageRowIndex + 1}

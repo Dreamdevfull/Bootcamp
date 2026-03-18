@@ -15,6 +15,7 @@ type OrderService interface {
 	QuickComplete(orderID int) error
 	ProcessCheckout(slug string, req dto.CheckoutRequest) (*models.Orders, error)
 	ConfirmPayment(orderID uint) (*models.Orders, error)
+	GetOrderTracking(orderNumber string) (*models.Orders, error)
 }
 
 type orderService struct {
@@ -59,7 +60,7 @@ func (s *orderService) QuickComplete(orderID int) error {
 		return err
 	}
 
-	if err := s.walletRepo.AddBalance(order.Shop_id, totalProfit); err != nil {
+	if err := s.walletRepo.AddBalance(order.Shop_id, totalProfit, uint(orderID)); err != nil {
 		return err
 	}
 
@@ -160,18 +161,24 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		return nil, errors.New("ออเดอร์นี้ได้ทำการชำระเงินเรียบร้อยแล้ว")
 	}
 
-	// BR-29: ตัดสต็อกสินค้า
 	for _, item := range order.OrderItems {
 		if err := s.productRepo.UpdateStock(uint(item.Product_id), -item.Quantity); err != nil {
 			return nil, err
 		}
 	}
 
-	// BR-28: อัปเดตสถานะเป็น completed (หรือตาม ENUM ที่คุณตั้ง)
 	order.Status = "pending"
 	if err := s.repo.UpdateOrderStatus(orderID, order.Status); err != nil {
 		return nil, err
 	}
 
+	return order, nil
+}
+
+func (s *orderService) GetOrderTracking(orderNumber string) (*models.Orders, error) {
+	order, err := s.repo.FindByOrderNumber(orderNumber)
+	if err != nil {
+		return nil, err // จะถูกส่งไปเป็น "ไม่พบออเดอร์นี้"
+	}
 	return order, nil
 }

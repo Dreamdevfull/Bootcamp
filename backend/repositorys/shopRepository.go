@@ -55,7 +55,7 @@ func (r *shopRepository) GetShopProducts(shopId uint) ([]models.ShopProducts, er
 }
 func (r *shopRepository) GetShopProductsByShopID(shopID uint) ([]models.ShopProducts, error) {
 	var shopProducts []models.ShopProducts
-	// ใช้ table("shop_products") หรือถ้ามี model แล้วก็ใช้ชื่อ model ได้เลย
+
 	err := r.db.Where("shop_id = ?", shopID).Find(&shopProducts).Error
 	return shopProducts, err
 }
