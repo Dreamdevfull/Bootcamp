@@ -1,7 +1,7 @@
 "use client"
 import { ColumnDef } from '@tanstack/table-core';
 import EditButton from '@/app/components/ui/button/edit';
-import DeleteButton from '@/app/components/ui/button/delete';
+import SoftDeleteButton from '@/app/components/ui/button/softdelete';
 
 interface Product {
   id: number;
@@ -21,9 +21,10 @@ export const productColumns: ColumnDef<Product>[] = [
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex;
       const pageSize = table.getState().pagination.pageSize;
+       const pageRowIndex = table.getRowModel().rows.findIndex(r => r.id === row.id);
       return (
         <div className="text-center">
-          {pageIndex * pageSize + row.index + 1}
+          {pageIndex * pageSize + pageRowIndex + 1}
         </div>
       );
     },
@@ -72,10 +73,10 @@ export const productColumns: ColumnDef<Product>[] = [
   {
     id: "actions",
     header: () => <div className="text-center">จัดการ</div>,
-    cell: () => (
+    cell: ({ row }) => (
       <div className="flex items-center justify-center gap-2">
         <EditButton />
-        <DeleteButton />
+        <SoftDeleteButton id={row.original.id} />
       </div>
     ),
   },
