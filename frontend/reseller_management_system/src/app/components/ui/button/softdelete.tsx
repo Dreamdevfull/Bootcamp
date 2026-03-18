@@ -5,14 +5,14 @@ type Props = {
   onSuccess?: () => void; // optional: บอก parent ให้ refetch
 }
 
-const BockButton = ({ id, onSuccess }: Props) => {
+const SoftDeleteButton = ({ id, onSuccess }: Props) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const handleClick = async () => {
-    const res = await fetch(`${API_URL}/admin/resellers/${id}`, {
-      method: "PATCH",
+    const res = await fetch(`${API_URL}/admin/products/delete/${id}`, {
+      method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ status: "" }),
+      body: JSON.stringify({ deleted: true }),
     });
 
     if (res.ok) {
@@ -23,11 +23,11 @@ const BockButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-      className="text-[#791f1f] border border-[#791f1f] hover:bg-[#fcebeb] rounded-sm p-2 cursor-pointer"
+      className="text-[#791f1f] rounded-lg hover:bg-[#fcebeb] transition cursor-pointer px-4 py-2"
     >
-      ระงับ
+      ลบ
     </button>
   );
 };
 
-export default BockButton;
+export default SoftDeleteButton;

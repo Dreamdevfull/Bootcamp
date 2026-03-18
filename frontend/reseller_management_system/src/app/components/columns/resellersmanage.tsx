@@ -21,9 +21,10 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex;
       const pageSize = table.getState().pagination.pageSize;
+      const pageRowIndex = table.getRowModel().rows.findIndex(r => r.id === row.id);
       return (
         <div className="text-center">
-          {pageIndex * pageSize + row.index + 1}
+          {pageIndex * pageSize + pageRowIndex + 1}
         </div>
       );
     },
@@ -105,7 +106,7 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
       } else if (status === "approved") {
         return (
           <div className="flex justify-center">
-            <BockButton />
+            <BockButton id={row.original.id}/>
           </div>
         );
       } else {
