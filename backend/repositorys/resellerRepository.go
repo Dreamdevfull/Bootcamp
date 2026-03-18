@@ -1,59 +1,16 @@
 package repositorys
 
 import (
+	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"gorm.io/gorm"
 )
 
-// type ResellerRepository interface {
-// 	FindResellers() ([]models.Users, error)
-// 	UpdateStatus(id string, status string) error
-// }
-
-// func (r *resellerRepository) Create(user *models.Users) error {
-// 	panic("unimplemented")
-// }
-
-// func (r *resellerRepository) FindByEmail(email string) (*models.Users, error) {
-// 	panic("unimplemented")
-// }
-
-// type resellerRepository struct {
-// 	db *gorm.DB
-// }
-
-// func NewResellerRepository(db *gorm.DB) ResellerRepository {
-// 	return &resellerRepository{db}
-// }
-
-// func (r *resellerRepository) FindResellers() ([]models.Users, error) {
-// 	var resellers []models.Users
-
-// 	err := r.db.Select("id", "name", "email", "phone", "role", "status", "address", "created_at").
-// 		Where("role = ?", "reseller").
-// 		Find(&resellers).Error
-
-// 	return resellers, err
-// }
-
-// func (r *resellerRepository) UpdateStatus(id string, status string) error {
-// 	result := r.db.Model(&models.Users{}).
-// 		Where("id = ? AND role = ?", id, "reseller").
-// 		Update("status", status)
-
-// 	if result.Error != nil {
-// 		return result.Error
-// 	}
-
-// 	if result.RowsAffected == 0 {
-// 		return errors.New("reseller not found or no changes made")
-// 	}
-
-// 	return nil
-// }
-
 type ResellerRepository interface {
 	GetCatalog() ([]models.Products, error)
+	GetCatalogWithStatus(shopID uint, productID uint) ([]dto.ProductCatalogResponse, error)
+	UpsertShopProduct(data *models.ShopProducts) error
+	GetShopByUserID(userID uint) (models.Shops, error)
 	GetProductsByID(id uint) (models.Products, error)
 	AddProductToShop(shopProduct *models.ShopProducts) error
 	GetMyShopProducts(shopID uint) ([]models.ShopProducts, error)
@@ -64,6 +21,7 @@ type ResellerRepository interface {
 	GetMyOrders(resellerID uint) ([]models.Orders, error)
 	GetWalletByUserID(userID uint) (*models.Wallet, error)
 	CreateWallet(wallet *models.Wallet) error
+	GetProductOwner(productID uint) (uint, error)
 }
 
 type resellerRepository struct {
@@ -152,9 +110,9 @@ func (r *resellerRepository) GetMyOrders(userID uint) ([]models.Orders, error) {
 		Find(&orders).Error
 
 	return orders, err
- 
+
 }
-  
+
 func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {
 	var wallet models.Wallet
 
@@ -168,4 +126,61 @@ func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, err
 
 func (r *resellerRepository) CreateWallet(wallet *models.Wallet) error {
 	return r.db.Create(wallet).Error
+}
+
+func (r *resellerRepository) GetCatalogWithStatus(shopID uint, productID uint) ([]dto.ProductCatalogResponse, error) {
+	var results []dto.ProductCatalogResponse
+
+	query := r.db.Table("products").
+		Select(`
+            products.id, 
+            products.name, 
+            products.image_url, 
+            products.min_price, 
+            products.cost_price, 
+            products.stock,
+            (SELECT COUNT(*) FROM shop_products WHERE product_id = products.id) > 0 as is_added,
+            (SELECT shop_id FROM shop_products WHERE product_id = products.id LIMIT 1) = ? as is_mine,
+            (SELECT selling_price FROM shop_products WHERE product_id = products.id AND shop_id = ?) as my_current_price
+        `, shopID, shopID).
+		Where("products.deleted_at IS NULL")
+
+	if productID != 0 {
+		query = query.Where("products.id = ?", productID)
+	}
+
+	err := query.Scan(&results).Error
+	return results, err
+}
+
+func (r *resellerRepository) UpsertShopProduct(data *models.ShopProducts) error {
+	var existing models.ShopProducts
+
+	// 1. ลองหาดูว่ามีอยู่แล้วไหม
+	err := r.db.Where("shop_id = ? AND product_id = ?", data.Shop_id, data.Products_id).First(&existing).Error
+
+	if err == nil {
+		// 2. ถ้าเจอ (err เป็น nil) ให้ Update ราคา
+		return r.db.Model(&existing).Update("selling_price", data.Selling_price).Error
+	}
+
+	// 3. ถ้าไม่เจอ ให้ Create ใหม่
+	return r.db.Create(data).Error
+}
+func (r *resellerRepository) GetShopByUserID(userID uint) (models.Shops, error) {
+	var shop models.Shops
+	// ค้นหาในตาราง shops โดยใช้ user_id
+	err := r.db.Where("user_id = ?", userID).First(&shop).Error
+	return shop, err
+}
+func (r *resellerRepository) GetProductOwner(productID uint) (uint, error) {
+	var shopID uint
+	// ค้นหา shop_id ที่ครอบครอง product_id นี้อยู่
+	err := r.db.Table("shop_products").
+		Select("shop_id").
+		Where("product_id = ?", productID).
+		Row().Scan(&shopID)
+
+	// ถ้าไม่เจอ (เช่น สินค้ายังว่าง) GORM จะคืน error "sql: no rows in result set"
+	return shopID, err
 }
