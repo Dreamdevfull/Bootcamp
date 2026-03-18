@@ -15,6 +15,7 @@ type OrderService interface {
 	QuickComplete(orderID int) error
 	ProcessCheckout(slug string, req dto.CheckoutRequest) (*models.Orders, error)
 	ConfirmPayment(orderID uint) (*models.Orders, error)
+	GetOrderTracking(orderNumber string) (*models.Orders, error)
 }
 
 type orderService struct {
@@ -171,5 +172,13 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		return nil, err
 	}
 
+	return order, nil
+}
+
+func (s *orderService) GetOrderTracking(orderNumber string) (*models.Orders, error) {
+	order, err := s.repo.FindByOrderNumber(orderNumber)
+	if err != nil {
+		return nil, err // จะถูกส่งไปเป็น "ไม่พบออเดอร์นี้"
+	}
 	return order, nil
 }
