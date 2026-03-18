@@ -26,6 +26,21 @@ func (p *ProductsController) CreatedProduct(c fiber.Ctx) error {
 		})
 	}
 
+	// 3. ดึงไฟล์รูปภาพ (Key ต้องตรงกับใน Postman เช่น "image")
+	file, err := c.FormFile("image")
+	if err != nil {
+		// แทนที่ req.ImageURL == "" ด้วยการเช็คไฟล์
+		return c.Status(400).JSON(fiber.Map{
+			"message": "product image is required",
+		})
+	}
+
+	// 4. อ่านไฟล์เป็น []byte เพื่อส่งให้ Service
+	f, _ := file.Open()
+	defer f.Close()
+	imageBytes := make([]byte, file.Size)
+	f.Read(imageBytes)
+
 	if req.Name == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "product name is required",
@@ -50,7 +65,7 @@ func (p *ProductsController) CreatedProduct(c fiber.Ctx) error {
 		})
 	}
 
-	result, err := p.service.CreateProduct(req)
+	result, err := p.service.CreateProduct(req, imageBytes)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"message": "can not create product",
