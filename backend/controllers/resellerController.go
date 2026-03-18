@@ -8,57 +8,6 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-// import (
-// 	"github.com/Dreamdevfull/Bootcamp/services"
-// 	"github.com/gofiber/fiber/v3"
-// )
-
-// type ResellerController struct {
-// 	service services.ResellerService
-// }
-
-// func NewResellerController(s services.ResellerService) *ResellerController {
-// 	return &ResellerController{service: s}
-// }
-
-// func (ctrl *ResellerController) GetResellers(c fiber.Ctx) error {
-// 	resellers, err := ctrl.service.GetResellers()
-
-// 	if err != nil {
-// 		return c.Status(500).JSON(fiber.Map{
-// 			"error": "Could not fetch resellers data",
-// 		})
-// 	}
-
-// 	return c.Status(200).JSON(fiber.Map{
-// 		"total": len(resellers),
-// 		"data":  resellers,
-// 	})
-// }
-
-// func (ctrl *ResellerController) UpdateStatus(c fiber.Ctx) error {
-// 	id := c.Params("id")
-
-// 	type UpdateStatusRequest struct {
-// 		Status string `json:"status"`
-// 	}
-
-// 	var input UpdateStatusRequest
-// 	if err := c.Bind().Body(&input); err != nil {
-// 		return c.Status(400).JSON(fiber.Map{"message": "invalid request body"})
-// 	}
-
-// 	err := ctrl.service.UpdateResellerStatus(id, input.Status)
-// 	if err != nil {
-// 		return c.Status(400).JSON(fiber.Map{"message": err.Error()})
-// 	}
-
-// 	return c.Status(200).JSON(fiber.Map{
-// 		"status":  "success",
-// 		"message": "Reseller ID: " + id + " has been updated to " + input.Status,
-// 	})
-// }
-
 type ResellerController struct {
 	services services.ResellerService
 }
@@ -68,7 +17,8 @@ func NewResellerController(s services.ResellerService) *ResellerController {
 }
 
 func (ctrl *ResellerController) GetCatalog(c fiber.Ctx) error {
-	products, err := ctrl.services.GetCatalog()
+	userID := c.Locals("user_id").(uint)
+	products, err := ctrl.services.GetCatalog(userID)
 	if err != nil {
 
 		return c.Status(500).JSON(fiber.Map{
@@ -83,6 +33,7 @@ func (ctrl *ResellerController) GetCatalog(c fiber.Ctx) error {
 }
 
 func (ctrl *ResellerController) AddProductToShop(c fiber.Ctx) error {
+	userID := c.Locals("user_id").(uint)
 	var req dto.AddProductToShopRequest
 
 	if err := c.Bind().Body(&req); err != nil {
@@ -91,7 +42,7 @@ func (ctrl *ResellerController) AddProductToShop(c fiber.Ctx) error {
 		})
 	}
 
-	if err := ctrl.services.AddProductToShop(req); err != nil {
+	if err := ctrl.services.AddProductToShop(userID, req); err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": err.Error(),
 		})
@@ -205,9 +156,9 @@ func (p *ResellerController) GetOrdersForReseller(c fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"success": true,
 		"data":    result,
-  })
-} 
-    
+	})
+}
+
 func (ctrl *ResellerController) GetWallet(c fiber.Ctx) error {
 	userID, ok := c.Locals("user_id").(uint)
 	if !ok {

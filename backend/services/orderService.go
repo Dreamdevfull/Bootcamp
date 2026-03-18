@@ -39,6 +39,7 @@ func (s *orderService) GetOrders() ([]models.Orders, error) {
 }
 
 func (s *orderService) QuickComplete(orderID int) error {
+
 	order, err := s.repo.FindByID(orderID)
 	if err != nil {
 		return err
@@ -46,6 +47,11 @@ func (s *orderService) QuickComplete(orderID int) error {
 
 	if order.Status == "completed" {
 		return errors.New("ออเดอร์นี้บันทึกกำไรไปเรียบร้อยแล้ว")
+	}
+
+	shop, err := s.shopRepo.GetByID(uint(order.Shop_id))
+	if err != nil {
+		return fmt.Errorf("ไม่พบร้านค้าที่เกี่ยวข้องกับออเดอร์นี้: %v", err)
 	}
 
 	items, err := s.repo.GetItemsByOrderID(orderID)
@@ -57,14 +63,13 @@ func (s *orderService) QuickComplete(orderID int) error {
 	for _, item := range items {
 		profitPerItem := item.Selling_price - item.Cost_price
 		totalProfit += profitPerItem * float64(item.Quantity)
-
 	}
 
 	if err := s.repo.UpdateStatus(orderID, "completed"); err != nil {
 		return err
 	}
 
-	if err := s.walletRepo.AddBalance(order.Shop_id, totalProfit, uint(orderID)); err != nil {
+	if err := s.walletRepo.AddBalance(int(shop.User_id), totalProfit, uint(orderID)); err != nil {
 		return err
 	}
 

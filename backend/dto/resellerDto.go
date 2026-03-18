@@ -1,9 +1,20 @@
 package dto
 
+type ProductCatalogResponse struct {
+	ID             uint    `json:"id"`
+	Name           string  `json:"name"`
+	ImageURL       string  `json:"image_url"`
+	MinPrice       float64 `json:"min_price"`
+	CostPrice      float64 `json:"cost_price"`
+	Stock          int     `json:"stock"`
+	IsAdded        bool    `json:"is_added"`         // ใช้เช็คเพื่อเปลี่ยนปุ่ม เพิ่ม/แก้ไข
+	IsMine         bool    `json:"is_mine"`          // เราเป็นเจ้าของใช่ไหม (True/False)
+	MyCurrentPrice float64 `json:"my_current_price"` // ราคาที่ร้านเราตั้งขายอยู่
+}
+
 type AddProductToShopRequest struct {
-	ShopID    uint    `json:"shop_id" binding:"required"`
-	ProductID uint    `json:"product_id" binding:"required"`
-	Price     float64 `json:"price" binding:"required"`
+	ProductID     uint    `json:"product_id" binding:"required"`
+	Selling_Price float64 `json:"selling_price" binding:"required"`
 }
 
 type UpdatePriceRequest struct {

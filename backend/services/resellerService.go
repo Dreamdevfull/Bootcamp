@@ -8,41 +8,10 @@ import (
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
 )
 
-// type ResellerService interface {
-// 	GetResellers() ([]models.Users, error)
-// 	UpdateResellerStatus(id string, status string) error
-// }
-
-// type resellerService struct {
-// 	resellerRepo repositorys.ResellerRepository
-// }
-
-// func NewResellerService(r repositorys.ResellerRepository) ResellerService {
-// 	return &resellerService{resellerRepo: r}
-// }
-
-// func (s *resellerService) GetResellers() ([]models.Users, error) {
-// 	return s.resellerRepo.FindResellers()
-// }
-
-// func (s *resellerService) UpdateResellerStatus(id string, status string) error {
-// 	validStatuses := map[string]bool{
-// 		"pending":  true,
-// 		"approved": true,
-// 		"rejected": true,
-// 	}
-
-// 	if !validStatuses[status] {
-// 		return errors.New("invalid status: must be pending, approved, or rejected")
-// 	}
-
-// 	return s.resellerRepo.UpdateStatus(id, status)
-// }
-
 type ResellerService interface {
-	GetCatalog() ([]models.Products, error)
-	GetProductsByID(id uint) (models.Products, error)
-	AddProductToShop(req dto.AddProductToShopRequest) error
+	GetCatalog(userID uint) ([]dto.ProductCatalogResponse, error)
+	// GetProductsByID(id uint) (models.Products, error)
+	AddProductToShop(userID uint, req dto.AddProductToShopRequest) error
 	GetMyShopProducts(shopID uint) ([]models.ShopProducts, error)
 	UpdateProductPrice(userID uint, shopProductID uint, newPrice float64) error
 	RemoveProductFromShop(userID uint, productID uint) error
@@ -58,15 +27,17 @@ func NewResellerService(repo repositorys.ResellerRepository) ResellerService {
 	return &resellerService{repo: repo}
 }
 
-func (s *resellerService) GetCatalog() ([]models.Products, error) {
-	return s.repo.GetCatalog()
+func (s *resellerService) GetCatalog(userID uint) ([]dto.ProductCatalogResponse, error) {
+	shop, _ := s.repo.GetShopByUserID(userID)
+	return s.repo.GetCatalogWithStatus(shop.Id, 0)
 }
 
-func (s *resellerService) GetProductsByID(id uint) (models.Products, error) {
-	return s.repo.GetProductsByID(id)
-}
+// func (s *resellerService) GetProductsByID(id uint) (models.Products, error) {
+// 	return s.repo.GetProductsByID(id)
+// }
 
-func (s *resellerService) AddProductToShop(req dto.AddProductToShopRequest) error {
+func (s *resellerService) AddProductToShop(userID uint, req dto.AddProductToShopRequest) error {
+	shop, _ := s.repo.GetShopByUserID(userID)
 
 	product, err := s.repo.GetProductsByID(req.ProductID)
 
@@ -78,16 +49,24 @@ func (s *resellerService) AddProductToShop(req dto.AddProductToShopRequest) erro
 		return errors.New("product out of stock")
 	}
 
-	if req.Price < product.Min_price {
+	if req.Selling_Price < product.Min_price {
 		return errors.New("price must be at least the minimum price")
 	}
 
 	shopProduct := models.ShopProducts{
-		Shop_id:       uint(req.ShopID),
-		Products_id:   uint(req.ProductID),
-		Selling_price: req.Price,
+		Shop_id:       shop.Id,
+		Products_id:   req.ProductID,
+		Selling_price: req.Selling_Price,
 	}
-	return s.repo.AddProductToShop(&shopProduct)
+
+	ownerID, err := s.repo.GetProductOwner(req.ProductID)
+
+	// Logic: ถ้ามีเจ้าของแล้ว (err == nil) และเจ้าของไม่ใช่เรา
+	if err == nil && ownerID != shop.Id {
+		return errors.New("สินค้านี้ถูกร้านค้าอื่นเลือกไปแล้ว")
+	}
+
+	return s.repo.UpsertShopProduct(&shopProduct)
 }
 
 func (s *resellerService) GetMyShopProducts(shopID uint) ([]models.ShopProducts, error) {
@@ -168,7 +147,7 @@ func mapStatusThai(status string) string {
 	default:
 		return status
 	}
-  
+
 }
 func (s *resellerService) GetWalletByUserID(userID uint) (*models.Wallet, error) {
 
