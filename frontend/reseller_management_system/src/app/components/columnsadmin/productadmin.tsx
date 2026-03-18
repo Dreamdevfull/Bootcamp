@@ -1,7 +1,7 @@
 "use client"
 import { ColumnDef } from '@tanstack/table-core';
-import EditButton from '@/app/components/ui/button/edit';
-import SoftDeleteButton from '@/app/components/ui/button/softdelete';
+import EditButton from '@/app/components/ui/admin/button/edit';
+import SoftDeleteButton from '@/app/components/ui/admin/button/softdelete';
 
 interface Product {
   id: number;
