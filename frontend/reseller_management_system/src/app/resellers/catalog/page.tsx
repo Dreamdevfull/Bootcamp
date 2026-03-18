@@ -1,15 +1,40 @@
 "use client"
-import React from 'react'
+import { Catalog as CatalogType } from '@/app/types/model';
 import HeaderReseller from '@/app/components/layout/headerReseller'
 import Main from '@/app/components/layout/main'
+import CatalogCrad from '@/app/components/cradcatalogreseller/catalog';
+import { useEffect, useState } from 'react';
 
-const p = () => {
+const CatalogPage = () => {
+  const [data, setData] = useState<CatalogType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${API_URL}/reseller/catalog`, {
+          credentials: "include",
+        });
+        const result = await res.json();
+        setData(result.data ?? []);
+      } catch {
+        setData(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  },[]);
   return (
     <div className="min-h-screen bg-[#F5F3EE]">
       <HeaderReseller/>
       <Main/>
+      <div className='px-8 py-7'>
+        <CatalogCrad data={data} loading={loading}/>
+      </div>
     </div>
   )
 }
 
-export default p
+export default CatalogPage
