@@ -4,20 +4,15 @@ import { useEffect, useState } from 'react';
 import { DataTable } from '@/app/components/ui/datatable';
 import { productColumns as columns } from '@/app/components/columnsadmin/productadmin';
 import Main from '@/app/components/layout/main';
+import { Product as ProductType } from '@/app/types/model';
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  Image: string;
-  cost_price: number;
-  min_price: number;
-  stock: number;
-  Create_at: string;
+const mockmain = {
+  text1: "จัดการสินค้า",
+  text2: "เพิ่ม แก้ไข ลบ และกำหนดราคาสินค้าในระบบ"
 }
 
 const ProductsPage = () => {
-  const [data, setData] = useState<Product[]>([]);
+  const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -41,7 +36,7 @@ const ProductsPage = () => {
   return (
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
-      <Main />
+      <Main main={mockmain}/>
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading}  />
       </div>
