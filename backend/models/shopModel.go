@@ -17,7 +17,7 @@ type Products struct {
 	Id          uint           `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
 	Name        string         `json:"name"`
 	Description string         `json:"description"`
-	Image       string         `gorm:"column:image_url"`
+	Image       string         `gorm:"column:image_url;not null"`
 	Cost_price  float64        `json:"cost_price" gorm:"type:decimal(10,2)"`
 	Min_price   float64        `json:"min_price" gorm:"type:decimal(10,2)"`
 	Stock       int            `json:"stock" gorm:"type:int;default:0"`
