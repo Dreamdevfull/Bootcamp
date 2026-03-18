@@ -92,7 +92,7 @@ interface CatalogCardProps  {
   loading: boolean
 }
 
-const CatalogColumn = ({ data, loading }: CatalogCardProps ) => {
+const CatalogCrad = ({ data, loading }: CatalogCardProps ) => {
 
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
@@ -159,4 +159,4 @@ const CatalogColumn = ({ data, loading }: CatalogCardProps ) => {
   )
 }
 
-export default CatalogColumn
+export default CatalogCrad
