@@ -44,6 +44,10 @@ func (s *orderService) QuickComplete(orderID int) error {
 		return err
 	}
 
+	if order.Status == "completed" {
+		return errors.New("ออเดอร์นี้บันทึกกำไรไปเรียบร้อยแล้ว")
+	}
+
 	items, err := s.repo.GetItemsByOrderID(orderID)
 	if err != nil {
 		return err
@@ -56,7 +60,7 @@ func (s *orderService) QuickComplete(orderID int) error {
 
 	}
 
-	if err := s.repo.UpdateStatus(orderID, "shipped"); err != nil {
+	if err := s.repo.UpdateStatus(orderID, "completed"); err != nil {
 		return err
 	}
 
