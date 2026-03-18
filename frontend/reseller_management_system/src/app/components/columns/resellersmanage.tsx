@@ -98,8 +98,8 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
       if (status === "pending") {
         return (
           <div className="flex gap-2 justify-center">
-            <ApprovalButton />
-            <RejectedButton />
+            <ApprovalButton id={row.original.id} />
+            <RejectedButton id={row.original.id} />
           </div>
         );
       } else if (status === "approved") {
@@ -108,13 +108,10 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
             <BockButton />
           </div>
         );
+      } else {
+        return null;
       }
 
-      return (
-        <div className="text-center">
-          -
-        </div>
-      );
     },
   }
 ]
