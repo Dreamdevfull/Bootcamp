@@ -10,7 +10,9 @@ type OrderRepository interface {
 	UpdateStatus(orderID int, status string) error
 	FindByID(id int) (*models.Orders, error)
 	GetItemsByOrderID(orderID int) ([]models.OrderItems, error)
-	CreateOrderWithItems(order *models.Orders, items []models.OrderItems) error
+	CreateOrder(order *models.Orders) error
+	FindOrderByID(id uint) (*models.Orders, error)
+	UpdateOrderStatus(id uint, status string) error
 }
 
 type orderRepository struct {
@@ -46,20 +48,16 @@ func (r *orderRepository) GetItemsByOrderID(orderID int) ([]models.OrderItems, e
 	return items, err
 }
 
-func (r *orderRepository) CreateOrderWithItems(order *models.Orders, items []models.OrderItems) error {
-	return r.db.Transaction(func(tx *gorm.DB) error {
-		// บันทึก Order หลักก่อน
-		if err := tx.Create(order).Error; err != nil {
-			return err
-		}
+func (r *orderRepository) CreateOrder(order *models.Orders) error {
 
-		// วนลูปบันทึก OrderItems โดยผูกกับ Order ID ที่เพิ่งสร้าง
-		for i := range items {
-			items[i].Order_id = int(order.Id) // เชื่อม FK
-			if err := tx.Create(&items[i]).Error; err != nil {
-				return err
-			}
-		}
-		return nil
-	})
+	return r.db.Create(order).Error
+}
+func (r *orderRepository) FindOrderByID(id uint) (*models.Orders, error) {
+	var order models.Orders
+	// ใช้ Preload เพื่อดึงรายการสินค้าในออเดอร์ออกมาด้วย
+	err := r.db.Preload("OrderItems").First(&order, id).Error
+	return &order, err
+}
+func (r *orderRepository) UpdateOrderStatus(id uint, status string) error {
+	return r.db.Model(&models.Orders{}).Where("id = ?", id).Update("status", status).Error
 }
