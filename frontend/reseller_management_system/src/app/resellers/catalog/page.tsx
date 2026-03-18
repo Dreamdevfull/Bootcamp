@@ -5,6 +5,11 @@ import Main from '@/app/components/layout/main'
 import CatalogCrad from '@/app/components/cradcatalogreseller/catalog';
 import { useEffect, useState } from 'react';
 
+const mockmain = {
+  text1: "สินค้าส่วนกลาง",
+  text2: "เลือกสินค้าจากระบบ เพื่อนำไปวางขายในหน้าร้านของคุณ"
+}
+
 const CatalogPage = () => {
   const [data, setData] = useState<CatalogType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,8 +34,8 @@ const CatalogPage = () => {
   return (
     <div className="min-h-screen bg-[#F5F3EE]">
       <HeaderReseller/>
-      <Main/>
-      <div className='px-8 py-7'>
+      <Main main={mockmain}/>
+      <div className='px-8 py-5'>
         <CatalogCrad data={data} loading={loading}/>
       </div>
     </div>
