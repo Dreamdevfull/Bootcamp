@@ -44,7 +44,7 @@ func (ctrl *OrderController) QuickComplete(c fiber.Ctx) error {
 	if err := ctrl.service.QuickComplete(idInt); err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",
-			"message": "can not complete order",
+			"message": err.Error(),
 		})
 	}
 

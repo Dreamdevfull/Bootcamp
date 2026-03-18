@@ -49,14 +49,14 @@ func (s *resellerService) AddProductToShop(userID uint, req dto.AddProductToShop
 		return errors.New("product out of stock")
 	}
 
-	if req.Price < product.Min_price {
+	if req.Selling_Price < product.Min_price {
 		return errors.New("price must be at least the minimum price")
 	}
 
 	shopProduct := models.ShopProducts{
 		Shop_id:       shop.Id,
 		Products_id:   req.ProductID,
-		Selling_price: req.Price,
+		Selling_price: req.Selling_Price,
 	}
 
 	ownerID, err := s.repo.GetProductOwner(req.ProductID)
