@@ -6,6 +6,11 @@ import ShopProductCrad from '@/app/components/cradcatalogreseller/shopproduct';
 import { useEffect, useState } from 'react';
 import { ShopProducts as ShopProductsType } from '@/app/types/model';
 
+const mockmain = {
+  text1: "จัดการหน้าร้าน",
+  text2: "สินค้าที่คุณกำลังขายในหน้าร้านคุณ"
+}
+
 const Shoppage = () => {
   const [data, setData] = useState<ShopProductsType[]>([]);
     const [loading, setLoading] = useState(true);
@@ -30,8 +35,10 @@ const Shoppage = () => {
   return (
     <div className="min-h-screen bg-[#F5F3EE]">
       <HeaderReseller/>
-      <Main/>
-      <ShopProductCrad data={data} loading={loading}/>
+      <Main main={mockmain}/>
+      <div className='px-8 py-7'>
+        <ShopProductCrad data={data} loading={loading}/>
+      </div>
     </div>
   )
 }
