@@ -15,20 +15,20 @@ interface Approval {
 }
 
 export const ResellersManage: ColumnDef<Approval>[] =  [
-  {
-    id: "index",
-    header: () => <div className="text-center">ลำดับ</div>,
-    cell: ({ row, table }) => {
-      const pageIndex = table.getState().pagination.pageIndex;
-      const pageSize = table.getState().pagination.pageSize;
-      const pageRowIndex = table.getRowModel().rows.findIndex(r => r.id === row.id);
-      return (
-        <div className="text-center">
-          {pageIndex * pageSize + pageRowIndex + 1}
-        </div>
-      );
-    },
-  },
+  // {
+  //   id: "index",
+  //   header: () => <div className="text-center">ลำดับ</div>,
+  //   cell: ({ row, table }) => {
+  //     const pageIndex = table.getState().pagination.pageIndex;
+  //     const pageSize = table.getState().pagination.pageSize;
+  //     const pageRowIndex = table.getRowModel().rows.findIndex(r => r.id === row.id);
+  //     return (
+  //       <div className="text-center">
+  //         {pageIndex * pageSize + pageRowIndex + 1}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "create_at",
     header: () => <div className="text-center">วันที่สมัคร</div>,
@@ -37,11 +37,30 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
       console.log(date);
       return (
         <div className='text-center'>
-          {new Date(date).toLocaleDateString("th-TH")}
+          {new Date(date).toLocaleDateString("th-TH", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
         </div>
       );
     },
   },
+  // {
+  //   accessorKey: "create_at",
+  //   header: () => <div className="text-center">วันที่สมัคร</div>,
+  //   cell: ({ row }) => {
+  //     const date = row.original.created_at;
+  //     console.log(date);
+  //     return (
+  //       <div className='text-center'>
+  //         {new Date(date).toLocaleDateString("th-TH")}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "name",
     header: () => <div className="text-center">ชื่อ-นามสกุล</div>,
