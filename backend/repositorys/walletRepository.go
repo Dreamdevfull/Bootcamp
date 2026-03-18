@@ -35,10 +35,10 @@ func (r *walletRepository) AddBalance(userID int, amount float64, orderID uint) 
 		}
 
 		log := models.WalletLog{
-			Wallet_id: int(wallet.Id),
-			Order_id:  int(orderID),
-			Amount:    amount,
-			Create_at: time.Now(),
+			Wallet_id:  int(wallet.Id),
+			Order_id:   int(orderID),
+			Amount:     amount,
+			Created_at: time.Now(),
 		}
 
 		if err := tx.Create(&log).Error; err != nil {

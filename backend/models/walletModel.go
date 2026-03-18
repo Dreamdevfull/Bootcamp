@@ -10,9 +10,9 @@ type Wallet struct {
 }
 
 type WalletLog struct {
-	Id        uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Wallet_id int       `json:"wallet_id" gorm:"ForeignKey:Wallet_id"`
-	Order_id  int       `json:"order_id" gorm:"ForeignKey:Order_id"`
-	Amount    float64   `json:"amount" gorm:"type:decimal(10,2)"`
-	Create_at time.Time `json:"created_at"`
+	Id         uint      `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
+	Wallet_id  int       `json:"wallet_id" gorm:"ForeignKey:Wallet_id"`
+	Order_id   int       `json:"order_id" gorm:"ForeignKey:Order_id"`
+	Amount     float64   `json:"amount" gorm:"type:decimal(10,2)"`
+	Created_at time.Time `gorm:"column:created_at"`
 }
