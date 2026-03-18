@@ -1,12 +1,16 @@
 "use client"
 import { ColumnDef } from '@tanstack/table-core';
-import EditButton from '@/app/components/ui/button/edit';
-import SoftDeleteButton from '@/app/components/ui/button/softdelete';
+import CompletedButton from '@/app/components/ui/button/order/completedbutton';
 
 interface Orders {
   id: number;
   order_number: string;
-  shop_id: number;
+  shop: {
+    id: number;
+    users_id: number;
+    shop_name: string;
+    shop_slug: string;
+  };
   customer_name: string;
   customer_phone: string;          
   shipping_address: string;
@@ -18,11 +22,11 @@ interface Orders {
     id: number;
     order_id: number;
     products_id: number;
-    products_name: string;
+    product_name: string;
     cost_price: number;
     selling_price: number;
     quantity: number;
-  }
+  }[];
 }
 
 export const ManageOrderAdmin: ColumnDef<Orders>[] = [
@@ -48,32 +52,62 @@ export const ManageOrderAdmin: ColumnDef<Orders>[] = [
   
   {
     accessorKey: "order_number",
-    header: () => <div className="text-center">เลขออเดอร์</div>,
+    header: () => <div>เลขออเดอร์</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("order_number")}</div>
+      <div>{row.getValue("order_number")}</div>
     ),
   },
   {
-    accessorKey: "shop_id",
-    header: () => <div className="text-center">ชื่อร้าน(ผู้ขาย)</div>,
+    accessorKey: "shop.shop_name",
+    header: () => <div>ชื่อร้าน(ผู้ขาย)</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("shop_id")}</div>
+      <div>{row.original.shop.shop_name}</div>
     ),
   },
   {
     accessorKey: "customer_name",
-    header: () => <div className="text-center">ชื่อลูกค้า</div>,
+    header: () => <div>ชื่อลูกค้า</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("customer_name")}</div>
+      <div>{row.getValue("customer_name")}</div>
     ),
   },
+  // {
+  //   id: "order_items",
+  //   header: () => <div className="text-center">สินค้า(จำนวน)</div>,
+  //   cell: ({ row }) => (
+  //     <div className="text-center">
+  //     {row.original.order_items.map((item, index) => (
+  //       <div key={index}>
+  //         {item.product_name} ({item.quantity})
+  //       </div>
+  //     ))}
+  //   </div>
+  //   ),
+  // },
   {
-    accessorKey: "products_name",
-    header: () => <div className="text-center">สินค้า(จำนวน)</div>,
-    cell: ({ row }) => (
-      <div className="text-center">{row.getValue("products_name")}</div>
-    ),
+  id: "order_items",
+  header: () => <div>สินค้า(จำนวน)</div>,
+  cell: ({ row }) => {
+    const items = row.original.order_items
+    const preview = items.slice(0, 2)
+    const remaining = items.length - 2
+
+    return (
+      <div>
+        {preview.map((item, index) => (
+          <div key={index}>
+            {item.product_name} ({item.quantity})
+          </div>
+        ))}
+        {remaining > 0 && (
+          <div className="text-xs text-gray-400">
+            +{remaining} รายการ
+          </div>
+        )}
+      </div>
+    )
   },
+},
   {
     accessorKey: "total_amount",
     header: () => <div className="text-center">ราคารวม</div>,
@@ -91,16 +125,13 @@ export const ManageOrderAdmin: ColumnDef<Orders>[] = [
       let color = "";
 
       if (status === "pending") {
-        text = "รอดำเนินการ";
+        text = "รอการชําระเงิน";
         color = "text-[#633806] border border-[#fac775] bg-[#faeeda] rounded-md px-2 py-1";
       } else if (status === "completed") {
         text = "จัดส่งสำเร็จ";
         color = "text-[#085041] border border-[#9fe1cb] bg-[#e1f5ee] rounded-md px-2 py-1";
       } else if (status === "shipped") {
-        text = "กําลังจัดส่ง";
-        color = "text-[#791f1f] border border-[#f7c1c1] bg-[#fcebeb] rounded-md px-2 py-1";
-      } else if (status === "awaiting_payment") {
-        text = "รอชําระเงิน";
+        text = "รอจัดส่ง";
         color = "text-[#791f1f] border border-[#f7c1c1] bg-[#fcebeb] rounded-md px-2 py-1";
       }
 
@@ -112,13 +143,34 @@ export const ManageOrderAdmin: ColumnDef<Orders>[] = [
     },
   },
   {
-    id: "actions",
-    header: () => <div className="text-center">การจัดส่ง</div>,
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center gap-2">
-        <EditButton />
-        <SoftDeleteButton id={row.original.id} />
-      </div>
-    ),
+    accessorKey: "actions",
+    header: () => <div className="text-center">จัดการ</div>,
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+
+      if (status === "pending") {
+        return(
+          <div className="flex gap-2 justify-center text-[#633806]">
+            รอการชําระเงิน
+          </div>
+        )
+      }
+      else if (status === "shipped") {
+        return (
+          <div className="flex gap-2 justify-center">
+            <CompletedButton id={row.original.id} />
+          </div>
+        );
+      } else if (status === "completed") {
+        return (
+          <div className="flex justify-center text-[#085041]/70">
+            จัดส่งสำเร็จ
+          </div>
+        );
+      } else {
+        return null;
+      }
+
+    },
   },
 ];

@@ -8,7 +8,12 @@ import Main from '@/app/components/layout/main';
 interface Orders {
   id: number;
   order_number: string;
-  shop_id: number;
+  shop: {
+    id: number;
+    users_id: number;
+    shop_name: string;
+    shop_slug: string;
+  };
   customer_name: string;
   customer_phone: string;          
   shipping_address: string;
@@ -20,11 +25,11 @@ interface Orders {
     id: number;
     order_id: number;
     products_id: number;
-    products_name: string;
+    product_name: string;
     cost_price: number;
     selling_price: number;
     quantity: number;
-  }
+  }[];
 }
 
 const OrdersPage = () => {
