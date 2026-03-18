@@ -1,33 +1,7 @@
 "use client"
 import { ColumnDef } from '@tanstack/table-core';
-import CompletedButton from '@/app/components/ui/button/order/completedbutton';
-
-interface Orders {
-  id: number;
-  order_number: string;
-  shop: {
-    id: number;
-    users_id: number;
-    shop_name: string;
-    shop_slug: string;
-  };
-  customer_name: string;
-  customer_phone: string;          
-  shipping_address: string;
-  total_amount: number;
-  reseller_profit: number;
-  status: string;
-  created_at: string;
-  order_items: {
-    id: number;
-    order_id: number;
-    products_id: number;
-    product_name: string;
-    cost_price: number;
-    selling_price: number;
-    quantity: number;
-  }[];
-}
+import CompletedButton from '@/app/components/ui/admin/button/order/completedbutton';
+import { Orders } from '@/app/types/model';
 
 export const ManageOrderAdmin: ColumnDef<Orders>[] = [
   {
@@ -85,29 +59,29 @@ export const ManageOrderAdmin: ColumnDef<Orders>[] = [
   //   ),
   // },
   {
-  id: "order_items",
-  header: () => <div>สินค้า(จำนวน)</div>,
-  cell: ({ row }) => {
-    const items = row.original.order_items
-    const preview = items.slice(0, 2)
-    const remaining = items.length - 2
+    id: "order_items",
+    header: () => <div>สินค้า(จำนวน)</div>,
+    cell: ({ row }) => {
+      const items = row.original.order_items
+      const preview = items.slice(0, 2)
+      const remaining = items.length - 2
 
-    return (
-      <div>
-        {preview.map((item, index) => (
-          <div key={index}>
-            {item.product_name} ({item.quantity})
-          </div>
-        ))}
-        {remaining > 0 && (
-          <div className="text-xs text-gray-400">
-            +{remaining} รายการ
-          </div>
-        )}
-      </div>
-    )
+      return (
+        <div>
+          {preview.map((item, index) => (
+            <div key={index}>
+              {item.product_name} ({item.quantity})
+            </div>
+          ))}
+          {remaining > 0 && (
+            <div className="text-xs text-gray-400">
+              +{remaining} รายการ
+            </div>
+          )}
+        </div>
+      )
+    },
   },
-},
   {
     accessorKey: "total_amount",
     header: () => <div className="text-center">ราคารวม</div>,

@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import ButtonLogout from '../ui/button/logout'
+import ButtonLogout from '../ui/admin/button/logout'
 import { usePathname } from 'next/navigation'
 const HeaderReseller = () => {
   const pathname = usePathname();

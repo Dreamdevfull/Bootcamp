@@ -39,9 +39,19 @@ func (s *orderService) GetOrders() ([]models.Orders, error) {
 }
 
 func (s *orderService) QuickComplete(orderID int) error {
+
 	order, err := s.repo.FindByID(orderID)
 	if err != nil {
 		return err
+	}
+
+	if order.Status == "completed" {
+		return errors.New("ออเดอร์นี้บันทึกกำไรไปเรียบร้อยแล้ว")
+	}
+
+	shop, err := s.shopRepo.GetByID(uint(order.Shop_id))
+	if err != nil {
+		return fmt.Errorf("ไม่พบร้านค้าที่เกี่ยวข้องกับออเดอร์นี้: %v", err)
 	}
 
 	items, err := s.repo.GetItemsByOrderID(orderID)
@@ -53,14 +63,13 @@ func (s *orderService) QuickComplete(orderID int) error {
 	for _, item := range items {
 		profitPerItem := item.Selling_price - item.Cost_price
 		totalProfit += profitPerItem * float64(item.Quantity)
-
 	}
 
-	if err := s.repo.UpdateStatus(orderID, "shipped"); err != nil {
+	if err := s.repo.UpdateStatus(orderID, "completed"); err != nil {
 		return err
 	}
 
-	if err := s.walletRepo.AddBalance(order.Shop_id, totalProfit, uint(orderID)); err != nil {
+	if err := s.walletRepo.AddBalance(int(shop.User_id), totalProfit, uint(orderID)); err != nil {
 		return err
 	}
 
@@ -141,7 +150,7 @@ func (s *orderService) ProcessCheckout(slug string, req dto.CheckoutRequest) (*m
 		Shipping_address: req.ShippingAddress,
 		Total_amount:     totalAmount,
 		Reseller_profit:  totalProfit,
-		Status:           "awaiting_payment",
+		Status:           "pending",
 		OrderItems:       items,
 	}
 
@@ -157,7 +166,7 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		return nil, errors.New("ไม่พบออเดอร์")
 	}
 
-	if order.Status != "awaiting_payment" {
+	if order.Status != "pending" {
 		return nil, errors.New("ออเดอร์นี้ได้ทำการชำระเงินเรียบร้อยแล้ว")
 	}
 
@@ -167,7 +176,8 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		}
 	}
 
-	order.Status = "pending"
+	// BR-28: อัปเดตสถานะเป็น completed (หรือตาม ENUM ที่คุณตั้ง)
+	order.Status = "shipped"
 	if err := s.repo.UpdateOrderStatus(orderID, order.Status); err != nil {
 		return nil, err
 	}

@@ -1,39 +1,19 @@
 "use client"
 import HeaderAdmin from '@/app/components/layout/headeradmin'
-import { ManageOrderAdmin as columns } from "@/app/components/columns/manageorderadmin";
+import { ManageOrderAdmin as columns } from "@/app/components/columnsadmin/manageorderadmin";
 import { useEffect, useState } from 'react'
 import { DataTable } from '@/app/components/ui/datatable';
 import Main from '@/app/components/layout/main';
+import { Orders as OrdersType } from '@/app/types/model';
 
-interface Orders {
-  id: number;
-  order_number: string;
-  shop: {
-    id: number;
-    users_id: number;
-    shop_name: string;
-    shop_slug: string;
-  };
-  customer_name: string;
-  customer_phone: string;          
-  shipping_address: string;
-  total_amount: number;
-  reseller_profit: number;
-  status: string;
-  created_at: string;
-  order_items: {
-    id: number;
-    order_id: number;
-    products_id: number;
-    product_name: string;
-    cost_price: number;
-    selling_price: number;
-    quantity: number;
-  }[];
+const mockmain = {
+  text1: "จัดการออเดอร์",
+  text2: "ตรวจสอบออเดอร์จากทุกร้านค้า และอัปเดตสถานะการจัดส่ง"
 }
 
+
 const OrdersPage = () => {
-  const [data, setData] = useState<Orders[]>([]);
+  const [data, setData] = useState<OrdersType[]>([]);
   const [loading, setLoading] = useState(true);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -58,7 +38,7 @@ const OrdersPage = () => {
   return (
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
-      <Main />
+      <Main main={mockmain}/>
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading} />
       </div>

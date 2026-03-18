@@ -2,21 +2,17 @@
 import HeaderAdmin from '@/app/components/layout/headeradmin'
 import Main from '@/app/components/layout/main'
 import { DataTable } from '@/app/components/ui/datatable'
-import { ResellersManage as columns } from '@/app/components/columns/resellersmanage';
+import { ResellersManage as columns } from '@/app/components/columnsadmin/resellersmanage';
 import  { useEffect, useState } from 'react';
+import { Approval as ApprovalType } from '@/app/types/model';
 
-interface Approval {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  status: string;
-  address: string;
-  created_at: string;
+const mockmain = {
+  text1: "อนุมัติตัวแทน",
+  text2: "พิจารณาคำขอสมัครตัวแทนจำหน่าย"
 }
 
 const ResellersManagepage = () => {
-  const [data, setData] = useState<Approval[]>([]);
+  const [data, setData] = useState<ApprovalType[]>([]);
   const [loading, setLoading] = useState(true);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -40,7 +36,7 @@ const ResellersManagepage = () => {
   return (
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
-      <Main />
+      <Main main={mockmain}/>
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading}  />
       </div>

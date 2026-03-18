@@ -1,20 +1,10 @@
 "use client"
 import { ColumnDef } from '@tanstack/table-core';
-import EditButton from '@/app/components/ui/button/edit';
-import SoftDeleteButton from '@/app/components/ui/button/softdelete';
+import EditButton from '@/app/components/ui/admin/button/edit';
+import SoftDeleteButton from '@/app/components/ui/admin/button/softdelete';
+import { Wallet as WalletType } from '@/app/types/model';
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  Image: string;
-  cost_price: number;
-  min_price: number;
-  stock: number;
-  Create_at: string;
-}
-
-export const productColumns: ColumnDef<Product>[] = [
+export const WalletColumn: ColumnDef<WalletType>[] = [
   {
     id: "index",
     header: () => <div className="text-center">ลำดับ</div>,
@@ -68,16 +58,6 @@ export const productColumns: ColumnDef<Product>[] = [
     header: () => <div className="text-center">จํานวน</div>,
     cell: ({ row }) => (
       <div className="text-center">{row.getValue("stock")}</div>
-    ),
-  },
-  {
-    id: "actions",
-    header: () => <div className="text-center">จัดการ</div>,
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center gap-2">
-        <EditButton />
-        <SoftDeleteButton id={row.original.id} />
-      </div>
     ),
   },
 ];
