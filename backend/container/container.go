@@ -41,7 +41,7 @@ func NewContainer(db *gorm.DB) *Container {
 	resellerService := services.NewResellerService(resellerRepo)
 	resellerController := controllers.NewResellerController(resellerService)
 
-	userService := services.NewUserService(userRepo)
+	userService := services.NewUserService(userRepo, resellerRepo)
 	userController := controllers.NewUserController(userService)
 
 	productService.StartCleanupScheduler()
