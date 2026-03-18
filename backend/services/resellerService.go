@@ -78,14 +78,14 @@ func (s *resellerService) AddProductToShop(req dto.AddProductToShopRequest) erro
 		return errors.New("product out of stock")
 	}
 
-	if req.Price < product.Min_price {
+	if req.Selling_Price < product.Min_price {
 		return errors.New("price must be at least the minimum price")
 	}
 
 	shopProduct := models.ShopProducts{
 		Shop_id:       uint(req.ShopID),
 		Products_id:   uint(req.ProductID),
-		Selling_price: req.Price,
+		Selling_price: req.Selling_Price,
 	}
 	return s.repo.AddProductToShop(&shopProduct)
 }
@@ -168,7 +168,7 @@ func mapStatusThai(status string) string {
 	default:
 		return status
 	}
-  
+
 }
 func (s *resellerService) GetWalletByUserID(userID uint) (*models.Wallet, error) {
 
