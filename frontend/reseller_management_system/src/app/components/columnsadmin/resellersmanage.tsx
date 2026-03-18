@@ -1,8 +1,8 @@
 "use client"
 import { ColumnDef } from '@tanstack/react-table';
-import ApprovalButton from '../ui/button/approval/approved';
-import BockButton from '../ui/button/approval/bock';
-import RejectedButton from '../ui/button/approval/rejected';
+import ApprovalButton from '../ui/admin/button/approval/approved';
+import BockButton from '../ui/admin/button/approval/bock';
+import RejectedButton from '../ui/admin/button/approval/rejected';
 
 interface Approval {
   id: number;

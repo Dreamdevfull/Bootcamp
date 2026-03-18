@@ -1,7 +1,7 @@
 "use client"
 import Link from 'next/link';
 import Image from 'next/image';
-import ButtonLogout from '@/app/components/ui/button/logout';
+import ButtonLogout from '@/app/components/ui/admin/button/logout';
 import { usePathname } from 'next/navigation';
 
 const HeaderAdmin = () => {

@@ -2,7 +2,7 @@
 import HeaderAdmin from '@/app/components/layout/headeradmin'
 import Main from '@/app/components/layout/main'
 import { DataTable } from '@/app/components/ui/datatable'
-import { ResellersManage as columns } from '@/app/components/columns/resellersmanage';
+import { ResellersManage as columns } from '@/app/components/columnsadmin/resellersmanage';
 import  { useEffect, useState } from 'react';
 
 interface Approval {

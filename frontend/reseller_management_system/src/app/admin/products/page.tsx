@@ -2,7 +2,7 @@
 import HeaderAdmin from '@/app/components/layout/headeradmin'
 import { useEffect, useState } from 'react';
 import { DataTable } from '@/app/components/ui/datatable';
-import { productColumns as columns } from '@/app/components/columns/productadmin';
+import { productColumns as columns } from '@/app/components/columnsadmin/productadmin';
 import Main from '@/app/components/layout/main';
 
 interface Product {

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/services"
 	"github.com/gofiber/fiber/v3"
@@ -157,5 +159,35 @@ func (ctrl *ResellerController) UpdateProductPrice(c fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"status":  "success",
 		"message": "Price updated successfully",
+	})
+}
+
+func (ctrl *ResellerController) RemoveProductFromShop(c fiber.Ctx) error {
+	productIDStr := c.Params("id")
+	productID, err := strconv.Atoi(productIDStr)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid Product ID",
+		})
+	}
+
+	userID, ok := c.Locals("user_id").(uint)
+	if !ok {
+		return c.Status(401).JSON(fiber.Map{
+			"message": "Unauthorized",
+		})
+	}
+
+	if err := ctrl.services.RemoveProductFromShop(userID, uint(productID)); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
+		})
+
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Product removed from your shop scucessfully",
 	})
 }

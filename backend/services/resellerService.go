@@ -45,6 +45,7 @@ type ResellerService interface {
 	AddProductToShop(req dto.AddProductToShopRequest) error
 	GetMyShopProducts(shopID uint) ([]models.ShopProducts, error)
 	UpdateProductPrice(shopProductID uint, newPrice float64) error
+	RemoveProductFromShop(userID uint, productID uint) error
 }
 
 type resellerService struct {
@@ -103,4 +104,17 @@ func (s *resellerService) UpdateProductPrice(shopProductID uint, resellingPrice 
 	}
 
 	return s.repo.UpdatePrice(shopProductID, resellingPrice)
+}
+
+func (s *resellerService) RemoveProductFromShop(userID uint, productID uint) error {
+	hasOrder, err := s.repo.HasActiveOrder(productID, userID)
+	if err != nil {
+		return err
+	}
+	if hasOrder {
+		return errors.New("ไม่สามารถนำสินค้าออกได้ เนื่องจากยังมีออเดอร์ค้างส่งอยู่")
+	}
+
+	return s.repo.DeleteFromShop(userID, productID)
+
 }
