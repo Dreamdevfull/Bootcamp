@@ -61,6 +61,9 @@ type ResellerRepository interface {
 	UpdatePrice(shopProductID uint, resellingPrice float64) error
 	DeleteFromShop(shopID uint, productID uint) error
 	HasActiveOrder(productID uint, shopID uint) (bool, error)
+	GetMyOrders(resellerID uint) ([]models.Orders, error)
+	GetWalletByUserID(userID uint) (*models.Wallet, error)
+	CreateWallet(wallet *models.Wallet) error
 }
 
 type resellerRepository struct {
@@ -136,4 +139,33 @@ func (r *resellerRepository) HasActiveOrder(productID uint, shopID uint) (bool, 
 	}
 
 	return count > 0, nil
+}
+
+func (r *resellerRepository) GetMyOrders(userID uint) ([]models.Orders, error) {
+	var orders []models.Orders
+	// Preload OrderItems เพื่อเอาไปคำนวณกำไร และ Preload Product เพื่อเอาชื่อสินค้า
+	err := r.db.Model(&models.Orders{}).
+		Preload("OrderItems.Product").                    // ดึงข้อมูลสินค้ามาเพื่อใช้คำนวณกำไรและแสดงชื่อ
+		Joins("JOIN shops ON shops.id = orders.shop_id"). // เชื่อมกับตารางร้านค้า
+		Where("shops.user_id = ?", userID).               // กรองเฉพาะร้านที่เป็นของ User คนนี้
+		Order("orders.created_at DESC").
+		Find(&orders).Error
+
+	return orders, err
+ 
+}
+  
+func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {
+	var wallet models.Wallet
+
+	err := r.db.Preload("WalletLogs").Where("user_id = ?", userID).First(&wallet).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &wallet, nil
+}
+
+func (r *resellerRepository) CreateWallet(wallet *models.Wallet) error {
+	return r.db.Create(wallet).Error
 }
