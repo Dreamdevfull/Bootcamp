@@ -9,6 +9,8 @@ import (
 
 type WalletRepository interface {
 	AddBalance(userID int, amount float64, orderID uint) error
+	CreateWallet(wallet *models.Wallet) error
+	GetWalletByUserID(userID uint) (*models.Wallet, error)
 }
 
 type walletRepository struct {
@@ -47,4 +49,18 @@ func (r *walletRepository) AddBalance(userID int, amount float64, orderID uint) 
 
 		return nil
 	})
+}
+func (r *walletRepository) CreateWallet(wallet *models.Wallet) error {
+	return r.db.Create(wallet).Error
+}
+
+func (r *walletRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {
+	var wallet models.Wallet
+
+	err := r.db.Preload("WalletLogs.Order").Where("user_id = ?", userID).First(&wallet).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &wallet, nil
 }
