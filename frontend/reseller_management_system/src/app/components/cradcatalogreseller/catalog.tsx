@@ -93,7 +93,7 @@ interface CatalogCardProps  {
 }
 
 const CatalogCrad = ({ data, loading }: CatalogCardProps ) => {
-
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
       <section className='bg-white p-6 min-h-screen rounded-2xl shadow-md border border-gray-100'>
@@ -136,7 +136,7 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps ) => {
           {data.map((item) => (
             <div key={item.id} className='border border-gray-200 rounded-xl p-4 w-64 shadow-sm'>
               {item.image_url ? (
-                <img src={item.image_url} alt={item.name} className="w-full h-50 object-cover rounded-lg mb-3" />
+                <img src={API_URL + item.image_url} alt={item.name} className="w-full h-50 object-cover rounded-lg mb-3" />
               ) : (
                 <div className="w-full h-50 bg-gray-200 rounded-lg mb-3 flex items-center justify-center text-gray-400">
                   ไม่มีรูป
