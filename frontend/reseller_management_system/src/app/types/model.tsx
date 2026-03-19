@@ -84,10 +84,13 @@ export interface ShopProducts {
 }
 
 export interface OrderReseller {
-  id: number;
+  order_id: number;
   order_number: string;
   customer_name: string;
-  items: string;
+  items: {
+    product_name: string;
+    quantity: number;
+  }[];
   total_amount: number;
   my_profit: number;
   created_at: string;
