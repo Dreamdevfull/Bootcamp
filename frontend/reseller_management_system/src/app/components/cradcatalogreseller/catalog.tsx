@@ -132,28 +132,50 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps ) => {
           </div>
         </div>
         {/* สำหรับสั่งสินค้า  */}
-        <div className='flex flex-wrap ml-1 gap-7.5'>
-          {data.map((item) => (
-            <div key={item.id} className='border border-gray-200 rounded-xl p-4 w-64 shadow-sm'>
-              {item.image_url ? (
-                <img src={API_URL + item.image_url} alt={item.name} className="w-full h-50 object-cover rounded-lg mb-3" />
-              ) : (
-                <div className="w-full h-50 bg-gray-200 rounded-lg mb-3 flex items-center justify-center text-gray-400">
-                  ไม่มีรูป
+        {loading ? (
+          <div className="text-center py-10 text-gray-400">กำลังโหลด...</div>
+        ) : (
+          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5'>
+            {data.map((item) => (
+              <div
+                key={item.id}
+                className='bg-white p-4 border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition duration-200'
+              >
+                {/* image */}
+                {item.image_url ? (
+                  <img
+                    src={API_URL + item.image_url}
+                    alt={item.name}
+                    className="w-full h-50 object-cover rounded-lg mb-3 border shadow-sm"
+                  />
+                ) : (
+                  <div className="w-full h-50 bg-gray-200 rounded-lg mb-3 flex items-center justify-center text-gray-400">
+                    ไม่มีรูป
+                  </div>
+                )}
+
+                {/* content */}
+                <div className="p-3 flex flex-col gap-2">
+                  <p className="text-sm font-medium line-clamp-2">
+                    {item.name}
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#1a6b5a] font-semibold text-lg">
+                      ฿{item.min_price}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      เหลือ {item.stock}
+                    </span>
+                  </div>
+
+                  {/* button */}
+                  <AddProductsButton id={item.id}/>
                 </div>
-              )}
-              <div className="flex justify-between">
-                <p>{item.name}</p>
-                <p className="text-[#1a6b5a] text-[20px] pr-3">฿{item.min_price}</p>
               </div>
-              {/* <div className='text-[#888780] text-[15px]'>{item.description}</div> */}
-              <div className='flex justify-between mt-2'>
-                <div className='text-[#888780] text-[15px]'>เหลือ {item.stock}</div>
-              </div>
-                <AddProductsButton id={item.id}/>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   )
