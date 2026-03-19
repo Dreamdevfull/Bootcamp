@@ -98,7 +98,6 @@ export interface OrderReseller {
 }
 
 export interface Wallet {
-  balance: number;
   history: {
     id: number;
     wallet_id: number;
@@ -106,4 +105,7 @@ export interface Wallet {
     amount: number;
     created_at: string;
   }[]
+  pending_amount: number;
+  received_amount: number;
+  total_profit: number;
 }
