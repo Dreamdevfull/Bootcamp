@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+	"io"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -85,35 +87,73 @@ func (p *ProductsController) GetProducts(c fiber.Ctx) error {
 	})
 }
 
-func (p *ProductsController) UpdateProduct(c fiber.Ctx) error {
+// func (p *ProductsController) UpdateProduct(c fiber.Ctx) error {
 
-	idParam := c.Params("id")
+// 	idParam := c.Params("id")
 
-	id, err := strconv.Atoi(idParam)
+// 	id, err := strconv.Atoi(idParam)
+// 	if err != nil {
+// 		return c.Status(400).JSON(fiber.Map{
+// 			"message": "invalid product id",
+// 		})
+// 	}
+
+// 	var req dto.UpdateProductRequest
+
+// 	if err := c.Bind().Body(&req); err != nil {
+// 		return c.Status(400).JSON(fiber.Map{
+// 			"message": "invalid request body",
+// 		})
+// 	}
+
+// 	result, err := p.service.UpdateProduct(uint(id), req)
+// 	if err != nil {
+// 		return c.Status(500).JSON(fiber.Map{
+// 			"message": err.Error(),
+// 		})
+// 	}
+
+// 	return c.JSON(fiber.Map{
+// 		"message": "product updated successfully",
+// 		"data":    result,
+// 	})
+// }
+
+func (ctrl *ProductsController) UpdateProduct(c fiber.Ctx) error {
+	idStr := c.Params("id")
+	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "invalid product id",
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "ID ไม่ถูกต้อง"})
 	}
 
-	var req dto.UpdateProductRequest
-
-	if err := c.Bind().Body(&req); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "invalid request body",
-		})
+	input := new(dto.UpdateProductRequest)
+	if err := c.Bind().Body(input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "ข้อมูลฟอร์มไม่ถูกต้อง"})
 	}
 
-	result, err := p.service.UpdateProduct(uint(id), req)
+	fmt.Printf("Input Data: %+v\n", input)
+
+	// 3. จัดการไฟล์รูปภาพ (ถ้ามี)
+	var imageBytes []byte
+	var fileName string
+	file, err := c.FormFile("image") // Key ชื่อ "image" ใน Postman
+	if err == nil {
+		fileName = fmt.Sprintf("%d_%s", time.Now().Unix(), file.Filename)
+		f, _ := file.Open()
+		defer f.Close()
+		imageBytes, _ = io.ReadAll(f)
+	}
+
+	// 4. เรียก Service
+	response, err := ctrl.service.UpdateProduct(uint(id), *input, imageBytes, fileName)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"message": err.Error(),
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": err.Error()})
 	}
 
+	// 5. ส่ง Response ที่ได้จาก Service กลับไป
 	return c.JSON(fiber.Map{
 		"message": "product updated successfully",
-		"data":    result,
+		"data":    response,
 	})
 }
 

@@ -17,7 +17,7 @@ function ActionCell({ id, image_url, cost_price, min_price, name, selling_price 
   const [open, setOpen] = React.useState(false);
   return (
     <div className="flex items-center justify-center gap-2">
-      <button onClick={() => setOpen(true)} className='text-[#412402] border border-[#BA7517] bg-[#EF9F27] hover:bg-[#BA7517] hover:text-[#FAEEDA] rounded-lg px-5 py-2 cursor-pointer transition'>
+      <button onClick={() => setOpen(true)} className='text-white bg-[#1D9E75] border hover:bg-[#1A6B5A] hover:text-[#FAEEDA] rounded-lg px-5 py-2 cursor-pointer transition'>
         แก้ไข
       </button>
       <EditSellingpriceReseller id={id}
@@ -31,6 +31,8 @@ function ActionCell({ id, image_url, cost_price, min_price, name, selling_price 
     </div>
   );
 }
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export const ProductsColumn: ColumnDef<MyProductsType>[] = [
   {
@@ -54,7 +56,7 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
       <div className="flex items-center gap-3">
         {row.original.product.image_url ? (
           <img
-            src={row.original.product.image_url}
+            src={API_URL +row.original.product.image_url}
             alt={row.original.product.name}
             className="w-10 h-10 rounded-md object-cover"
           />

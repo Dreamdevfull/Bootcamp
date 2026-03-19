@@ -22,7 +22,7 @@ const DetailOrderButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-      className="text-[#412402] border border-[#000000] bg-[#ef9f27] hover:bg-[#BA7517] rounded-sm p-2 cursor-pointer mt-2"
+      className="text-white border bg-[#1D9E75] hover:bg-[#1A6B5A] rounded-sm p-2 cursor-pointer mt-2"
     >
       รายละเอียด
     </button>

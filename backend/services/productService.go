@@ -52,12 +52,10 @@ func (s *ProductService) CreateProduct(input dto.AddProductRequest, imageBytes [
 		Create_at:   time.Now(),
 	}
 
-	// Logic เช็คราคา (มึงมีอยู่แล้ว)
 	if product.Min_price < product.Cost_price {
 		return nil, errors.New("min price must be greater or equal to cost price")
 	}
 
-	// บันทึกลงฐานข้อมูล
 	err := s.productRepo.Create(&product)
 	if err != nil {
 		return nil, err
@@ -77,39 +75,39 @@ func (s *ProductService) GetProducts() ([]models.Products, error) {
 	return s.productRepo.GetProducts()
 }
 
-func (s *ProductService) UpdateProduct(id uint, input dto.UpdateProductRequest) (*dto.ProductResponse, error) {
+// func (s *ProductService) UpdateProduct(id uint, input dto.UpdateProductRequest) (*dto.ProductResponse, error) {
 
-	product, err := s.productRepo.FindByID(id)
-	if err != nil {
-		return nil, errors.New("product not found")
-	}
+// 	product, err := s.productRepo.FindByID(id)
+// 	if err != nil {
+// 		return nil, errors.New("product not found")
+// 	}
 
-	if input.MinPrice < input.CostPrice {
-		return nil, errors.New("min price must be greater or equal to cost price")
-	}
+// 	if input.MinPrice < input.CostPrice {
+// 		return nil, errors.New("min price must be greater or equal to cost price")
+// 	}
 
-	product.Name = input.Name
-	product.Description = input.Description
-	product.Image = input.ImageURL
-	product.Cost_price = input.CostPrice
-	product.Min_price = input.MinPrice
-	product.Stock = input.Stock
+// 	product.Name = input.Name
+// 	product.Description = input.Description
+// 	product.Image = input.ImageURL
+// 	product.Cost_price = input.CostPrice
+// 	product.Min_price = input.MinPrice
+// 	product.Stock = input.Stock
 
-	err = s.productRepo.Update(product)
-	if err != nil {
-		return nil, err
-	}
+// 	err = s.productRepo.Update(product)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &dto.ProductResponse{
-		ID:          product.Id,
-		Name:        product.Name,
-		Description: product.Description,
-		ImageURL:    product.Image,
-		CostPrice:   product.Cost_price,
-		MinPrice:    product.Min_price,
-		Stock:       product.Stock,
-	}, nil
-}
+// 	return &dto.ProductResponse{
+// 		ID:          product.Id,
+// 		Name:        product.Name,
+// 		Description: product.Description,
+// 		ImageURL:    product.Image,
+// 		CostPrice:   product.Cost_price,
+// 		MinPrice:    product.Min_price,
+// 		Stock:       product.Stock,
+// 	}, nil
+// }
 
 func (s *ProductService) DeleteProduct(id uint) error {
 
@@ -128,6 +126,67 @@ func (s *ProductService) DeleteProduct(id uint) error {
 	}
 
 	return s.productRepo.Delete(product)
+}
+
+func (s *ProductService) UpdateProduct(id uint, input dto.UpdateProductRequest, imageBytes []byte, fileName string) (*dto.ProductResponse, error) {
+	// 1. สร้าง Map เพื่อเก็บฟิลด์ที่จะอัปเดต
+	updateData := make(map[string]interface{})
+
+	// 2. เช็คทีละฟิลด์ ถ้าส่งมา (ไม่ว่าง/ไม่ nil) ให้ใส่ลงใน Map
+	if input.Name != "" {
+		updateData["name"] = input.Name
+	}
+	if input.Description != "" {
+		updateData["description"] = input.Description
+	}
+	if input.CostPrice > 0 {
+		updateData["cost_price"] = input.CostPrice
+	}
+	if input.MinPrice > 0 {
+		updateData["min_price"] = input.MinPrice
+	}
+
+	// สำหรับ Stock (ที่เป็น Pointer)
+	if input.Stock != nil {
+		updateData["stock"] = *input.Stock
+	}
+
+	// 3. จัดการรูปภาพ
+	if len(imageBytes) > 0 {
+		uploadDir := "public/uploads/products"
+		os.MkdirAll(uploadDir, 0755)
+		fullPath := filepath.Join(uploadDir, fileName)
+		os.WriteFile(fullPath, imageBytes, 0644)
+		updateData["image"] = "/uploads/products/" + fileName
+	}
+
+	// 4. ถ้าไม่มีอะไรต้องแก้เลย ให้รีเทิร์นข้อมูลเดิม
+	if len(updateData) == 0 {
+		p, _ := s.productRepo.FindByID(id)
+		return s.mapToResponse(p), nil
+	}
+
+	// 5. สั่งอัปเดตผ่าน Repository (ส่ง Map ไป)
+	if err := s.productRepo.UpdateFields(id, updateData); err != nil {
+		return nil, err
+	}
+
+	// 6. ดึงข้อมูลใหม่ล่าสุดมาโชว์
+	updatedProduct, _ := s.productRepo.FindByID(id)
+	return s.mapToResponse(updatedProduct), nil
+}
+
+// Helper function สำหรับสร้าง Response (เพื่อความสะอาดของโค้ด)
+func (s *ProductService) mapToResponse(p *models.Products) *dto.ProductResponse {
+	return &dto.ProductResponse{
+		ID:          p.Id,
+		Name:        p.Name,
+		Description: p.Description,
+		ImageURL:    p.Image,
+		CostPrice:   p.Cost_price,
+		MinPrice:    p.Min_price,
+		Stock:       p.Stock,
+	}
 }
 
 // 1. ฟังก์ชันสั่งลบจริง (ล้างถังขยะ)
