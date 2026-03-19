@@ -19,10 +19,10 @@ type ProductResponse struct {
 }
 
 type UpdateProductRequest struct {
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	ImageURL    string  `json:"image_url" validate:"required"`
-	CostPrice   float64 `json:"cost_price"`
-	MinPrice    float64 `json:"min_price"`
-	Stock       int     `json:"stock"`
+	Name        string  `json:"name" form:"name"`
+	Description string  `json:"description" form:"description"`
+	ImageURL    string  `json:"image_url" form:"image_url"`
+	CostPrice   float64 `json:"cost_price" form:"cost_price"`
+	MinPrice    float64 `json:"min_price" form:"min_price"`
+	Stock       *int    `json:"stock" form:"stock"`
 }
