@@ -129,73 +129,64 @@ func (s *ProductService) DeleteProduct(id uint) error {
 }
 
 func (s *ProductService) UpdateProduct(id uint, input dto.UpdateProductRequest, imageBytes []byte, fileName string) (*dto.ProductResponse, error) {
-	// 1. ค้นหาสินค้าเดิม
-	product, err := s.productRepo.FindByID(id)
-	if err != nil {
-		return nil, errors.New("product not found")
-	}
+	// 1. สร้าง Map เพื่อเก็บฟิลด์ที่จะอัปเดต
+	updateData := make(map[string]interface{})
+
+	// 2. เช็คทีละฟิลด์ ถ้าส่งมา (ไม่ว่าง/ไม่ nil) ให้ใส่ลงใน Map
 	if input.Name != "" {
-		product.Name = input.Name
+		updateData["name"] = input.Name
 	}
 	if input.Description != "" {
-		product.Description = input.Description
+		updateData["description"] = input.Description
 	}
-
-	// 2. จัดการเรื่องราคาและสต็อก (ถ้าค่า > 0 ถึงจะอัปเดต)
 	if input.CostPrice > 0 {
-		product.Cost_price = input.CostPrice
+		updateData["cost_price"] = input.CostPrice
 	}
 	if input.MinPrice > 0 {
-		product.Min_price = input.MinPrice
-	}
-	// สำหรับ Stock อาจจะเป็น 0 ได้ ต้องเช็คจาก Request ว่าส่งมาจริงไหม
-	// หรือเช็คเบื้องต้นถ้าไม่อยากให้เป็น 0 ก็ใช้เงื่อนไข > 0
-	if input.Stock != nil {
-		product.Stock = *input.Stock
+		updateData["min_price"] = input.MinPrice
 	}
 
-	// 2. จัดการรูปภาพ
+	// สำหรับ Stock (ที่เป็น Pointer)
+	if input.Stock != nil {
+		updateData["stock"] = *input.Stock
+	}
+
+	// 3. จัดการรูปภาพ
 	if len(imageBytes) > 0 {
-		// ถ้ามีการอัปโหลดไฟล์ใหม่เข้ามา
 		uploadDir := "public/uploads/products"
 		os.MkdirAll(uploadDir, 0755)
 		fullPath := filepath.Join(uploadDir, fileName)
-		if err := os.WriteFile(fullPath, imageBytes, 0644); err != nil {
-			return nil, err
-		}
-		product.Image = "/uploads/products/" + fileName
-	} else if input.ImageURL != "" {
-		// ถ้าไม่มีไฟล์ใหม่ แต่มี URL รูปเดิมส่งมา (ป้องกันค่าว่าง)
-		product.Image = input.ImageURL
+		os.WriteFile(fullPath, imageBytes, 0644)
+		updateData["image"] = "/uploads/products/" + fileName
 	}
 
-	// 3. Business Logic
-	if input.MinPrice < input.CostPrice {
-		return nil, errors.New("min price must be greater or equal to cost price")
+	// 4. ถ้าไม่มีอะไรต้องแก้เลย ให้รีเทิร์นข้อมูลเดิม
+	if len(updateData) == 0 {
+		p, _ := s.productRepo.FindByID(id)
+		return s.mapToResponse(p), nil
 	}
 
-	// 4. Mapping ข้อมูลใหม่
-	product.Name = input.Name
-	product.Description = input.Description
-	product.Cost_price = input.CostPrice
-	product.Min_price = input.MinPrice
-	product.Stock = *input.Stock
-
-	// 5. บันทึก
-	if err := s.productRepo.Update(product); err != nil {
+	// 5. สั่งอัปเดตผ่าน Repository (ส่ง Map ไป)
+	if err := s.productRepo.UpdateFields(id, updateData); err != nil {
 		return nil, err
 	}
 
-	// 6. ส่ง Response กลับ (Output)
+	// 6. ดึงข้อมูลใหม่ล่าสุดมาโชว์
+	updatedProduct, _ := s.productRepo.FindByID(id)
+	return s.mapToResponse(updatedProduct), nil
+}
+
+// Helper function สำหรับสร้าง Response (เพื่อความสะอาดของโค้ด)
+func (s *ProductService) mapToResponse(p *models.Products) *dto.ProductResponse {
 	return &dto.ProductResponse{
-		ID:          product.Id,
-		Name:        product.Name,
-		Description: product.Description,
-		ImageURL:    product.Image,
-		CostPrice:   product.Cost_price,
-		MinPrice:    product.Min_price,
-		Stock:       product.Stock,
-	}, nil
+		ID:          p.Id,
+		Name:        p.Name,
+		Description: p.Description,
+		ImageURL:    p.Image,
+		CostPrice:   p.Cost_price,
+		MinPrice:    p.Min_price,
+		Stock:       p.Stock,
+	}
 }
 
 // 1. ฟังก์ชันสั่งลบจริง (ล้างถังขยะ)
