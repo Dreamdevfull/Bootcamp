@@ -22,7 +22,7 @@ const RemoveShopProductButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-      className="text-[#791f1f] border border-[#F7C1C1] rounded-lg bg-[#FCEBEB] hover:bg-[#F7C1C1] transition cursor-pointer px-4 py-2 w-full mt-2"
+      className="text-[#791f1f] border border-[#F7C1C1] rounded-lg bg-[#FCEBEB] hover:bg-[#F7C1C1] transition cursor-pointer px-4 py-2 mt-2"
     >
       นำออก
     </button>
