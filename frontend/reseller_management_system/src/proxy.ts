@@ -54,6 +54,16 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  const data = await res.json();
+  
+  if (isAdmin && data.role !== "admin") {
+    return NextResponse.redirect(new URL("/resellers/dashboard", req.url));
+  }
+
+  if (isReseller && data.role !== "reseller") {
+    return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+  }
+
   return NextResponse.next();
 }
 
