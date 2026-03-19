@@ -5,6 +5,7 @@ import HeaderReseller from '@/app/components/layout/headerReseller'
 import Main from '@/app/components/layout/main'
 import { DataTable } from '@/app/components/ui/datatable'
 import { OrdersColumn as columns } from '@/app/components/columnsreseller/orders';
+import { FilterSearchAndDropdown } from '@/app/components/ui/filter'
 
 const mockmain = {
   text1: "ออเดอร์ของฉัน",
@@ -37,7 +38,8 @@ const OrdersPage = () => {
     <div className="min-h-screen bg-[#F5F3EE]">
       <HeaderReseller/>
       <Main main={mockmain}/>
-      <div className='px-8 py-7'>
+      <FilterSearchAndDropdown/>
+      <div className='px-8 py-1'>
         <DataTable columns={columns} data={data} loading={loading} />
       </div>
     </div>

@@ -2,6 +2,7 @@
 import React from 'react'
 import HeaderCustomers from '@/app/components/layout/headerCustomers'
 import { useState } from "react"
+import PopCustomersOrder from '@/app/components/ui/popup/popcustomers/order'
 
 
 
@@ -83,7 +84,9 @@ const Customers = () => {
             {/* ปุ่มข้างล่างสำหรับเพิ่มสินค้าเข้าตะกร้าหรือสั่งซื้อสินค้า */}
             <div className="flex gap-2 mt-3">
               <button className="flex-1 bg-[#e1f5ee] border border-[#1d9e75] text-[#085041] rounded-lg py-2 text-sm hover:bg-[#9FE1CB] hover:border-[#0F6E56] cursor-pointer">🛒 เพิ่มลงตะกร้า</button>
-              <button className="flex-1 bg-[#ef9f27] text-[#412402] border border-black rounded-lg py-2 text-sm hover:bg-[#BA7517] cursor-pointer">ซื้อสินค้า</button>
+              <button onClick={() => setOpen(true)}
+              className="flex-1 bg-[#EF9F27] text-white border rounded-lg py-2 text-sm hover:bg-[#BA7517] cursor-pointer">ซื้อสินค้า</button>
+              <PopCustomersOrder open={open} onClose={() => setOpen(false)}/>
             </div>
           </div>
         </div>
