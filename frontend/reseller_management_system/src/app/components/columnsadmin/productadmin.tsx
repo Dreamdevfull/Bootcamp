@@ -7,7 +7,7 @@ interface Product {
   id: number;
   name: string;
   description: string;
-  Image: string;
+  image_url: string;
   cost_price: number;
   min_price: number;
   stock: number;
@@ -32,22 +32,28 @@ export const productColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: "สินค้า",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-3">
-        {row.original.Image ? (
-          <img
-            src={row.original.Image}
-            alt={row.original.name}
-            className="w-10 h-10 rounded-md object-cover"
-          />
-        ) : (
-          <div className="w-10 h-10 rounded-md bg-gray-200 flex items-center justify-center text-xs text-gray-400">
-            ไม่มีรูป
-          </div>
-            )}
+    cell: ({ row }) => {
+      
+      const API_URL = process.env.NEXT_PUBLIC_API_URL ;
+
+      return (
+        <div className="flex items-center gap-3">
+          {row.original.image_url ? (
+            <img
+              
+              src={`${API_URL}${row.original.image_url}`}
+              alt={row.original.name}
+              className="w-10 h-10 rounded-md object-cover"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-md bg-gray-200 flex items-center justify-center text-xs text-gray-400">
+              ไม่มีรูป
+            </div>
+          )}
           <span>{row.original.name}</span>
-      </div>
-    ),
+        </div>
+      );
+    },
   },
   {
     accessorKey: "cost_price",
@@ -75,7 +81,7 @@ export const productColumns: ColumnDef<Product>[] = [
     header: () => <div className="text-center">จัดการ</div>,
     cell: ({ row }) => (
       <div className="flex items-center justify-center gap-2">
-        <EditButton/>
+        <EditButton />
         <SoftDeleteButton id={row.original.id} />
       </div>
     ),
