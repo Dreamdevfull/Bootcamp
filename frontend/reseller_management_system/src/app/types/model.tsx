@@ -78,17 +78,19 @@ export interface ShopProducts {
     cost_price: number
     min_price: number
     stock: number
-    Create_at: string
+    create_at: string
   }
   selling_price: number
 }
 
 export interface OrderReseller {
+  id: number;
   order_number: string;
   customer_name: string;
   items: string;
   total_amount: number;
   my_profit: number;
+  created_at: string;
   status: string;
 }
 
