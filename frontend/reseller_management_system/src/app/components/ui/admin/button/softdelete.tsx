@@ -5,14 +5,14 @@ type Props = {
   onSuccess?: () => void; // optional: บอก parent ให้ refetch
 }
 
-const ApprovedButton = ({ id, onSuccess }: Props) => {
+const SoftDeleteButton = ({ id, onSuccess }: Props) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const handleClick = async () => {
-    const res = await fetch(`${API_URL}/admin/resellers/${id}`, {
-      method: "PATCH",
+    const res = await fetch(`${API_URL}/admin/products/delete/${id}`, {
+      method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ status: "approved" }),
+      body: JSON.stringify({ deleted: true }),
     });
 
     if (res.ok) {
@@ -23,11 +23,11 @@ const ApprovedButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-      className="text-[#ffffffff] border border-[] bg-[#0d3d30] hover:bg-[#0d3d30]/80 rounded-sm p-2 cursor-pointer'"
+      className="bg-[#FCEBEB] text-[#791F1F border border-[#F7C1C1] rounded-lg hover:bg-[#F7C1C1] transition cursor-pointer px-4 py-2"
     >
-      อนุมัติ
+      ลบ
     </button>
   );
 };
 
-export default ApprovedButton;
+export default SoftDeleteButton;

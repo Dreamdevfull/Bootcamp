@@ -1,9 +1,14 @@
 "use client"
 import Link from 'next/link';
 import Image from 'next/image';
-import ButtonLogout from '@/app/components/ui/button/logout';
+import ButtonLogout from '@/app/components/ui/admin/button/logout';
+import { usePathname } from 'next/navigation';
 
 const HeaderAdmin = () => {
+  const pathname = usePathname();
+    const sidebarLinkClass = (path: string) =>
+    `flex mb-0.5 items-center p-2 rounded-lg font-medium w-30 justify-center border border-white/30 hover:bg-[#1a6b5a] hover:text-white transition cursor-pointer ${
+    pathname === path ? "bg-[#1a6b5a] text-white" : ""}`;
   
   return (
     <nav className="sticky top-0 z-50 w-full h-20 bg-[#0d3d30] text-white flex items-center justify-between px-8 shadow-md">
@@ -23,10 +28,10 @@ const HeaderAdmin = () => {
       </div>
       
       <div className="flex gap-4">
-        <Link href="/admin/dashboard"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">แดชบอร์ด</button></Link>
-        <Link href="/admin/products"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">จัดการสินค้า</button></Link>
-        <Link href="/admin/resellers_manage"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">อนุมัติตัวแทน</button></Link>
-        <Link href="/admin/orders"><button className="border border-white/30 px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">จัดการออเดอร์</button></Link>
+        <Link href="/admin/dashboard"><button className={sidebarLinkClass("/admin/dashboard")}>แดชบอร์ด</button></Link>
+        <Link href="/admin/products"><button className={sidebarLinkClass("/admin/products")}>จัดการสินค้า</button></Link>
+        <Link href="/admin/resellers_manage"><button className={sidebarLinkClass("/admin/resellers_manage")}>อนุมัติตัวแทน</button></Link>
+        <Link href="/admin/orders"><button className={sidebarLinkClass("/admin/orders")}>จัดการออเดอร์</button></Link>
         <ButtonLogout />
       </div>
     </nav>

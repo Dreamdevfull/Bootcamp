@@ -1,8 +1,8 @@
 "use client"
 import { ColumnDef } from '@tanstack/react-table';
-import ApprovalButton from '../ui/button/approval/approved';
-import BockButton from '../ui/button/approval/bock';
-import RejectedButton from '../ui/button/approval/rejected';
+import ApprovalButton from '../ui/admin/approval/approved';
+import BockButton from '../ui/admin/approval/bock';
+import RejectedButton from '../ui/admin/approval/rejected';
 
 interface Approval {
   id: number;
@@ -15,19 +15,20 @@ interface Approval {
 }
 
 export const ResellersManage: ColumnDef<Approval>[] =  [
-  {
-    id: "index",
-    header: () => <div className="text-center">ลำดับ</div>,
-    cell: ({ row, table }) => {
-      const pageIndex = table.getState().pagination.pageIndex;
-      const pageSize = table.getState().pagination.pageSize;
-      return (
-        <div className="text-center">
-          {pageIndex * pageSize + row.index + 1}
-        </div>
-      );
-    },
-  },
+  // {
+  //   id: "index",
+  //   header: () => <div className="text-center">ลำดับ</div>,
+  //   cell: ({ row, table }) => {
+  //     const pageIndex = table.getState().pagination.pageIndex;
+  //     const pageSize = table.getState().pagination.pageSize;
+  //     const pageRowIndex = table.getRowModel().rows.findIndex(r => r.id === row.id);
+  //     return (
+  //       <div className="text-center">
+  //         {pageIndex * pageSize + pageRowIndex + 1}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "create_at",
     header: () => <div className="text-center">วันที่สมัคร</div>,
@@ -36,11 +37,30 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
       console.log(date);
       return (
         <div className='text-center'>
-          {new Date(date).toLocaleDateString("th-TH")}
+          {new Date(date).toLocaleDateString("th-TH", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
         </div>
       );
     },
   },
+  // {
+  //   accessorKey: "create_at",
+  //   header: () => <div className="text-center">วันที่สมัคร</div>,
+  //   cell: ({ row }) => {
+  //     const date = row.original.created_at;
+  //     console.log(date);
+  //     return (
+  //       <div className='text-center'>
+  //         {new Date(date).toLocaleDateString("th-TH")}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "name",
     header: () => <div className="text-center">ชื่อ-นามสกุล</div>,
@@ -105,7 +125,7 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
       } else if (status === "approved") {
         return (
           <div className="flex justify-center">
-            <BockButton />
+            <BockButton id={row.original.id}/>
           </div>
         );
       } else {

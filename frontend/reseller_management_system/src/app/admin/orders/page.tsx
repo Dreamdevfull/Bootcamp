@@ -1,22 +1,19 @@
 "use client"
 import HeaderAdmin from '@/app/components/layout/headeradmin'
-import { ColumnDef } from "@tanstack/react-table";
+import { ManageOrderAdmin as columns } from "@/app/components/columnsadmin/manageorderadmin";
 import { useEffect, useState } from 'react'
 import { DataTable } from '@/app/components/ui/datatable';
 import Main from '@/app/components/layout/main';
+import { Orders as OrdersType } from '@/app/types/model';
 
-interface orders {
-  id: number,
-  
+const mockmain = {
+  text1: "จัดการออเดอร์",
+  text2: "ตรวจสอบออเดอร์จากทุกร้านค้า และอัปเดตสถานะการจัดส่ง"
 }
-const columns: ColumnDef<orders>[] = [
-  { accessorKey: "name", header: "ชื่อ" },
-  { accessorKey: "email", header: "อีเมล" },
-  { accessorKey: "status", header: "สถานะ" },
-];
+
 
 const OrdersPage = () => {
-  const [data, setData] = useState<orders[]>([]);
+  const [data, setData] = useState<OrdersType[]>([]);
   const [loading, setLoading] = useState(true);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -41,7 +38,7 @@ const OrdersPage = () => {
   return (
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
-      <Main />
+      <Main main={mockmain}/>
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading} />
       </div>
