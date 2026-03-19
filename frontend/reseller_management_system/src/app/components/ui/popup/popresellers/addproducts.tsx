@@ -1,28 +1,46 @@
 "use client"
 
-import React from "react"
+import { useEffect, useState } from "react";
 
-export default function EditSellingpriceReseller({ open, onClose, id, image_url, cost_price, min_price, name, selling_price }: {
+export default function AddProducts({ open, onClose, id, name, image_url, cost_price, min_price }: {
   open: boolean;
   onClose: () => void;
   id: number;
+  name: string;
   image_url: string;
   cost_price: number;
-  name: string;
-  min_price: number
-  selling_price: number;
+  min_price: number;
 }) {
-  const [price, setPrice] = React.useState<number>(selling_price);
+  const [price, setPrice] = useState<number>(min_price)
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL
-  const handleSubmit = async () => {
-    console.log({ id, selling_price: price })
-    await fetch(`${API_URL}/reseller/my-products/update-price`, {
-      method: "PATCH",
+
+  //  useEffect(() => {
+  //   if (open) {
+  //     setPrice(min_price);
+  //   }
+  // }, [open, min_price]);
+
+  const handleClick = async () => {
+    if (price < min_price) {
+      alert("ราคาห้ามต่ำกว่าขั้นต่ำ")
+      return
+    }
+
+    const res = await fetch(`${API_URL}/reseller/catalog/add`, {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ id, selling_price: price }),
-    });
-    onClose();
+       body: JSON.stringify({
+        product_id: id,
+        selling_price: price,
+      }),
+    })
+    if (res.ok) {
+      onClose()
+    } else {
+      alert("เพิ่มสินค้าไม่สำเร็จ")
+    }
   }
 
   if (!open) return null
@@ -35,7 +53,7 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
     >
       {/* header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-[#2C2C2A]">ตั้งราคาสินค้า</h2>
+        <h2 className="text-xl font-bold text-[#2C2C2A]">เพิ่มสินค้าเข้าร้าน</h2>
         <button onClick={onClose} className="text-[#888780] hover:text-[#2C2C2A] text-xl cursor-pointer transition">
           ✕
         </button>
@@ -44,7 +62,7 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
       {/* รูปและราคา */}
       <div className="border border-[#D3D1C7] rounded-lg p-4 mb-3">
         <div className="h-55 flex items-center justify-center w-full rounded-md overflow-hidden bg-[#F5F3EE] mb-3">
-          {API_URL + image_url ? (
+          {image_url ? (
             <img src={`${API_URL}${image_url}`} alt={name} className="h-50 w-50 object-cover border shadow-md" />
           ) : (
             <div className="h-full w-full flex items-center justify-center text-xs text-[#888780]">
@@ -57,10 +75,6 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
           <div>
             <p className="text-xs text-[#888780]">ต้นทุน</p>
             <p className="text-lg font-bold text-[#888780]">฿{cost_price}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-[#888780]">ราคาขายเดิม</p>
-            <p className="text-lg font-bold text-[#888780]">฿{selling_price}</p>
           </div>
         </div>
       </div>
@@ -104,11 +118,11 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
         </button>
         <button
           type="button"
-          onClick={handleSubmit}
+          onClick={handleClick}
           disabled={price < min_price}
           className="w-full px-4 py-2 rounded-lg bg-[#EF9F27] text-white hover:bg-[#BA7517] transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          บันทึก
+          ยืนยันการเพิ่ม
         </button>
       </div>
     </div>
