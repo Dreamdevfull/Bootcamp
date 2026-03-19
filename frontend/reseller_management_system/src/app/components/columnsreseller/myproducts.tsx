@@ -53,6 +53,7 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
     accessorKey: "name",
     header: "สินค้า",
     cell: ({ row }) => (
+      
       <div className="flex items-center gap-3">
         {row.original.product.image_url ? (
           <img
@@ -97,7 +98,7 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
     accessorKey: "product.cost_price",
     header: () => <div className="text-center">ราคาทุน</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.original.product.cost_price}</div>
+      <div className="text-center">{row.original.product?.cost_price}</div>
     ),
   },
   {
@@ -119,13 +120,7 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
       </div>
     ),
   },
-  // {
-  //   accessorKey: "selling_price",
-  //   header: () => <div className="text-center">กำไรสูงสุด</div>,
-  //   cell: ({ row }) => (
-  //     <div className="text-center">{row.original.selling_price}</div>
-  //   ),
-  // },
+  
   {
     accessorKey: "product.stock",
     header: () => <div className="text-center">สต๊อก</div>,
