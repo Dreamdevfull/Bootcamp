@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import Header from '@/app/components/layout/header'
 import { useRouter, useSearchParams } from "next/navigation"
 
 const FromLogin = () => {
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
   const router = useRouter();
-  const [,setLoading] = useState(false);
+  const [loading,setLoading] = useState(false);
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";;
+  const callbackUrl = searchParams.get("callbackUrl") || "";;
 
   const URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -28,15 +27,15 @@ const FromLogin = () => {
 
       if (res.ok) {
         window.alert(res.status === 200)
-        if (callbackUrl.startsWith("/") && callbackUrl !== "/login") {
-        router.push(callbackUrl);
-        return;
+        if (callbackUrl && callbackUrl.startsWith("/") && callbackUrl !== "/login") {
+          router.push(callbackUrl);
+          return;
         }
 
-        const data = result.data;
-        if (data.role === "admin") {
+        const user = result.user;
+        if (user.role === "admin") {
           router.push("/admin/dashboard");
-        } else if (data.role === "reseller") {
+        } else if (user.role === "reseller") {
           router.push("/resellers/dashboard");
         } else {
           window.alert("ไม่สามารถเข้าสู่ระบบได้ เนื่องจากบทบาทผู้ใช้ไม่ถูกต้อง");
@@ -48,11 +47,13 @@ const FromLogin = () => {
       }
 
     } catch (err) {
+      console.error("catch error:", err) 
       alert("เกิดข้อผิดพลาด กรุณาลองใหม่")
     } finally {
       setLoading(false)
     }
   }
+  if (loading) {}
   return (
     <main className="flex-1 flex justify-center items-center p-4">
       <div className="w-[503px] h-[472px] bg-white rounded-2xl shadow-md border border-gray-200 p-8">

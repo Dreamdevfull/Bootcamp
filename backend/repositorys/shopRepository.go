@@ -11,6 +11,7 @@ type ShopRepository interface {
 	GetBySlug(slug string) (*models.Shops, error)
 	GetShopProducts(shopId uint) ([]models.ShopProducts, error)
 	GetShopProductsByShopID(shopID uint) ([]models.ShopProducts, error)
+	GetByID(id uint) (*models.Shops, error)
 }
 
 type shopRepository struct {
@@ -55,7 +56,13 @@ func (r *shopRepository) GetShopProducts(shopId uint) ([]models.ShopProducts, er
 }
 func (r *shopRepository) GetShopProductsByShopID(shopID uint) ([]models.ShopProducts, error) {
 	var shopProducts []models.ShopProducts
-	// ใช้ table("shop_products") หรือถ้ามี model แล้วก็ใช้ชื่อ model ได้เลย
+
 	err := r.db.Where("shop_id = ?", shopID).Find(&shopProducts).Error
 	return shopProducts, err
+}
+
+func (r *shopRepository) GetByID(id uint) (*models.Shops, error) {
+	var shop models.Shops
+	err := r.db.First(&shop, id).Error
+	return &shop, err
 }

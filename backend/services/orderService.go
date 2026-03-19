@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -12,7 +13,9 @@ import (
 type OrderService interface {
 	GetOrders() ([]models.Orders, error)
 	QuickComplete(orderID int) error
-	ProcessCheckout(slug string, req dto.CheckoutRequest) (*dto.CheckoutResponse, error)
+	ProcessCheckout(slug string, req dto.CheckoutRequest) (*models.Orders, error)
+	ConfirmPayment(orderID uint) (*models.Orders, error)
+	GetOrderTracking(orderNumber string) (*models.Orders, error)
 }
 
 type orderService struct {
@@ -23,12 +26,12 @@ type orderService struct {
 }
 
 func NewOrderService(
-	r repositorys.OrderRepository,
-	w repositorys.WalletRepository,
-	p repositorys.ProductRepository,
-	sh repositorys.ShopRepository,
+	orderRepo repositorys.OrderRepository,
+	walletRepo repositorys.WalletRepository,
+	productRepo repositorys.ProductRepository,
+	shopRepo repositorys.ShopRepository,
 ) OrderService {
-	return &orderService{repo: r, walletRepo: w, productRepo: p, shopRepo: sh}
+	return &orderService{repo: orderRepo, walletRepo: walletRepo, productRepo: productRepo, shopRepo: shopRepo}
 }
 
 func (s *orderService) GetOrders() ([]models.Orders, error) {
@@ -36,9 +39,19 @@ func (s *orderService) GetOrders() ([]models.Orders, error) {
 }
 
 func (s *orderService) QuickComplete(orderID int) error {
+
 	order, err := s.repo.FindByID(orderID)
 	if err != nil {
 		return err
+	}
+
+	if order.Status == "completed" {
+		return errors.New("ออเดอร์นี้บันทึกกำไรไปเรียบร้อยแล้ว")
+	}
+
+	shop, err := s.shopRepo.GetByID(uint(order.Shop_id))
+	if err != nil {
+		return fmt.Errorf("ไม่พบร้านค้าที่เกี่ยวข้องกับออเดอร์นี้: %v", err)
 	}
 
 	items, err := s.repo.GetItemsByOrderID(orderID)
@@ -50,36 +63,52 @@ func (s *orderService) QuickComplete(orderID int) error {
 	for _, item := range items {
 		profitPerItem := item.Selling_price - item.Cost_price
 		totalProfit += profitPerItem * float64(item.Quantity)
-
 	}
 
-	if err := s.repo.UpdateStatus(orderID, "shipped"); err != nil {
+	if err := s.repo.UpdateStatus(orderID, "completed"); err != nil {
 		return err
 	}
 
-	if err := s.walletRepo.AddBalance(order.Shop_id, totalProfit); err != nil {
+	if err := s.walletRepo.AddBalance(int(shop.User_id), totalProfit, uint(orderID)); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (s *orderService) ProcessCheckout(slug string, req dto.CheckoutRequest) (*dto.CheckoutResponse, error) {
-	// 1. ตรวจสอบร้านค้าและสินค้า
-	shop, _ := s.shopRepo.GetBySlug(slug)
-	shopProduct, _ := s.productRepo.GetProductForCheckout(shop.Id, req.ProductID)
-	product, _ := s.productRepo.FindByID(req.ProductID)
-
-	// 2. BR-27: ตรวจสอบสต็อก
-	if product.Stock < req.Quantity {
-		return nil, fmt.Errorf("สินค้าไม่เพียงพอ")
+func (s *orderService) ProcessCheckout(slug string, req dto.CheckoutRequest) (*models.Orders, error) {
+	shop, err := s.shopRepo.GetBySlug(slug)
+	if err != nil {
+		return nil, errors.New("ไม่พบร้านค้า")
 	}
 
-	// 3. คำนวณยอดและกำไร [cite: 7, 8]
-	totalAmount := shopProduct.Selling_price * float64(req.Quantity)
-	resellerProfit := (shopProduct.Selling_price - product.Min_price) * float64(req.Quantity)
+	var totalAmount float64
+	var totalProfit float64
+	var items []models.OrderItems
 
-	// 4. เตรียมข้อมูล Order
+	for _, itemReq := range req.Items {
+		shopProduct, err := s.productRepo.GetProductForCheckout(shop.Id, itemReq.ProductID)
+		if err != nil {
+			return nil, fmt.Errorf("ไม่พบสินค้า ID %d", itemReq.ProductID)
+		}
+
+		// BR-27: ตรวจสอบสต็อก
+		if shopProduct.Product.Stock < itemReq.Quantity {
+			return nil, fmt.Errorf("สินค้า %s ไม่เพียงพอ", shopProduct.Product.Name)
+		}
+
+		totalAmount += shopProduct.Selling_price * float64(itemReq.Quantity)
+		totalProfit += (shopProduct.Selling_price - shopProduct.Product.Min_price) * float64(itemReq.Quantity)
+
+		items = append(items, models.OrderItems{
+			Product_id:    int(shopProduct.Product.Id),
+			Product_name:  shopProduct.Product.Name,
+			Cost_price:    shopProduct.Product.Cost_price,
+			Selling_price: shopProduct.Selling_price,
+			Quantity:      itemReq.Quantity,
+		})
+	}
+
 	order := models.Orders{
 		Order_number:     fmt.Sprintf("ORD-%d", time.Now().Unix()),
 		Shop_id:          int(shop.Id),
@@ -87,29 +116,46 @@ func (s *orderService) ProcessCheckout(slug string, req dto.CheckoutRequest) (*d
 		Customer_phone:   req.CustomerPhone,
 		Shipping_address: req.ShippingAddress,
 		Total_amount:     totalAmount,
-		Reseller_profit:  resellerProfit,
-		Staus:            "pending", // เริ่มต้นเป็นรอดำเนินการ
+		Reseller_profit:  totalProfit,
+		Status:           "pending",
+		OrderItems:       items,
 	}
 
-	item := models.OrderItems{
-		Products_id:   int(product.Id),
-		Products_name: product.Name,
-		Cost_price:    product.Cost_price, // ราคาทุนจากระบบ
-		Selling_price: shopProduct.Selling_price,
-		Quantity:      req.Quantity,
+	if err := s.repo.CreateOrder(&order); err != nil {
+		return nil, err
+	}
+	return &order, nil
+}
+
+func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
+	order, err := s.repo.FindOrderByID(orderID)
+	if err != nil {
+		return nil, errors.New("ไม่พบออเดอร์")
 	}
 
-	// 5. บันทึกและตัดสต็อก
-	if err := s.repo.CreateOrder(&order, []models.OrderItems{item}); err != nil {
+	if order.Status != "pending" {
+		return nil, errors.New("ออเดอร์นี้ได้ทำการชำระเงินเรียบร้อยแล้ว")
+	}
+
+	for _, item := range order.OrderItems {
+		if err := s.productRepo.UpdateStock(uint(item.Product_id), -item.Quantity); err != nil {
+			return nil, err
+		}
+	}
+
+	// BR-28: อัปเดตสถานะเป็น completed (หรือตาม ENUM ที่คุณตั้ง)
+	order.Status = "shipped"
+	if err := s.repo.UpdateOrderStatus(orderID, order.Status); err != nil {
 		return nil, err
 	}
 
-	// ตัดสต็อกสินค้า
-	product.Stock -= req.Quantity
-	s.productRepo.Update(product)
+	return order, nil
+}
 
-	return &dto.CheckoutResponse{
-		OrderNumber: order.Order_number,
-		Message:     "สั่งซื้อสำเร็จ!",
-	}, nil
+func (s *orderService) GetOrderTracking(orderNumber string) (*models.Orders, error) {
+	order, err := s.repo.FindByOrderNumber(orderNumber)
+	if err != nil {
+		return nil, err // จะถูกส่งไปเป็น "ไม่พบออเดอร์นี้"
+	}
+	return order, nil
 }

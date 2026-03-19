@@ -14,6 +14,7 @@ type Container struct {
 	ProductsController *controllers.ProductsController
 	UserController     *controllers.UserController
 	ShopController     *controllers.ShopController
+	WalletController   *controllers.WalletController
 }
 
 func NewContainer(db *gorm.DB) *Container {
@@ -31,17 +32,19 @@ func NewContainer(db *gorm.DB) *Container {
 	authService := services.NewAuthService(userRepo, shopRepo)
 	authController := controllers.NewAuthController(authService)
 	//=========================================================
+	walletRepo := repositorys.NewWalletRepository(db)
+	walletService := services.NewWalletService(walletRepo)
+	walletController := controllers.NewWalletController(walletService)
 
 	orderRepo := repositorys.NewOrderRepository(db)
-	walletRepo := repositorys.NewWalletRepository(db)
 	orderService := services.NewOrderService(orderRepo, walletRepo, productRepo, shopRepo)
-	orderController := controllers.NewOrderController(orderService)
+	orderController := controllers.NewOrderController(orderService, shopService)
 
 	resellerRepo := repositorys.NewResellerRepository(db)
 	resellerService := services.NewResellerService(resellerRepo)
 	resellerController := controllers.NewResellerController(resellerService)
 
-	userService := services.NewUserService(userRepo)
+	userService := services.NewUserService(userRepo, walletRepo)
 	userController := controllers.NewUserController(userService)
 
 	productService.StartCleanupScheduler()
@@ -53,5 +56,6 @@ func NewContainer(db *gorm.DB) *Container {
 		ProductsController: productsController,
 		UserController:     userController,
 		ShopController:     shopsController,
+		WalletController:   walletController,
 	}
 }

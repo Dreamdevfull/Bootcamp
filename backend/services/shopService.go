@@ -1,12 +1,17 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/Dreamdevfull/Bootcamp/dto"
+	"github.com/Dreamdevfull/Bootcamp/models"
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
+	"gorm.io/gorm"
 )
 
 type ShopService interface {
 	GetShopFrontData(slug string) (*dto.ShopFrontResponse, error)
+	GetShopBySlug(slug string) (*models.Shops, error)
 }
 
 type shopService struct {
@@ -48,4 +53,15 @@ func (s *shopService) GetShopFrontData(slug string) (*dto.ShopFrontResponse, err
 		ShopName: shop.Shop_name,
 		Products: productList,
 	}, nil
+}
+func (s *shopService) GetShopBySlug(slug string) (*models.Shops, error) {
+	// เรียกใช้ Repository ที่คุณมีอยู่แล้ว
+	shop, err := s.repo.GetBySlug(slug)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("ไม่พบร้านค้าที่ระบุ")
+		}
+		return nil, err
+	}
+	return shop, nil
 }

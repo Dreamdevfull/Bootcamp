@@ -10,7 +10,10 @@ type OrderRepository interface {
 	UpdateStatus(orderID int, status string) error
 	FindByID(id int) (*models.Orders, error)
 	GetItemsByOrderID(orderID int) ([]models.OrderItems, error)
-	CreateOrder(order *models.Orders, items []models.OrderItems) error
+	CreateOrder(order *models.Orders) error
+	FindOrderByID(id uint) (*models.Orders, error)
+	UpdateOrderStatus(id uint, status string) error
+	FindByOrderNumber(orderNumber string) (*models.Orders, error)
 }
 
 type orderRepository struct {
@@ -24,7 +27,7 @@ func NewOrderRepository(db *gorm.DB) OrderRepository {
 func (r *orderRepository) FindAll() ([]models.Orders, error) {
 	var orders []models.Orders
 
-	err := r.db.Preload("OrderItems").Find(&orders).Error
+	err := r.db.Preload("Shop").Preload("OrderItems").Find(&orders).Error
 	return orders, err
 }
 
@@ -46,18 +49,24 @@ func (r *orderRepository) GetItemsByOrderID(orderID int) ([]models.OrderItems, e
 	return items, err
 }
 
-func (r *orderRepository) CreateOrder(order *models.Orders, items []models.OrderItems) error {
-	// ใช้ Transaction เพื่อความปลอดภัย: ถ้าบันทึกอย่างใดอย่างหนึ่งพลาด ให้ Rollback ทั้งหมด
-	return r.db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(order).Error; err != nil {
-			return err
-		}
-		for i := range items {
-			items[i].Order_id = int(order.Id) // เชื่อม FK Order [cite: 8]
-			if err := tx.Create(&items[i]).Error; err != nil {
-				return err
-			}
-		}
-		return nil
-	})
+func (r *orderRepository) CreateOrder(order *models.Orders) error {
+
+	return r.db.Create(order).Error
+}
+func (r *orderRepository) FindOrderByID(id uint) (*models.Orders, error) {
+	var order models.Orders
+	// ใช้ Preload เพื่อดึงรายการสินค้าในออเดอร์ออกมาด้วย
+	err := r.db.Preload("OrderItems").First(&order, id).Error
+	return &order, err
+}
+func (r *orderRepository) UpdateOrderStatus(id uint, status string) error {
+	return r.db.Model(&models.Orders{}).Where("id = ?", id).Update("status", status).Error
+}
+func (r *orderRepository) FindByOrderNumber(orderNumber string) (*models.Orders, error) {
+	var order models.Orders
+	err := r.db.Preload("OrderItems").
+		Where("order_number = ?", orderNumber).
+		First(&order).Error
+
+	return &order, err
 }

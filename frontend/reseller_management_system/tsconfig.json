@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/components/ui/buttonlogoutstsx", "src/app/components/ui/popup/popadmin"  ],
   "exclude": ["node_modules"]
 }

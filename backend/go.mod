@@ -11,8 +11,11 @@ require (
 )
 
 require (
+	github.com/chai2010/webp v1.4.0 // indirect
 	github.com/gofiber/fiber/v2 v2.52.12 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
+	github.com/nickalie/go-binwrapper v0.0.0-20260217210625-2cc2a03abe15 // indirect
+	github.com/nickalie/go-webpbin v0.0.0-20260302110202-4584fd694f25 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 )
 
