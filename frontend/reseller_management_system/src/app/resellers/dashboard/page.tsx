@@ -148,5 +148,6 @@ export default function DashboardPage() {
         </PieChart>
       </section>
     </div>
+
   )
 }
