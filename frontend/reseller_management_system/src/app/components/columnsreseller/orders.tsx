@@ -60,18 +60,18 @@ export const OrdersColumn: ColumnDef<OrderResellerType>[] = [
     id: "items",
     header: () => <div>สินค้า(จำนวน)</div>,
     cell: ({ row }) => {
-      const items = row.original.items
-      const preview = items.slice(0, 2)
-      const remaining = items.length - 2
+      const item = row.original.items
+      const preview = item.slice(0, 2)
+      const remaining = item.length - 2
 
       return (
         <div>
-          {/* {preview.map((item, index) => ( */}
-            {/* <div key={index}>
-              {item.items} ({item.quantity})
-            </div> */}
-            <h1>{items}</h1>
-          {/* ))} */}
+          {preview.map((item, index) => (
+          <div key={index}>
+              {item.product_name} ({item.quantity})
+            </div>
+            
+          ))}
           {remaining > 0 && (
             <div className="text-xs text-gray-400">
               +{remaining} รายการ
@@ -142,7 +142,7 @@ export const OrdersColumn: ColumnDef<OrderResellerType>[] = [
     header: () => <div className="text-center">จัดการ</div>,
     cell: ({ row }) => (
       <div className="flex items-center justify-center gap-2">
-        <DetailOrderButton id={row.original.id} />
+        <DetailOrderButton id={row.original.order_id} />
       </div>
     ),
   },
