@@ -2,9 +2,11 @@
 import React from 'react'
 import HeaderReseller from '@/app/components/layout/headerReseller'
 import Main from '@/app/components/layout/main'
-import ShopProductCrad from '@/app/components/cradcatalogreseller/shopproduct';
+// import ShopProductCrad from '@/app/components/cradcatalogreseller/shopproduct';
+import { ProductsColumn } from '@/app/components/columnsreseller/myproducts';
 import { useEffect, useState } from 'react';
 import { ShopProducts as ShopProductsType } from '@/app/types/model';
+import { DataTable } from '@/app/components/ui/datatable';
 
 const mockmain = {
   text1: "จัดการหน้าร้าน",
@@ -37,7 +39,8 @@ const Shoppage = () => {
       <HeaderReseller/>
       <Main main={mockmain}/>
       <div className='px-8 py-7'>
-        <ShopProductCrad data={data} loading={loading}/>
+        {/* <ShopProductCrad data={data} loading={loading}/> */}
+        <DataTable columns={ProductsColumn} data={data} loading={loading} />
       </div>
     </div>
   )
