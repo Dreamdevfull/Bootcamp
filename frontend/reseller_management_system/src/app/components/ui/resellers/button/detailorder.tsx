@@ -1,32 +1,35 @@
-"use client"
+  "use client"
 
-type Props = {
-  id: number;
-  onSuccess?: () => void; // optional: บอก parent ให้ refetch
-}
+  import Link from "next/link";
 
-const DetailOrderButton = ({ id, onSuccess }: Props) => {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const handleClick = async () => {
-    const res = await fetch(`${API_URL}/reseller/detailorder/${id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
+  type Props = {
+    id: number;
+    onSuccess?: () => void; // optional: บอก parent ให้ refetch
+  }
 
-    if (res.ok) {
-      onSuccess?.();
-    }
-  };
+  const DetailOrderButton = ({ id, onSuccess }: Props) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const handleClick = async () => {
+      const res = await fetch(`${API_URL}/reseller/detailorder/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
 
-  return (
-    <button
+      if (res.ok) {
+        onSuccess?.();
+      }
+    };
+
+    return (
+      <Link
+      href={`/resellers/orders/track_orders/${id}`}
       onClick={handleClick}
-      className="text-white border bg-[#1D9E75] hover:bg-[#1A6B5A] rounded-sm p-2 cursor-pointer mt-2"
+      className="inline-block text-white border bg-[#1D9E75] hover:bg-[#1A6B5A] rounded-sm p-2 cursor-pointer mt-2"
     >
       รายละเอียด
-    </button>
-  );
-};
+    </Link>
+    );
+  };
 
-export default DetailOrderButton;
+  export default DetailOrderButton;
