@@ -68,9 +68,8 @@ export const productColumns: ColumnDef<ProductType>[] = [
           </div>
             )}
           <span>{row.original.name}</span>
-        </div>
-      );
-    },
+      </div>
+    ),
   },
   {
     accessorKey: "cost_price",
