@@ -46,7 +46,9 @@ const ProductsPage = () => {
       <Main main={mockmain} />
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading}/>
-        <PopAddProducts open={open} onClose={() => setOpen(false)}/>
+        <PopAddProducts open={open} onClose={() => setOpen(false)} onSuccess={function (): void {
+          throw new Error('Function not implemented.');
+        } }/>
       </div>
     </div>
   )
