@@ -27,8 +27,6 @@ export default function Modal({ open, onClose, children }: ModalProps) {
             ✕
           </button>
         </div>
-
-        {/* เนื้อหา */}
         {children}
       </div>
     </div>
