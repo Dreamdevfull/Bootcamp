@@ -7,6 +7,7 @@ import { ProductsColumn } from '@/app/components/columnsreseller/myproducts';
 import { useEffect, useState } from 'react';
 import { ShopProducts as ShopProductsType } from '@/app/types/model';
 import { DataTable } from '@/app/components/ui/datatable';
+import { FilterSearchAndDropdown } from '@/app/components/ui/filter';
 
 const mockmain = {
   text1: "จัดการหน้าร้าน",
@@ -38,7 +39,8 @@ const Shoppage = () => {
     <div className="min-h-screen bg-[#F5F3EE]">
       <HeaderReseller/>
       <Main main={mockmain}/>
-      <div className='px-8 py-7'>
+      <FilterSearchAndDropdown/>
+      <div className='px-8 py-1'>
         {/* <ShopProductCrad data={data} loading={loading}/> */}
         <DataTable columns={ProductsColumn} data={data} loading={loading} />
       </div>
