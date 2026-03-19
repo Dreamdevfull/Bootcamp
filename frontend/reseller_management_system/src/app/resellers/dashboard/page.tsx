@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Test from "@/app/components/ui/popup/popadmin/test"
+import Modal from "@/app/components/ui/popup/popadmin/test"
 import HeaderReseller from '@/app/components/layout/headerReseller'
 
 export default function Page() {
@@ -21,11 +21,11 @@ export default function Page() {
       </div>
 
       {/* Modal */}
-      <Test open={open} onClose={() => setOpen(false)}>
-        <h2 className="text-lg font-bold text-gray-800 mb-2">ตั้งราคาสินค้า</h2>
-        <div className="border border-[#888780] rounded-sm p-4">
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <h2 className="text-[22px] font-bold text-gray-800 mb-2">ตั้งราคาสินค้า</h2>
+        <div className="border border-[#737373]/30 rounded-sm p-4">
           {/* ส่วนรูปภาพ */}
-          <div className="h-50 w-full rounded-sm border">
+          <div className="h-50 w-full">
             <img
               src="..."
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -33,15 +33,15 @@ export default function Page() {
           </div>
           {/* ส่วนเนื้อหา */}
           <div className="flex py-2 pl-1">
-            <div className="mt-1 text-gray-900">เสื้อยืดคอกลม สีดำ
-             <div className="text-xs text-gray-400">ต้นทุน</div>
-             <div className="text-sm font-bold text-[#888780]">฿ 250.00</div>
+            <div className="text-[18px] mt-1 text-gray-900">เสื้อยืดคอกลม สีดำ
+             <div className="text-[12px] text-gray-400">ต้นทุน</div>
+             <div className="text-[20px] font-bold text-[#888780]">฿ 250.00</div>
             </div>
           </div>
         </div>
-        <div className="border border-[#888780] rounded-sm p-2 mt-2 bg-[#9FE1CB]/20">
+        <div className="border border-[#737373]/30 rounded-sm p-2 mt-2 bg-[#E1F5EE]/40">
           <div className="text-[#888780] front-bold ml-2">ราคาขายของคุณ</div>
-          <div className="text-[#888780] ml-1">(ต้องไม่ต่ำกว่า ฿150)</div>
+          <div className="text-[#888780] ml-1 mb-1">(ต้องไม่ต่ำกว่า ฿150)</div>
           <input
             type="number"
             placeholder="150"
@@ -52,14 +52,14 @@ export default function Page() {
           </div>
         </div>
         <div className="flex gap-2 mt-2">
-          <button className="bg-white text-black px-4 py-2 rounded-xl w-full hover:bg-[#0d3d30]/20 transition border cursor-pointer">
+          <button className="bg-white text-neutral-text px-4 py-2 rounded-sm w-full border border-[#D3D1C7] hover:bg-[#E1F5EE] transition cursor-pointer">
             ยกเลิก
           </button>
-          <button className="bg-[#0d3d30] text-white px-4 py-2 rounded-xl w-full hover:bg-[#0d3d30]/90 transition border cursor-pointer">
+          <button className="bg-[#EF9F27] text-white px-4 py-2 rounded-sm w-full hover:bg-[#BA7517] transition cursor-pointer">
             เพิ่มเข้าร้าน
           </button>
         </div>
-      </Test>
+      </Modal>
     </div>
   )
 }

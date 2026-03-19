@@ -1,12 +1,12 @@
 "use client"
 
-type TestProps = {
+type ModalProps = {
   open: boolean
   onClose: () => void
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
-export default function Test({ open, onClose, children }: TestProps) {
+export default function Modal({ open, onClose, children }: ModalProps) {
   if (!open) return null
 
   return (
@@ -19,7 +19,7 @@ export default function Test({ open, onClose, children }: TestProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* ปุ่มปิด */}
-        <div className="mb-4">
+        <div className="flex justify-end">
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-xl font-bold"

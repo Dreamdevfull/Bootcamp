@@ -18,7 +18,7 @@ type ResellerRepository interface {
 	UpdatePrice(shopProductID uint, resellingPrice float64) error
 	DeleteFromShop(shopID uint, productID uint) error
 	HasActiveOrder(productID uint, shopID uint) (bool, error)
-	GetMyOrders(resellerID uint) ([]models.Orders, error)
+	GetMyOrders(userID uint) ([]models.Orders, error)
 	GetWalletByUserID(userID uint) (*models.Wallet, error)
 	CreateWallet(wallet *models.Wallet) error
 	GetProductOwner(productID uint) (uint, error)
@@ -116,7 +116,7 @@ func (r *resellerRepository) GetMyOrders(userID uint) ([]models.Orders, error) {
 func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {
 	var wallet models.Wallet
 
-	err := r.db.Preload("WalletLogs").Where("user_id = ?", userID).First(&wallet).Error
+	err := r.db.Preload("WalletLogs.Order").Where("user_id = ?", userID).First(&wallet).Error
 
 	if err != nil {
 		return nil, err
