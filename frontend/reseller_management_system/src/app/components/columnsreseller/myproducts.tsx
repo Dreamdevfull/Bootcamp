@@ -32,6 +32,8 @@ function ActionCell({ id, image_url, cost_price, min_price, name, selling_price 
   );
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
 export const ProductsColumn: ColumnDef<MyProductsType>[] = [
   {
     id: "index",
@@ -54,7 +56,7 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
       <div className="flex items-center gap-3">
         {row.original.product.image_url ? (
           <img
-            src={row.original.product.image_url}
+            src={API_URL +row.original.product.image_url}
             alt={row.original.product.name}
             className="w-10 h-10 rounded-md object-cover"
           />
