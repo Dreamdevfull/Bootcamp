@@ -2,8 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
-	"strings"
 
 	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
@@ -109,9 +107,10 @@ func (s *resellerService) GetOrdersForReseller(resellerID uint) ([]dto.ResellerO
 	}
 
 	var response []dto.ResellerOrderResponse
+
 	for _, o := range orders {
 		var totalProfit float64
-		var itemSummaryParts []string
+		var itemSummaryParts []dto.OrderItemDetail
 
 		// 2. Logic การคำนวณกำไรและการรวมชื่อสินค้า
 		for _, item := range o.OrderItems {
@@ -120,8 +119,10 @@ func (s *resellerService) GetOrdersForReseller(resellerID uint) ([]dto.ResellerO
 			totalProfit += profit
 
 			// เก็บชื่อสินค้าและจำนวนไว้ใน Slice เพื่อรอ Join เป็น String
-			summary := fmt.Sprintf("%s (%d)", item.Product_name, item.Quantity)
-			itemSummaryParts = append(itemSummaryParts, summary)
+			itemSummaryParts = append(itemSummaryParts, dto.OrderItemDetail{
+				ProductName: item.Product_name,
+				Quantity:    item.Quantity,
+			})
 		}
 
 		// 3. Map ข้อมูลลง DTO
@@ -129,7 +130,7 @@ func (s *resellerService) GetOrdersForReseller(resellerID uint) ([]dto.ResellerO
 			OrderID:      o.Id,
 			OrderNumber:  o.Order_number,
 			CustomerName: o.Customer_name,
-			ItemsSummary: strings.Join(itemSummaryParts, ", "), // "เสื้อ (2), กางเกง (1)"
+			ItemsSummary: itemSummaryParts, // "เสื้อ (2), กางเกง (1)"
 			TotalAmount:  o.Total_amount,
 			MyProfit:     totalProfit,
 			CreatedAt:    o.Created_at.Format("02/01/2006 15:04"),
