@@ -1,6 +1,7 @@
 "use client"
 import HeaderAdmin from '@/app/components/layout/headeradmin'
 import { ShoppingCart, TrendingUp, Package, Clock, Users, UserCheck } from "lucide-react";
+import { useEffect , useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts"
 import { PieChart, Pie } from "recharts"
 
@@ -8,10 +9,10 @@ import { PieChart, Pie } from "recharts"
 export default function page() {
   
   // test
-  const data1 = [
+  const Linedata = [
     { date: "1/3", orders: 0 },
   ]
-  const data2 = [
+  const Piedata = [
   { name: "สำเร็จ", value: 400 },
   { name: "รอดำเนินการ", value: 80 },
   { name: "ยกเลิก", value: 20 },
@@ -86,7 +87,7 @@ export default function page() {
       {/* กราฟเส้น */}
       <section className='min-h-60 mx-8 my-6 px-6 py-4 bg-white border border-gray-100 rounded-2xl flex gap-3'>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data1}>
+          <LineChart data={Linedata}>
             <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#f0f0f0" />
             <XAxis dataKey="date" tick={{ fontSize: 12 }} axisLine={true} tickLine={false} />
             <YAxis tick={{ fontSize: 12 }} axisLine={true} tickLine={false} />
@@ -103,14 +104,14 @@ export default function page() {
         </ResponsiveContainer>
         <PieChart width={400} height={300}>
           <Pie
-            data={data2}
+            data={Piedata}
             dataKey="value"      // ค่าที่ใช้คำนวณสัดส่วน
             nameKey="name"       // ชื่อแต่ละชิ้น
             cx="50%"             // จุดกึ่งกลาง X
             cy="50%"             // จุดกึ่งกลาง Y
             outerRadius={150}    // รัศมีวงนอก
           >
-            {data2.map((_, index) => (
+            {Piedata.map((_, index) => (
               <Cell key={index} fill={COLORS[index]} />  // สีแต่ละชิ้น
             ))}
           </Pie>

@@ -22,7 +22,7 @@ const Main = ({main} : mainType) => {
           {main.button && (
             <button
               onClick={main.button.onClick}
-              className='bg-[#EF9F27] text-white px-4 py-2 rounded-sm text-sm hover:bg-[#BA7517] transition cursor-pointer'
+              className='bg-[#EF9F27] text-white px-7 py-3 mr-3 rounded-sm text-sm hover:bg-[#BA7517] transition cursor-pointer'
             >
               {main.button.label}
             </button>

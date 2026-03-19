@@ -4,8 +4,10 @@ import HeaderCustomers from '@/app/components/layout/headerCustomers'
 import { useState } from "react"
 
 
+
 const Customers = () => {
   const [count, setCount] = useState(1);
+  const [open, setOpen] = useState(false)
 
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
