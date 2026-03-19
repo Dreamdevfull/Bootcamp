@@ -8,12 +8,14 @@ import { useEffect, useState } from 'react';
 import { ShopProducts as ShopProductsType } from '@/app/types/model';
 import { DataTable } from '@/app/components/ui/datatable';
 import { FilterSearchAndDropdown } from '@/app/components/ui/filter';
+import { useRouter } from 'next/navigation';
 
 
 const Shoppage = () => {
   const [data, setData] = useState<ShopProductsType[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false)
+  const router = useRouter()
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   useEffect(() => {
@@ -39,7 +41,7 @@ const Shoppage = () => {
     text2: "สินค้าที่คุณกำลังขายในหน้าร้านคุณ",
     button: {
       label: "ดูหน้าร้านค้า",
-      onClick: () => setOpen(true)
+      onClick: () => router.push('/customers/${name}')
     },
   }
   return (
