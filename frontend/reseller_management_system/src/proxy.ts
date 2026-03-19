@@ -6,7 +6,6 @@ const authRoutes = ["/login", "/register", "/"];
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-
   const token = req.cookies.get("jwt")?.value;
 
   if (authRoutes.some((r) => pathname === r)) {

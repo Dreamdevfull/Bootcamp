@@ -28,7 +28,7 @@
 // }
 
 "use client"
-import HeaderAdmin from '@/app/components/layout/headeradmin'
+import HeaderReseller from '@/app/components/layout/headerReseller'
 import { ShoppingCart, TrendingUp, Package, Clock, Users, UserCheck } from "lucide-react";
 import { useEffect , useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts"
@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
   return (
     <div className='min-h-screen bg-[#F5F3EE]'>
-      <HeaderAdmin />
+      <HeaderReseller />
       {/* <div className='text-[#0d3d30] text-[28px] font-semibold m-4'>Dashboard</div> */}
       <div className="flex items-center gap-3 mx-8 mt-6 mb-2">
         {/* <div className="w-1 h-8 bg-[#0d3d30] rounded-full" /> */}
