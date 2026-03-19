@@ -5,7 +5,7 @@ import { DataTable } from '@/app/components/ui/datatable';
 import { productColumns as columns } from '@/app/components/columnsadmin/productadmin';
 import Main from '@/app/components/layout/main';
 import { Product as ProductType } from '@/app/types/model';
-import Modal from '@/app/components/ui/popup/popadmin/test';
+import PopAddProducts from '@/app/components/ui/popup/popadmin/addproducts';
 
 
 const ProductsPage = () => {
@@ -14,14 +14,14 @@ const ProductsPage = () => {
   const [open, setOpen] = useState(false)
 
   const mockmain = {
-  text1: "จัดการสินค้า",
-  text2: "เพิ่ม แก้ไข ลบ และกำหนดราคาสินค้าในระบบ",
-  button: {
-    label: "+ เพิ่มสินค้า",
-    onClick: () => setOpen(true) 
-  },
-}
-  
+    text1: "จัดการสินค้า",
+    text2: "เพิ่ม แก้ไข ลบ และกำหนดราคาสินค้าในระบบ",
+    button: {
+      label: "+ เพิ่มสินค้า",
+      onClick: () => setOpen(true)
+    },
+  }
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   useEffect(() => {
     const fetchData = async () => {
@@ -43,13 +43,10 @@ const ProductsPage = () => {
   return (
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
-      <Main main={mockmain}/>
+      <Main main={mockmain} />
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading}/>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <h2 className="text-[22px] font-bold text-gray-800 mb-2">เพิ่มสินค้าใหม่</h2>
-          <div>ชื่อสินค้า</div>
-        </Modal>
+        <PopAddProducts open={open} onClose={() => setOpen(false)}/>
       </div>
     </div>
   )

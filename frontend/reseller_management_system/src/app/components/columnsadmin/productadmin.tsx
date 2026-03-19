@@ -75,7 +75,7 @@ export const productColumns: ColumnDef<Product>[] = [
     header: () => <div className="text-center">จัดการ</div>,
     cell: ({ row }) => (
       <div className="flex items-center justify-center gap-2">
-        <EditButton />
+        <EditButton/>
         <SoftDeleteButton id={row.original.id} />
       </div>
     ),
