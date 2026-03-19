@@ -6,6 +6,7 @@ import { productColumns as columns } from '@/app/components/columnsadmin/product
 import Main from '@/app/components/layout/main';
 import { Product as ProductType } from '@/app/types/model';
 import PopAddProducts from '@/app/components/ui/popup/popadmin/addproducts';
+import { FilterSearchAndDropdown } from '@/app/components/ui/filter';
 
 
 const ProductsPage = () => {
@@ -44,6 +45,7 @@ const ProductsPage = () => {
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
       <Main main={mockmain} />
+      <FilterSearchAndDropdown/>
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading}/>
         <PopAddProducts open={open} onClose={() => setOpen(false)} onSuccess={function (): void {
