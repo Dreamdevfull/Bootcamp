@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Modal from "@/app/components/ui/popup/popadmin/test"
 import HeaderReseller from '@/app/components/layout/headerReseller'
+import PopCustomersOrder from "@/app/components/ui/popup/popcustomers/order"
 
 export default function Page() {
   const [open, setOpen] = useState(false)
@@ -21,7 +22,7 @@ export default function Page() {
       </div>
 
       {/* Modal */}
-      <Modal open={open} onClose={() => setOpen(false)}/>
+      <PopCustomersOrder open={open} onClose={() => setOpen(false)}/>
     </div>
   )
 }
