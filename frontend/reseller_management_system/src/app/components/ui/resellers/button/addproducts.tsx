@@ -22,7 +22,7 @@ const AddProductsButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-      className="text-[#412402] border border-[#000000] bg-[#ef9f27] hover:bg-[#BA7517] rounded-sm p-2 cursor-pointer w-full mt-2"
+      className="text-white border bg-[#EF9F27] hover:bg-[#BA7517] rounded-sm p-2 cursor-pointer w-full mt-2"
     >
       เพิ่มเข้าร้าน
     </button>

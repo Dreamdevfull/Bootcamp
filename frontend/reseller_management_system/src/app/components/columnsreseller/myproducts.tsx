@@ -17,7 +17,7 @@ function ActionCell({ id, image_url, cost_price, min_price, name, selling_price 
   const [open, setOpen] = React.useState(false);
   return (
     <div className="flex items-center justify-center gap-2">
-      <button onClick={() => setOpen(true)} className='text-[#412402] border border-[#BA7517] bg-[#EF9F27] hover:bg-[#BA7517] hover:text-[#FAEEDA] rounded-lg px-5 py-2 cursor-pointer transition'>
+      <button onClick={() => setOpen(true)} className='text-white bg-[#1D9E75] border hover:bg-[#1A6B5A] hover:text-[#FAEEDA] rounded-lg px-5 py-2 cursor-pointer transition'>
         แก้ไข
       </button>
       <EditSellingpriceReseller id={id}
