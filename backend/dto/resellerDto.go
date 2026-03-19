@@ -19,15 +19,19 @@ type AddProductToShopRequest struct {
 
 type UpdatePriceRequest struct {
 	ID             uint    `json:"id" binding:"required"`
-	ResellingPrice float64 `json:"reselling_price" binding:"required"`
+	ResellingPrice float64 `json:"selling_price" binding:"required"`
 }
 type ResellerOrderResponse struct {
-	OrderID      uint    `json:"order_id"`
-	OrderNumber  string  `json:"order_number"`  // เลขออเดอร์
-	CustomerName string  `json:"customer_name"` // ชื่อลูกค้า
-	ItemsSummary string  `json:"items"`         // สินค้า / จำนวน
-	TotalAmount  float64 `json:"total_amount"`  // ยอดรวม
-	MyProfit     float64 `json:"my_profit"`     // กำไรของฉัน
-	CreatedAt    string  `json:"created_at"`    // เวลาสั่งซื้อ
-	Status       string  `json:"status"`        // สถานะ (รอจัดส่ง/ฯลฯ)
+	OrderID      uint              `json:"order_id"`
+	OrderNumber  string            `json:"order_number"`  // เลขออเดอร์
+	CustomerName string            `json:"customer_name"` // ชื่อลูกค้า
+	ItemsSummary []OrderItemDetail `json:"items"`         // สินค้า / จำนวน
+	TotalAmount  float64           `json:"total_amount"`  // ยอดรวม
+	MyProfit     float64           `json:"my_profit"`     // กำไรของฉัน
+	CreatedAt    string            `json:"created_at"`    // เวลาสั่งซื้อ
+	Status       string            `json:"status"`        // สถานะ (รอจัดส่ง/ฯลฯ)
+}
+type OrderItemDetail struct {
+	ProductName string `json:"product_name"`
+	Quantity    int    `json:"quantity"`
 }

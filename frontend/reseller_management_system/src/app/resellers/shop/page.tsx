@@ -24,7 +24,7 @@ const Shoppage = () => {
             credentials: "include",
           });
           const result = await res.json();
-          setData(result.data ?? []);
+          setData((result.data ?? []).sort((a: ShopProductsType, b: ShopProductsType) => b.id - a.id));
         } catch {
           setData(data);
         } finally {
