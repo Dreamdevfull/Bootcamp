@@ -54,10 +54,7 @@ func (r *resellerRepository) AddProductToShop(shopProduct *models.ShopProducts) 
 
 func (r *resellerRepository) GetMyShopProducts(shopID uint) ([]models.ShopProducts, error) {
 	var myProducts []models.ShopProducts
-	err := r.db.Preload("Product").
-		Preload("Shop").
-		Where("shop_id = ?", shopID).
-		Find(&myProducts).Error
+	err := r.db.Debug().Preload("Product").Where("shop_id = ?", shopID).Find(&myProducts).Error
 	return myProducts, err
 }
 
@@ -140,8 +137,8 @@ func (r *resellerRepository) GetCatalogWithStatus(shopID uint, productID uint) (
             products.cost_price, 
             products.stock,
             (SELECT COUNT(*) FROM shop_products WHERE product_id = products.id) > 0 as is_added,
-            (SELECT shop_id FROM shop_products WHERE product_id = products.id LIMIT 1) = ? as is_mine,
-            (SELECT selling_price FROM shop_products WHERE product_id = products.id AND shop_id = ?) as my_current_price
+            (SELECT COUNT(*) FROM shop_products WHERE product_id = products.id AND shop_id = ?) > 0 as is_mine,
+            (SELECT selling_price FROM shop_products WHERE product_id = products.id AND shop_id = ? LIMIT 1) as my_current_price
         `, shopID, shopID).
 		Where("products.deleted_at IS NULL")
 
