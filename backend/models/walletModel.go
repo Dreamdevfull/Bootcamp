@@ -15,4 +15,5 @@ type WalletLog struct {
 	Order_id   int       `json:"order_id" gorm:"ForeignKey:Order_id"`
 	Amount     float64   `json:"amount" gorm:"type:decimal(10,2)"`
 	Created_at time.Time `gorm:"column:created_at"`
+	Order      Orders    `gorm:"foreignKey:Order_id"`
 }
