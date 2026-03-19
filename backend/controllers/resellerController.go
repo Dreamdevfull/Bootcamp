@@ -101,7 +101,7 @@ func (ctrl *ResellerController) UpdateProductPrice(c fiber.Ctx) error {
 	}
 
 	userID, _ := c.Locals("user_id").(uint)
-	if err := ctrl.services.UpdateProductPrice(userID, req.ID, req.ResellingPrice); err != nil {
+	if err := ctrl.services.UpdateProductPrice(userID, req.ID, req.SellingPrice); err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": err.Error(),
@@ -159,50 +159,50 @@ func (p *ResellerController) GetOrdersForReseller(c fiber.Ctx) error {
 	})
 }
 
-func (ctrl *ResellerController) GetWallet(c fiber.Ctx) error {
-	userID, ok := c.Locals("user_id").(uint)
-	if !ok {
-		return c.Status(401).JSON(fiber.Map{
-			"message": "Unauthorized",
-		})
-	}
+// func (ctrl *ResellerController) GetWallet(c fiber.Ctx) error {
+// 	userID, ok := c.Locals("user_id").(uint)
+// 	if !ok {
+// 		return c.Status(401).JSON(fiber.Map{
+// 			"message": "Unauthorized",
+// 		})
+// 	}
 
-	wallet, err := ctrl.services.GetWalletByUserID(userID)
-	if err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"status":  "error",
-			"message": "ไม่พบข้อมูลกระเป๋าเงิน",
-		})
-	}
+// 	wallet, err := ctrl.services.GetWalletByUserID(userID)
+// 	if err != nil {
+// 		return c.Status(404).JSON(fiber.Map{
+// 			"status":  "error",
+// 			"message": "ไม่พบข้อมูลกระเป๋าเงิน",
+// 		})
+// 	}
 
-	var receivedAmount float64 = 0
-	var pendingAmount float64 = 0
-	var historyData []fiber.Map
+// 	var receivedAmount float64 = 0
+// 	var pendingAmount float64 = 0
+// 	var historyData []fiber.Map
 
-	for _, log := range wallet.WalletLogs {
-		if log.Order.Status == "completed" {
-			receivedAmount += log.Amount
-		} else {
-			pendingAmount += log.Amount
-		}
+// 	for _, log := range wallet.WalletLogs {
+// 		if log.Order.Status == "completed" {
+// 			receivedAmount += log.Amount
+// 		} else {
+// 			pendingAmount += log.Amount
+// 		}
 
-		historyData = append(historyData, fiber.Map{
-			"id":           log.Id,
-			"order_id":     log.Order_id,
-			"order_number": log.Order.Order_number,
-			"amount":       log.Amount,
-			"description":  "กำไรจากออเดอร์ " + log.Order.Order_number,
-			"created_at":   log.Created_at,
-		})
-	}
+// 		historyData = append(historyData, fiber.Map{
+// 			"id":           log.Id,
+// 			"order_id":     log.Order_id,
+// 			"order_number": log.Order.Order_number,
+// 			"amount":       log.Amount,
+// 			"description":  "กำไรจากออเดอร์ " + log.Order.Order_number,
+// 			"created_at":   log.Created_at,
+// 		})
+// 	}
 
-	return c.Status(200).JSON(fiber.Map{
-		"status": "success",
-		"data": fiber.Map{
-			"total_profit":    wallet.Balance,
-			"received_amount": receivedAmount,
-			"pending_amount":  pendingAmount,
-			"history":         historyData,
-		},
-	})
-}
+// 	return c.Status(200).JSON(fiber.Map{
+// 		"status": "success",
+// 		"data": fiber.Map{
+// 			"total_profit":    wallet.Balance,
+// 			"received_amount": receivedAmount,
+// 			"pending_amount":  pendingAmount,
+// 			"history":         historyData,
+// 		},
+// 	})
+// }

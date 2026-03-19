@@ -18,8 +18,8 @@ type AddProductToShopRequest struct {
 }
 
 type UpdatePriceRequest struct {
-	ID             uint    `json:"id" binding:"required"`
-	ResellingPrice float64 `json:"reselling_price" binding:"required"`
+	ID           uint    `json:"id" binding:"required"`
+	SellingPrice float64 `json:"selling_price" binding:"required"`
 }
 type ResellerOrderResponse struct {
 	OrderID      uint              `json:"order_id"`

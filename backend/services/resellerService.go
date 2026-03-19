@@ -16,7 +16,7 @@ type ResellerService interface {
 	UpdateProductPrice(userID uint, shopProductID uint, newPrice float64) error
 	RemoveProductFromShop(userID uint, productID uint) error
 	GetOrdersForReseller(resellerID uint) ([]dto.ResellerOrderResponse, error)
-	GetWalletByUserID(userID uint) (*models.Wallet, error)
+	// GetWalletByUserID(userID uint) (*models.Wallet, error)
 }
 
 type resellerService struct {
@@ -73,18 +73,18 @@ func (s *resellerService) GetMyShopProducts(shopID uint) ([]models.ShopProducts,
 	return s.repo.GetMyShopProducts(shopID)
 }
 
-func (s *resellerService) UpdateProductPrice(userID uint, shopProductID uint, resellingPrice float64) error {
+func (s *resellerService) UpdateProductPrice(userID uint, shopProductID uint, SellingPrice float64) error {
 	shopProduct, err := s.repo.GetShopProductByID(shopProductID)
 
 	if err != nil {
 		return errors.New("shop product not found")
 	}
 
-	if resellingPrice < shopProduct.Product.Min_price {
+	if SellingPrice < shopProduct.Product.Min_price {
 		return errors.New("price must be at least the minimum price")
 	}
 
-	return s.repo.UpdatePrice(shopProductID, resellingPrice)
+	return s.repo.UpdatePrice(shopProductID, SellingPrice)
 }
 
 func (s *resellerService) RemoveProductFromShop(userID uint, productID uint) error {
@@ -154,7 +154,8 @@ func mapStatusThai(status string) string {
 	}
 
 }
-func (s *resellerService) GetWalletByUserID(userID uint) (*models.Wallet, error) {
 
-	return s.repo.GetWalletByUserID(userID)
-}
+// func (s *resellerService) GetWalletByUserID(userID uint) (*models.Wallet, error) {
+
+// 	return s.repo.GetWalletByUserID(userID)
+// }
