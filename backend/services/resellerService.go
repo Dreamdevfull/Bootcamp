@@ -2,6 +2,8 @@ package services
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
@@ -109,26 +111,28 @@ func (s *resellerService) GetOrdersForReseller(resellerID uint) ([]dto.ResellerO
 	var response []dto.ResellerOrderResponse
 	for _, o := range orders {
 		var totalProfit float64
-		var itemSummary string
+		var itemSummaryParts []string
 
-		for i, item := range o.OrderItems {
-			// คำนวณกำไร: (ราคาขาย - ราคาทุน) * จำนวน
+		// 2. Logic การคำนวณกำไรและการรวมชื่อสินค้า
+		for _, item := range o.OrderItems {
+			// กำไร = (ราคาขายปลีก - ราคาทุน) * จำนวน
 			profit := (item.Selling_price - item.Cost_price) * float64(item.Quantity)
 			totalProfit += profit
 
-			// รวมชื่อสินค้าเพื่อแสดงในคอลัมน์ "สินค้า / จำนวน"
-			itemSummary += item.Product_name
-			if i < len(o.OrderItems)-1 {
-				itemSummary += ", "
-			}
+			// เก็บชื่อสินค้าและจำนวนไว้ใน Slice เพื่อรอ Join เป็น String
+			summary := fmt.Sprintf("%s (%d)", item.Product_name, item.Quantity)
+			itemSummaryParts = append(itemSummaryParts, summary)
 		}
 
+		// 3. Map ข้อมูลลง DTO
 		response = append(response, dto.ResellerOrderResponse{
+			OrderID:      o.Id,
 			OrderNumber:  o.Order_number,
 			CustomerName: o.Customer_name,
-			ItemsSummary: itemSummary,
+			ItemsSummary: strings.Join(itemSummaryParts, ", "), // "เสื้อ (2), กางเกง (1)"
 			TotalAmount:  o.Total_amount,
 			MyProfit:     totalProfit,
+			CreatedAt:    o.Created_at.Format("02/01/2006 15:04"),
 			Status:       mapStatusThai(string(o.Status)),
 		})
 	}
@@ -141,9 +145,9 @@ func mapStatusThai(status string) string {
 	case "pending":
 		return "รอจัดส่ง"
 	case "shipped":
-		return "จัดส่งแล้ว"
+		return "กำลังจัดส่ง"
 	case "completed":
-		return "เสร็จสมบูรณ์"
+		return "จัดส่งเสร็จสมบูรณ์"
 	default:
 		return status
 	}
