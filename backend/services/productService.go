@@ -2,13 +2,15 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
-	"github.com/Dreamdevfull/Bootcamp/utils"
 )
 
 type ProductService struct {
@@ -19,33 +21,43 @@ func NewProductService(repo repositorys.ProductRepository) *ProductService {
 	return &ProductService{repo}
 }
 
-func (s *ProductService) CreateProduct(input dto.AddProductRequest, imageBytes []byte) (*dto.ProductResponse, error) {
+func (s *ProductService) CreateProduct(input dto.AddProductRequest, imageBytes []byte, fileName string) (*dto.ProductResponse, error) {
 
 	var imagePath string
 
 	if len(imageBytes) > 0 {
-		// เก็บไว้ในโฟลเดอร์ public/uploads/products
-		path, err := utils.SaveImageAsWebP(imageBytes, "public/uploads/products")
-		if err != nil {
-			return nil, err
+
+		uploadDir := "public/uploads/products"
+
+		if err := os.MkdirAll(uploadDir, 0755); err != nil {
+			return nil, fmt.Errorf("could not create upload directory: %v", err)
 		}
-		imagePath = path
+
+		fullPath := filepath.Join(uploadDir, fileName)
+
+		if err := os.WriteFile(fullPath, imageBytes, 0644); err != nil {
+			return nil, fmt.Errorf("could not save image: %v", err)
+		}
+
+		imagePath = "/uploads/products/" + fileName
 	}
 
 	product := models.Products{
 		Name:        input.Name,
 		Description: input.Description,
-		Image:       imagePath, //input.ImageURL, // เปลี่ยนมาใช้ path ที่ได้จากการอัปโหลด
+		Image:       imagePath,
 		Cost_price:  input.CostPrice,
 		Min_price:   input.MinPrice,
 		Stock:       input.Stock,
 		Create_at:   time.Now(),
 	}
 
+	// Logic เช็คราคา (มึงมีอยู่แล้ว)
 	if product.Min_price < product.Cost_price {
 		return nil, errors.New("min price must be greater or equal to cost price")
 	}
 
+	// บันทึกลงฐานข้อมูล
 	err := s.productRepo.Create(&product)
 	if err != nil {
 		return nil, err
@@ -60,9 +72,7 @@ func (s *ProductService) CreateProduct(input dto.AddProductRequest, imageBytes [
 		MinPrice:    product.Min_price,
 		Stock:       product.Stock,
 	}, nil
-
 }
-
 func (s *ProductService) GetProducts() ([]models.Products, error) {
 	return s.productRepo.GetProducts()
 }
