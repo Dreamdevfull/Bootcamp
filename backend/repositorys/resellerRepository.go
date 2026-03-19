@@ -152,13 +152,13 @@ func (r *resellerRepository) GetMyOrders(userID uint) ([]models.Orders, error) {
 		Find(&orders).Error
 
 	return orders, err
- 
+
 }
-  
+
 func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {
 	var wallet models.Wallet
 
-	err := r.db.Preload("WalletLogs").Where("user_id = ?", userID).First(&wallet).Error
+	err := r.db.Preload("WalletLogs.Order").Where("user_id = ?", userID).First(&wallet).Error
 
 	if err != nil {
 		return nil, err
