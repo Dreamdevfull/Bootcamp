@@ -22,9 +22,9 @@ const EditShopProductButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-        className="text-[#412402] border border-[#BA7517] bg-[#EF9F27] hover:bg-[#BA7517] hover:text-[#FAEEDA] rounded-lg px-4 py-2 cursor-pointer w-full mt-2 transition"
+        className="text-[#412402] border border-[#BA7517] bg-[#EF9F27] hover:bg-[#BA7517] hover:text-[#FAEEDA] rounded-lg px-5 py-2 cursor-pointer mt-2 transition"
     >
-      แก้ไขราคา
+      แก้ไข
     </button>
   );
 };
