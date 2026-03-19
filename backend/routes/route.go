@@ -38,7 +38,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	resellerGroup.Patch("/my-products/update-price", c.ResellerController.UpdateProductPrice)
 	resellerGroup.Delete("/my-shop/products/:id", c.ResellerController.RemoveProductFromShop)
 	resellerGroup.Get("/orders", c.ResellerController.GetOrdersForReseller)
-	resellerGroup.Get("/wallet", c.ResellerController.GetWallet)
+	resellerGroup.Get("/wallet", c.WalletController.GetWallet)
 	// resellerGroup.Get("/shop", c.ShopController.MyShop)
 
 	app.Get("/shop/:shop_slug", c.ShopController.GetShopFront)
