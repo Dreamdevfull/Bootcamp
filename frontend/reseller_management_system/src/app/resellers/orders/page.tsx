@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react'
+import { OrderReseller as OrderResellerType } from '@/app/types/model'
 import HeaderReseller from '@/app/components/layout/headerReseller'
 import Main from '@/app/components/layout/main'
 import { DataTable } from '@/app/components/ui/datatable'
@@ -11,7 +12,7 @@ const mockmain = {
 }
 
 const OrdersPage = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<OrderResellerType[]>([]);
   const [loading, setLoading] = useState(true);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -22,7 +23,7 @@ const OrdersPage = () => {
           credentials: "include",
         });
         const result = await res.json();
-        setData(result.data ?? []);
+        setData(result.data ?? []);;
       } catch {
         setData([]);
       } finally {

@@ -1,8 +1,36 @@
 "use client"
 import { ColumnDef } from '@tanstack/table-core';
 import { ShopProducts as MyProductsType } from '@/app/types/model';
-import EditShopProductButton from '../ui/resellers/button/editshopproduct';
+// import EditShopProductButton from '../ui/resellers/button/editshopproduct';
+import EditSellingpriceReseller from '@/app/components/ui/popup/popresellers/EditSellingpriceReseller';
 import RemoveShopProductButton from '../ui/resellers/button/removeshopproduct';
+import React from 'react';
+
+function ActionCell({ id, image_url, cost_price, min_price, name, selling_price }: {
+  id: number;
+  image_url: string;
+  cost_price: number;
+  name: string;
+  min_price: number;
+  selling_price: number;
+}) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="flex items-center justify-center gap-2">
+      <button onClick={() => setOpen(true)} className='text-[#412402] border border-[#BA7517] bg-[#EF9F27] hover:bg-[#BA7517] hover:text-[#FAEEDA] rounded-lg px-5 py-2 cursor-pointer transition'>
+        แก้ไข
+      </button>
+      <EditSellingpriceReseller id={id}
+        open={open}
+        onClose={() => setOpen(false)}
+        image_url={image_url}
+        cost_price={cost_price}
+        name={name}
+        min_price={min_price}
+        selling_price={selling_price} />
+    </div>
+  );
+}
 
 export const ProductsColumn: ColumnDef<MyProductsType>[] = [
   {
@@ -82,11 +110,11 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
     header: () => <div className="text-center">กำไรต่อชิ้น</div>,
     cell: ({ row }) => (
       <div className="text-center text-[#1a6b5a]">
-  + ฿{row.original.selling_price - row.original.product.cost_price}
-  <span className="text-xs text-gray-400 ml-1">
-    ({Math.round((row.original.selling_price - row.original.product.cost_price) / row.original.product.cost_price * 100)}%)
-  </span>
-</div>
+        + ฿{row.original.selling_price - row.original.product.cost_price}
+        <span className="text-xs text-gray-400 ml-1">
+          ({Math.round((row.original.selling_price - row.original.product.cost_price) / row.original.product.cost_price * 100)}%)
+        </span>
+      </div>
     ),
   },
   // {
@@ -107,10 +135,10 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
     id: "actions",
     header: () => <div className="text-center">จัดการ</div>,
     cell: ({ row }) => (
-      <div className="flex items-center justify-center gap-2">
-        <EditShopProductButton id={row.original.id} onSuccess={() => {}}/>
-        <RemoveShopProductButton id={row.original.id} onSuccess={() => {}} />
-      </div>
-    ),
-  },
+     <div className="flex items-center justify-center gap-1">
+      <ActionCell id={row.original.id} image_url={row.original.product.image_url} cost_price={row.original.product.cost_price} name={row.original.product.name} min_price={row.original.product.min_price} selling_price={row.original.selling_price} />
+      <RemoveShopProductButton id={row.original.id} />
+    </div>
+      )
+  }
 ];
