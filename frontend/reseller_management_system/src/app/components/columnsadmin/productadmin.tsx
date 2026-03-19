@@ -34,6 +34,8 @@ function ActionCell({ id, name, image_url, description, cost_price, min_price, s
   );
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
 export const productColumns: ColumnDef<ProductType>[] = [
   {
     id: "index",
@@ -54,9 +56,9 @@ export const productColumns: ColumnDef<ProductType>[] = [
     header: "สินค้า",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        {row.original.Image ? (
+        {row.original.image_url ? (
           <img
-            src={row.original.Image}
+            src={API_URL + row.original.image_url}
             alt={row.original.name}
             className="w-10 h-10 rounded-md object-cover"
           />
@@ -95,7 +97,7 @@ export const productColumns: ColumnDef<ProductType>[] = [
     header: () => <div className="text-center">จัดการ</div>,
     cell: ({ row }) => (
       <div className="flex items-center justify-center gap-2">
-        <ActionCell id={row.original.id} name={row.original.name} image_url={row.original.Image} description={row.original.description} cost_price={row.original.cost_price} min_price={row.original.min_price} stock={row.original.stock} />
+        <ActionCell id={row.original.id} name={row.original.name} image_url={row.original.image_url} description={row.original.description} cost_price={row.original.cost_price} min_price={row.original.min_price} stock={row.original.stock} />
         <SoftDeleteButton id={row.original.id} />
       </div>
     ),
