@@ -94,6 +94,8 @@ interface CatalogCardProps  {
 
 const CatalogCrad = ({ data, loading }: CatalogCardProps ) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+  
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
       <section className='bg-white p-6 min-h-screen rounded-2xl shadow-md border border-gray-100'>
@@ -134,6 +136,8 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps ) => {
         {/* สำหรับสั่งสินค้า  */}
         {loading ? (
           <div className="text-center py-10 text-gray-400">กำลังโหลด...</div>
+        ) : data.length === 0 ? (   
+          <div className="text-center py-10 text-gray-400">ไม่มีสินค้าส่วนกลาง</div>  
         ) : (
           <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5'>
             {data.map((item) => (
