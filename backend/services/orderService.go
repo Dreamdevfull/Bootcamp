@@ -76,39 +76,6 @@ func (s *orderService) QuickComplete(orderID int) error {
 	return nil
 }
 
-// func (s *orderService) AddItemToCart(slug string, req dto.CartItem) (*models.OrderItems, error) {
-// 	// 1. ค้นหาร้านค้า
-// 	shop, err := s.shopRepo.GetBySlug(slug)
-// 	if err != nil {
-// 		return nil, errors.New("ไม่พบร้านค้า")
-// 	}
-
-// 	// 2. ตรวจสอบสินค้าและราคาขายของร้านนี้ (ใช้ฟังก์ชัน Checkout ที่เราแยกไว้)
-// 	shopProduct, err := s.productRepo.GetProductForCheckout(shop.Id, req.ProductID)
-// 	if err != nil {
-// 		return nil, errors.New("ไม่พบสินค้านี้ในร้านค้า")
-// 	}
-
-// 	// 3. BR-27: ตรวจสอบสต็อกเบื้องต้น
-// 	if shopProduct.Product.Stock < req.Quantity {
-// 		return nil, fmt.Errorf("สินค้าสต็อกไม่พอ (คงเหลือ %d)", shopProduct.Product.Stock)
-// 	}
-
-// 	// 4. เตรียมข้อมูล OrderItem (เปรียบเสมือนสินค้าในตะกร้า)
-// 	cartItem := &models.OrderItems{
-// 		Product_id:   int(shopProduct.Product.Id),
-// 		Products_name: shopProduct.Product.Name,
-// 		Cost_price:    shopProduct.Product.Cost_price,
-// 		Selling_price: shopProduct.Selling_price,
-// 		Quantity:      req.Quantity,
-// 		// หมายเหตุ: Order_id จะยังเป็น 0 หรือ Null จนกว่าจะมีการ Checkout จริง
-// 	}
-
-// 	// ในขั้นตอนนี้คุณอาจจะเลือกบันทึกลง Table Cart (ถ้ามี)
-// 	// หรือส่งกลับไปให้ Frontend เก็บไว้ใน LocalStorage/State ก่อนก็ได้
-// 	return cartItem, nil
-// }
-
 func (s *orderService) ProcessCheckout(slug string, req dto.CheckoutRequest) (*models.Orders, error) {
 	shop, err := s.shopRepo.GetBySlug(slug)
 	if err != nil {
