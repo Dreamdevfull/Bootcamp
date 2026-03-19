@@ -19,8 +19,8 @@ type ResellerRepository interface {
 	DeleteFromShop(shopID uint, productID uint) error
 	HasActiveOrder(productID uint, shopID uint) (bool, error)
 	GetMyOrders(userID uint) ([]models.Orders, error)
-	GetWalletByUserID(userID uint) (*models.Wallet, error)
-	CreateWallet(wallet *models.Wallet) error
+	// GetWalletByUserID(userID uint) (*models.Wallet, error)
+	// CreateWallet(wallet *models.Wallet) error
 	GetProductOwner(productID uint) (uint, error)
 }
 
@@ -113,20 +113,20 @@ func (r *resellerRepository) GetMyOrders(userID uint) ([]models.Orders, error) {
 
 }
 
-func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {
-	var wallet models.Wallet
+// func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {
+// 	var wallet models.Wallet
 
-	err := r.db.Preload("WalletLogs.Order").Where("user_id = ?", userID).First(&wallet).Error
+// 	err := r.db.Preload("WalletLogs.Order").Where("user_id = ?", userID).First(&wallet).Error
 
-	if err != nil {
-		return nil, err
-	}
-	return &wallet, nil
-}
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &wallet, nil
+// }
 
-func (r *resellerRepository) CreateWallet(wallet *models.Wallet) error {
-	return r.db.Create(wallet).Error
-}
+// func (r *resellerRepository) CreateWallet(wallet *models.Wallet) error {
+// 	return r.db.Create(wallet).Error
+// }
 
 func (r *resellerRepository) GetCatalogWithStatus(shopID uint, productID uint) ([]dto.ProductCatalogResponse, error) {
 	var results []dto.ProductCatalogResponse
