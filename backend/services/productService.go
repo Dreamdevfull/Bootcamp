@@ -157,7 +157,7 @@ func (s *ProductService) UpdateProduct(id uint, input dto.UpdateProductRequest, 
 		os.MkdirAll(uploadDir, 0755)
 		fullPath := filepath.Join(uploadDir, fileName)
 		os.WriteFile(fullPath, imageBytes, 0644)
-		updateData["image"] = "/uploads/products/" + fileName
+		updateData["image_url"] = "/uploads/products/" + fileName
 	}
 
 	// 4. ถ้าไม่มีอะไรต้องแก้เลย ให้รีเทิร์นข้อมูลเดิม
