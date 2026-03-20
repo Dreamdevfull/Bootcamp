@@ -38,6 +38,11 @@ function ActionCell({ id, name, image_url, description, cost_price, min_price, s
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
+const truncateText = (text: string | null | undefined, maxLength: number) => {
+    if (!text) return '-'; 
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
 export const productColumns = (onSuccess: () => void): ColumnDef<ProductType>[] => [
   {
     id: "index",
@@ -69,7 +74,7 @@ export const productColumns = (onSuccess: () => void): ColumnDef<ProductType>[] 
             ไม่มีรูป
           </div>
             )}
-          <span>{row.original.name}</span>
+          <span title={row.original.name}>{truncateText(row.original.name ?? "-", 65)}</span>
       </div>
     ),
   },

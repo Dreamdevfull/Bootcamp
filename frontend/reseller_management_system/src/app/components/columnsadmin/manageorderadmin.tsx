@@ -3,6 +3,12 @@ import { ColumnDef } from '@tanstack/table-core';
 import CompletedButton from '@/app/components/ui/admin/button/order/completedbutton';
 import { Orders } from '@/app/types/model';
 
+
+const truncateText = (text: string | null | undefined, maxLength: number) => {
+    if (!text) return '-'; 
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
 export const ManageOrderAdmin: ColumnDef<Orders>[] = [
   {
     accessorKey: "create_at",
@@ -35,14 +41,14 @@ export const ManageOrderAdmin: ColumnDef<Orders>[] = [
     accessorKey: "shop.shop_name",
     header: () => <div>ชื่อร้าน(ผู้ขาย)</div>,
     cell: ({ row }) => (
-      <div>{row.original.shop.shop_name}</div>
+      <div title={row.original.shop.shop_name}>{truncateText(row.original.shop.shop_name ?? "-", 30)}</div>
     ),
   },
   {
     accessorKey: "customer_name",
     header: () => <div>ชื่อลูกค้า</div>,
     cell: ({ row }) => (
-      <div>{row.getValue("customer_name")}</div>
+      <div title={row.getValue("customer_name")}>{truncateText(row.getValue("customer_name") ?? "-", 30)}</div>
     ),
   },
   // {
@@ -69,8 +75,8 @@ export const ManageOrderAdmin: ColumnDef<Orders>[] = [
       return (
         <div>
           {preview.map((item, index) => (
-            <div key={index}>
-              {item.product_name} ({item.quantity})
+            <div key={index}
+              title={item.product_name}>{truncateText(item.product_name ?? "-", 30)} ({item.quantity})
             </div>
           ))}
           {remaining > 0 && (
