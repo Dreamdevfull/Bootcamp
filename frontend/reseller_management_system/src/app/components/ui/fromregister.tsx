@@ -15,7 +15,7 @@ const FromRegister = () => {
   const [shop_name, setShopName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
-  // const [address, setAddress] = React.useState("");
+  const [address, setAddress] = React.useState("");
 
   const router = useRouter();
   const URL = process.env.NEXT_PUBLIC_API_URL;
@@ -37,7 +37,7 @@ const FromRegister = () => {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, status: "pending", role: "reseller", phone, shop_name, password }),
+        body: JSON.stringify({ name, email, status: "pending", role: "reseller", phone, shop_name, password,address }),
       });
       const result = await res.json();
       if (res.ok) {
@@ -98,7 +98,7 @@ const FromRegister = () => {
         </div>
         <div>
           <label htmlFor="email" className={classNamelabel}>อีเมล์</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} className={classNameinput} id="email" type="email" placeholder="example@email.com" required />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} className={classNameinput} id="email" type="text" placeholder="example@email.com" required />
         </div>
         <div>
           <label htmlFor="phone" className={classNamelabel}>เบอร์โทรศัพท์</label>
@@ -110,7 +110,7 @@ const FromRegister = () => {
             <label htmlFor="shopName" className={classNamelabel}>ชื่อร้าน</label>
             <input value={shop_name} onChange={(e) => setShopName(e.target.value)} className={classNameinput} id="shopName" placeholder="เช่น มินนี่ช็อป" required />
           </div>
-          {/* <div>
+          <div>
             <label htmlFor="address" className={classNamelabel}>ที่อยู่ร้าน</label>
             <textarea
               value={address}
@@ -120,7 +120,7 @@ const FromRegister = () => {
               placeholder="เช่น 123 หมู่ 1 ต.แม่กา อ.เมือง จ.พะเยา"
               required
             />
-          </div> */}
+          </div>
           <p className="text-xs text-[#0d3d30] font-mono bg-white p-2 rounded">
             URL หน้าร้านของคุณจะเป็น: <strong>/shop/ชื่อร้าน</strong>
           </p>

@@ -6,6 +6,7 @@ type RegisterRequest struct {
 	Phone     string `json:"phone"`
 	Password  string `json:"password"`
 	Shop_name string `json:"shop_name"`
+	Address   string `json:"address"`
 }
 
 type RegisterResponse struct {
