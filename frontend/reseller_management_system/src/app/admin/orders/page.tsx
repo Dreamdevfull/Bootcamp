@@ -1,6 +1,6 @@
 "use client";
 import HeaderAdmin from "@/app/components/layout/headeradmin";
-import { ManageOrderAdmin as columns } from "@/app/components/columnsadmin/manageorderadmin";
+import { ManageOrderAdmin as manageOrderColumns } from "@/app/components/columnsadmin/manageorderadmin";
 import { useEffect, useState, useMemo } from "react";
 import { DataTable } from "@/app/components/ui/datatable";
 import Main from "@/app/components/layout/main";
@@ -19,23 +19,25 @@ const OrdersPage = () => {
   const [statusFilter, setStatusFilter] = useState("all");
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`${API_URL}/admin/orders`, {
-          credentials: "include",
-        });
-        const result = await res.json();
-        setData(result.data ?? []);
-      } catch {
-        setData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`${API_URL}/admin/orders`, {
+        credentials: "include",
+      });
+      const result = await res.json();
+      setData(result.data ?? []);
+    } catch {
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [API_URL]);
+
+  const columns = manageOrderColumns(fetchData);
 
   const filteredOrders = useMemo(() => {
     return data.filter((order) => {

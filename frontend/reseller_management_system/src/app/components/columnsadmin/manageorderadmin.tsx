@@ -9,7 +9,7 @@ const truncateText = (text: string | null | undefined, maxLength: number) => {
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
-export const ManageOrderAdmin: ColumnDef<Orders>[] = [
+export const ManageOrderAdmin=  (onSuccess: () => void): ColumnDef<Orders>[] => [
   {
     accessorKey: "create_at",
     header: () => <div className="text-center">เวลาสั่งซื้อ</div>,
@@ -138,7 +138,7 @@ export const ManageOrderAdmin: ColumnDef<Orders>[] = [
       else if (status === "shipped") {
         return (
           <div className="flex gap-2 justify-center">
-            <CompletedButton id={row.original.id} />
+            <CompletedButton id={row.original.id} onSuccess={onSuccess}/>
           </div>
         );
       } else if (status === "completed") {

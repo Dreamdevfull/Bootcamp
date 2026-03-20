@@ -94,7 +94,7 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
         },
       }).then((result) => {
         if (result.isConfirmed) {
-          router.push(`/shop/${shop_slug}/tracking`)
+          router.push(`/shop/${shop_slug}/tracking?order=${paymentResult.order_number}`)  // ✅ เพิ่ม ?order=
         }
       })
     } catch {
