@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"time"
+
 	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/services"
 
@@ -140,6 +142,7 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
 		Name:     "jwt",
 		Value:    result.Token,
+		Expires:  time.Now().Add(24 * time.Hour),
 		HTTPOnly: true,
 		Secure:   true,   // *** ต้องเป็น true เท่านั้นเมื่อใช้ HTTPS (DuckDNS) ***
 		SameSite: "None", // *** ต้องเป็น "None" หาก Frontend กับ Backend อยู่คนละที่ ***
