@@ -163,29 +163,52 @@ func (oc *OrderController) SimulatePayment(c fiber.Ctx) error {
 		"detail": "ร้านจะดำเนินการจัดส่งให้เร็วที่สุด",
 	})
 }
+
+// func (oc *OrderController) TrackOrder(c fiber.Ctx) error {
+// 	var req struct {
+// 		OrderNumber string `json:"order_number"`
+// 	}
+
+// 	// 2. Parse JSON เข้าไปใน req
+// 	if err := c.Bind().Body(&req); err != nil {
+// 		return c.Status(400).JSON(fiber.Map{"message": "รูปแบบข้อมูลไม่ถูกต้อง"})
+// 	}
+
+// 	if req.OrderNumber == "" {
+// 		return c.Status(400).JSON(fiber.Map{"message": "กรุณากรอกเลขออเดอร์"})
+// 	}
+
+// 	order, err := oc.service.GetOrderTracking(req.OrderNumber)
+// 	if err != nil {
+
+// 		return c.Status(404).JSON(fiber.Map{"message": "ไม่พบออเดอร์นี้"})
+// 	}
+
+// 	return c.JSON(fiber.Map{
+// 		"order_number":     order.Order_number,
+// 		"status":           translateStatus(order.Status), // แปลงเป็นไทยตามโจทย์
+// 		"customer_name":    order.Customer_name,
+// 		"shipping_address": order.Shipping_address,
+// 		"total_amount":     order.Total_amount,
+// 		"items":            order.OrderItems,
+// 	})
+// }
+
 func (oc *OrderController) TrackOrder(c fiber.Ctx) error {
-	var req struct {
-		OrderNumber string `json:"order_number"`
-	}
+	orderNumber := c.Query("order_number") // ✅ เปลี่ยนจาก Body เป็น Query
 
-	// 2. Parse JSON เข้าไปใน req
-	if err := c.Bind().Body(&req); err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": "รูปแบบข้อมูลไม่ถูกต้อง"})
-	}
-
-	if req.OrderNumber == "" {
+	if orderNumber == "" {
 		return c.Status(400).JSON(fiber.Map{"message": "กรุณากรอกเลขออเดอร์"})
 	}
 
-	order, err := oc.service.GetOrderTracking(req.OrderNumber)
+	order, err := oc.service.GetOrderTracking(orderNumber)
 	if err != nil {
-
 		return c.Status(404).JSON(fiber.Map{"message": "ไม่พบออเดอร์นี้"})
 	}
 
 	return c.JSON(fiber.Map{
 		"order_number":     order.Order_number,
-		"status":           translateStatus(order.Status), // แปลงเป็นไทยตามโจทย์
+		"status":           order.Status, // ✅ ส่ง status ดิบไป แปลงที่ frontend แทน
 		"customer_name":    order.Customer_name,
 		"shipping_address": order.Shipping_address,
 		"total_amount":     order.Total_amount,
