@@ -116,3 +116,15 @@ export interface AddProductToShopRequest {
   product_id: number;
   selling_price: number;
 }
+
+export interface Getshop {
+  shop_name: string
+  products: {
+    product_id: number;
+    product_name: string;
+    description: string;
+    image_url: string;
+    selling_price: number;
+    stock: number;
+  }[]
+}

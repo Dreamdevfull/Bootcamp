@@ -39,7 +39,7 @@ const Shoppage = () => {
     text2: "สินค้าที่คุณกำลังขายในหน้าร้านคุณ",
     button: {
       label: "ดูหน้าร้านค้า",
-      onClick: () => router.push(`/customers/${name}`)
+      onClick: () => router.push(`/customers/name`)
     },
   };
 
