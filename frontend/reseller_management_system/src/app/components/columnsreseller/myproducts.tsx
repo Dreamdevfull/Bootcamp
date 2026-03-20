@@ -6,13 +6,14 @@ import EditSellingpriceReseller from '@/app/components/ui/popup/popresellers/Edi
 import RemoveShopProductButton from '../ui/resellers/button/removeshopproduct';
 import React from 'react';
 
-function ActionCell({ id, image_url, cost_price, min_price, name, selling_price }: {
+function ActionCell({ id, image_url, cost_price, min_price, name, selling_price, onSuccess }: {
   id: number;
   image_url: string;
   cost_price: number;
   name: string;
   min_price: number;
   selling_price: number;
+  onSuccess: () => void;
 }) {
   const [open, setOpen] = React.useState(false);
   return (
@@ -23,6 +24,7 @@ function ActionCell({ id, image_url, cost_price, min_price, name, selling_price 
       <EditSellingpriceReseller id={id}
         open={open}
         onClose={() => setOpen(false)}
+        onSuccess={onSuccess}
         image_url={image_url}
         cost_price={cost_price}
         name={name}
@@ -138,7 +140,7 @@ export const ProductsColumn = (refetchData: () => void): ColumnDef<MyProductsTyp
     header: () => <div className="text-center">จัดการ</div>,
     cell: ({ row }) => (
      <div className="flex items-center justify-center gap-1">
-      <ActionCell id={row.original.id} image_url={row.original.product.image_url} cost_price={row.original.product.cost_price} name={row.original.product.name} min_price={row.original.product.min_price} selling_price={row.original.selling_price} />
+      <ActionCell id={row.original.id} image_url={row.original.product.image_url} cost_price={row.original.product.cost_price} name={row.original.product.name} min_price={row.original.product.min_price} selling_price={row.original.selling_price} onSuccess={refetchData}/>
       <RemoveShopProductButton  id={row.original.id} onSuccess={refetchData} />
     </div>
       )
