@@ -1,8 +1,9 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import Swal from "sweetalert2"
+import { useRouter } from "next/navigation"
+import { useCart, type CartItem } from "@/app/components/cradcustomer/cartcontext"
 
 type PopCustomersOrderProps = {
   open: boolean
@@ -17,16 +18,21 @@ type PopCustomersOrderProps = {
   }
   quantity: number
   shop_slug: string
+  cartItems?: CartItem[]
 }
 
-export default function PopCustomersOrder({ open, onClose, product, quantity, shop_slug }: PopCustomersOrderProps) {
+export default function PopCustomersOrder({ open, onClose, product, quantity, shop_slug, cartItems }: PopCustomersOrderProps) {
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [address, setAddress] = useState("")
   const [localQuantity, setLocalQuantity] = useState(quantity)
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   const router = useRouter()
+  const { clearCart } = useCart()
 
+  const totalPrice = cartItems
+    ? cartItems.reduce((sum, i) => sum + i.selling_price * i.quantity, 0)
+    : product.selling_price * localQuantity
 
   const handleConfirmOrder = async () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -36,7 +42,9 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: [{ product_id: product.product_id, quantity: localQuantity }],
+          items: cartItems
+            ? cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity }))
+            : [{ product_id: product.product_id, quantity: localQuantity }],
           customer_name: name,
           customer_phone: phone,
           shipping_address: address,
@@ -62,6 +70,9 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
       }
 
       onClose()
+      clearCart() 
+      router.refresh()
+
 
       await Swal.fire({
         html: `
@@ -88,13 +99,13 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
         showDenyButton: true,
         denyButtonText: "กลับไปช้อปต่อ",
         denyButtonColor: "#FFFFFF",
-        customClass: { 
+        customClass: {
           denyButton: "swal-deny-custom",
           actions: "swal-actions-custom"
         },
       }).then((result) => {
         if (result.isConfirmed) {
-          router.push(`/shop/${shop_slug}/tracking?order=${paymentResult.order_number}`)  // ✅ เพิ่ม ?order=
+          router.push(`/shop/${shop_slug}/tracking?order=${paymentResult.order_number}`)
         }
       })
     } catch {
@@ -132,54 +143,90 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
           <div className="px-6 py-2 max-h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden">
 
             {/* Product List */}
-            <div className="space-y-3 mb-2 border border-[#D3D1C7] p-3 rounded-lg">
+            <div className="space-y-2 mb-2 border border-[#D3D1C7] p-3 rounded-lg">
               <div className="flex justify-between text-[13px] font-medium text-[#888780] px-1">
-                <span>รายการสินค้า</span>
+                <span>รายการสินค้า ({cartItems ? cartItems.length : 1} รายการ)</span>
                 <span>ราคารวม</span>
               </div>
 
-              <div className="flex flex-col gap-3 p-3 bg-[#F5F3EE] rounded-lg">
-                {/* รูป + ชื่อ + คำอธิบาย */}
-                <div className="flex items-center gap-3">
-                  <img
-                    src={`${API_URL}${product.image_url}`}
-                    alt=""
-                    className="w-14 h-14 bg-[#E1F5EE] rounded-xl flex-shrink-0 border border-[#D3D1C7] object-cover"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-semibold text-[#2C2C2A] truncate" title={product.product_name}>
-                      {product.product_name}
-                    </h4>
-                    <p className="text-xs text-[#888780] mt-0.5">
-                      {truncateText(product.description, 60)}
-                    </p>
-                    <p className="text-xs text-[#888780] mt-0.5">
-                      ฿{product.selling_price} / ชิ้น • เหลือ {product.stock} ชิ้น
-                    </p>
-                  </div>
+              {/* ✅ บอกใบ้ว่าเลื่อนได้ */}
+              {cartItems && cartItems.length > 2 && (
+                <p className="text-xs text-[#888780] text-center flex items-center justify-center gap-1">
+                  <span>↕</span> เลื่อนดูสินค้าทั้งหมดได้
+                </p>
+              )}
+
+              {/* ✅ scroll area + gradient */}
+              <div className="relative">
+                <div className="max-h-[240px] overflow-y-auto space-y-2 pr-1
+                  [&::-webkit-scrollbar]:w-2
+                  [&::-webkit-scrollbar-track]:bg-[#F5F3EE]
+                  [&::-webkit-scrollbar-track]:rounded-full
+                  [&::-webkit-scrollbar-thumb]:bg-[#9FE1CB]
+                  [&::-webkit-scrollbar-thumb]:rounded-full
+                  [&::-webkit-scrollbar-thumb]:border-2
+                  [&::-webkit-scrollbar-thumb]:border-[#F5F3EE]
+                ">
+                  {cartItems ? (
+                    cartItems.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3 p-3 bg-[#F5F3EE] rounded-lg">
+                        <img
+                          src={`${API_URL}${item.image_url}`}
+                          alt=""
+                          className="w-12 h-12 bg-[#E1F5EE] rounded-xl flex-shrink-0 border border-[#D3D1C7] object-cover"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-semibold text-[#2C2C2A] truncate">{item.product_name}</h4>
+                          <p className="text-xs text-[#888780]">{truncateText(item.description, 40)}</p>
+                          <p className="text-xs text-[#888780] mt-0.5">฿{item.selling_price} / ชิ้น</p>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-xs text-[#888780]">x{item.quantity}</p>
+                          <p className="text-sm font-bold text-[#2C2C2A]">฿{item.selling_price * item.quantity}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex flex-col gap-3 p-3 bg-[#F5F3EE] rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={`${API_URL}${product.image_url}`}
+                          alt=""
+                          className="w-14 h-14 bg-[#E1F5EE] rounded-xl flex-shrink-0 border border-[#D3D1C7] object-cover"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-semibold text-[#2C2C2A] truncate">{product.product_name}</h4>
+                          <p className="text-xs text-[#888780] mt-0.5">{truncateText(product.description, 60)}</p>
+                          <p className="text-xs text-[#888780] mt-0.5">฿{product.selling_price} / ชิ้น • เหลือ {product.stock} ชิ้น</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between border-t border-[#D3D1C7] pt-3">
+                        <div className="flex items-center gap-3 bg-white border border-[#D3D1C7] px-3 py-1.5 rounded-xl">
+                          <button
+                            onClick={() => setLocalQuantity(q => Math.max(1, q - 1))}
+                            disabled={localQuantity === 1}
+                            className="bg-[#1A6B5A]/20 hover:bg-[#1A6B5A] hover:text-white text-[#1A6B5A] rounded-lg w-7 h-7 text-lg font-bold transition disabled:opacity-30 cursor-pointer"
+                          >−</button>
+                          <span className="text-[#085041] font-bold text-base w-6 text-center">{localQuantity}</span>
+                          <button
+                            onClick={() => setLocalQuantity(q => Math.min(product.stock, q + 1))}
+                            disabled={localQuantity === product.stock}
+                            className="bg-[#1A6B5A] hover:bg-[#1A6B5A]/70 text-white rounded-lg w-7 h-7 text-lg font-bold transition disabled:opacity-30 cursor-pointer"
+                          >+</button>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-[#888780]">ราคารวม</p>
+                          <p className="text-lg font-black text-[#2C2C2A]">฿{product.selling_price * localQuantity}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {/* ปุ่ม + - ซ้าย | ราคารวม ขวา */}
-                <div className="flex items-center justify-between border-t border-[#D3D1C7] pt-3">
-                  <div className="flex items-center gap-3 bg-white border border-[#D3D1C7] px-3 py-1.5 rounded-xl">
-                    <button
-                      onClick={() => setLocalQuantity(q => Math.max(1, q - 1))}
-                      disabled={localQuantity === 1}
-                      className="bg-[#1A6B5A]/20 hover:bg-[#1A6B5A] hover:text-white text-[#1A6B5A] rounded-lg w-7 h-7 text-lg font-bold transition disabled:opacity-30 cursor-pointer"
-                    >−</button>
-                    <span className="text-[#085041] font-bold text-base w-6 text-center">{localQuantity}</span>
-                    <button
-                      onClick={() => setLocalQuantity(q => Math.min(product.stock, q + 1))}
-                      disabled={localQuantity === product.stock}
-                      className="bg-[#1A6B5A] hover:bg-[#1A6B5A]/70 text-white rounded-lg w-7 h-7 text-lg font-bold transition disabled:opacity-30 cursor-pointer"
-                    >+</button>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="text-xs text-[#888780]">ราคารวม</p>
-                    <p className="text-lg font-black text-[#2C2C2A]">฿{product.selling_price * localQuantity}</p>
-                  </div>
-                </div>
+                {/* ✅ gradient บอกใบ้ว่ายังมีด้านล่าง */}
+                {cartItems && cartItems.length > 2 && (
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none rounded-b-lg" />
+                )}
               </div>
             </div>
 
@@ -187,8 +234,6 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
             <div className="space-y-3 mb-2 border border-[#D3D1C7] p-3 rounded-lg">
               <label className="text-sm font-semibold text-[#2C2C2A] block ml-1">ข้อมูลจัดส่ง</label>
               <div className="grid grid-cols-2 gap-3">
-
-                {/* ชื่อ */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-medium text-[#2C2C2A]">
                     ชื่อ-นามสกุล <span className="text-[#791F1F]">*</span>
@@ -201,8 +246,6 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
                     className="w-full px-4 py-2.5 text-sm border border-[#D3D1C7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all placeholder:text-[#888780] text-[#2C2C2A]"
                   />
                 </div>
-
-                {/* เบอร์โทร */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-medium text-[#2C2C2A]">
                     เบอร์โทรศัพท์ <span className="text-[#791F1F]">*</span>
@@ -217,9 +260,9 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
                     placeholder="เบอร์โทรศัพท์ (10 หลัก)"
                     className={`w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all placeholder:text-[#888780] text-[#2C2C2A] ${
                       phone.length > 0 && phone.length < 10
-                        ? "border-[#F7C1C1] focus:ring-[#F7C1C1] bg-[#FCEBEB]"   // ✅ error palette
+                        ? "border-[#F7C1C1] focus:ring-[#F7C1C1] bg-[#FCEBEB]"
                         : phone.length === 10
-                        ? "border-[#9FE1CB] focus:ring-[#1D9E75] bg-[#E1F5EE]"   // ✅ success palette
+                        ? "border-[#9FE1CB] focus:ring-[#1D9E75] bg-[#E1F5EE]"
                         : "border-[#D3D1C7] focus:ring-[#1D9E75]"
                     }`}
                   />
@@ -234,10 +277,8 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
                     </p>
                   )}
                 </div>
-
               </div>
 
-              {/* ที่อยู่ */}
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-[#2C2C2A]">
                   ที่อยู่จัดส่ง <span className="text-[#791F1F]">*</span>
@@ -259,12 +300,12 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
             {/* Price Summary */}
             <div className="bg-[#F5F3EE] rounded-2xl p-4 border border-[#D3D1C7] space-y-2">
               <div className="flex justify-between text-sm text-[#888780]">
-                <span>ยอดรวมสินค้า ({localQuantity} รายการ)</span>
-                <span>฿{product.selling_price * localQuantity}</span>
+                <span>ยอดรวมสินค้า ({cartItems ? cartItems.reduce((s, i) => s + i.quantity, 0) : localQuantity} ชิ้น)</span>
+                <span>฿{totalPrice.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center pt-2 border-t border-[#D3D1C7]">
                 <span className="text-[#2C2C2A] font-bold">ยอดชำระสุทธิ</span>
-                <span className="text-2xl font-black text-[#2C2C2A]">฿{product.selling_price * localQuantity}</span>
+                <span className="text-2xl font-black text-[#2C2C2A]">฿{totalPrice.toLocaleString()}</span>
               </div>
             </div>
 
