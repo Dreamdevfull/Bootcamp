@@ -11,7 +11,7 @@ type ProductRepository interface {
 	Create(product *models.Products) error
 	GetProducts() ([]models.Products, error)
 	FindByID(id uint) (*models.Products, error)
-	UpdateFields(id uint, data map[string]interface{}) error
+	Update(product *models.Products) error
 	UpdateStock(productID uint, quantity int) error
 	HasActiveOrder(productID uint) (bool, error)
 	Delete(product *models.Products) error
@@ -57,9 +57,9 @@ func (r *productRepository) FindByID(id uint) (*models.Products, error) {
 
 	return &product, nil
 }
-func (r *productRepository) UpdateFields(id uint, data map[string]interface{}) error {
-	// ใช้ .Updates(data) โดยที่ data เป็น map จะอัปเดตเฉพาะ key ที่มีใน map เท่านั้น
-	return r.db.Model(&models.Products{}).Where("id = ?", id).Updates(data).Error
+func (r *productRepository) Update(product *models.Products) error {
+
+	return r.db.Save(product).Error
 }
 
 func (r *productRepository) UpdateStock(productID uint, quantity int) error {

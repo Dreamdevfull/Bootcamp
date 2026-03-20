@@ -24,9 +24,10 @@ type Products struct {
 	Create_at   time.Time      `gorm:"column:created_at"`
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 }
+
 type ShopProducts struct {
 	Id            uint     `json:"id" gorm:"type:INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;primaryKey"`
-	Shop_id       uint     `json:"shop_id" gorm:"not null;column:shop_id"`
+	Shop_id       uint     `json:"shop_id" gorm:"not null;column:shop_id;foreignKey:shops.id"`
 	Shop          Shops    `json:"shop,omitempty" gorm:"foreignKey:Shop_id;references:Id"`
 	Products_id   uint     `json:"product_id" gorm:"not null;column:product_id"`
 	Product       Products `json:"product,omitempty" gorm:"foreignKey:Products_id;references:Id"`

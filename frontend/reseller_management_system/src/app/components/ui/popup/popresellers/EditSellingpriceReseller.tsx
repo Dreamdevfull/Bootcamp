@@ -12,11 +12,10 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
   min_price: number
   selling_price: number;
 }) {
-  const [price, setPrice] = React.useState<number>(selling_price);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  const [price, setPrice] = React.useState<number>(0);
   const handleSubmit = async () => {
     console.log({ id, selling_price: price })
-    await fetch(`${API_URL}/reseller/my-products/update-price`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reseller/my-products/update-price`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -43,9 +42,9 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
 
       {/* รูปและราคา */}
       <div className="border border-[#D3D1C7] rounded-lg p-4 mb-3">
-        <div className="h-55 flex items-center justify-center w-full rounded-md overflow-hidden bg-[#F5F3EE] mb-3">
-          {API_URL + image_url ? (
-            <img src={`${API_URL}${image_url}`} alt={name} className="h-50 w-50 object-cover border shadow-md" />
+        <div className="h-48 w-full rounded-md overflow-hidden bg-[#F5F3EE] mb-3">
+          {image_url ? (
+            <img src={image_url} alt={name} className="h-full w-full object-cover" />
           ) : (
             <div className="h-full w-full flex items-center justify-center text-xs text-[#888780]">
               ไม่มีรูป
@@ -74,7 +73,6 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
           value={price || ""}
           onChange={(e) => setPrice(Number(e.target.value))}
           type="number"
-          min={min_price}
           placeholder={min_price.toString()}
           className="w-full px-4 py-2 border border-[#D3D1C7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D3D30] transition"
         />

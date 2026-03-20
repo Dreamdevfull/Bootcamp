@@ -1,8 +1,10 @@
 "use client"
 import { ColumnDef } from '@tanstack/table-core';
+import EditButton from '@/app/components/ui/admin/button/edit';
+import SoftDeleteButton from '@/app/components/ui/admin/button/softdelete';
 import { Wallet as WalletType } from '@/app/types/model';
 
-export const WalletColumn: ColumnDef<WalletType["history"][number]>[] = [
+export const WalletColumn: ColumnDef<WalletType>[] = [
   {
     id: "index",
     header: () => <div className="text-center">ลำดับ</div>,
@@ -18,37 +20,44 @@ export const WalletColumn: ColumnDef<WalletType["history"][number]>[] = [
     },
   },
   {
-    accessorKey: "create_at",
-    header: () => <div className="text-center">เวลาสั่งซื้อ</div>,
-    cell: ({ row }) => {
-      const date = row.original.created_at;
-      return (
-        <div className='text-center'>
-          {new Date(date).toLocaleDateString("th-TH", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "description",
-    header: () => <div className="text-center">รายละเอียด</div>,
+    accessorKey: "name",
+    header: "สินค้า",
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("description")}</div>
+      <div className="flex items-center gap-3">
+        {row.original.Image ? (
+          <img
+            src={row.original.Image}
+            alt={row.original.name}
+            className="w-10 h-10 rounded-md object-cover"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-md bg-gray-200 flex items-center justify-center text-xs text-gray-400">
+            ไม่มีรูป
+          </div>
+            )}
+          <span>{row.original.name}</span>
+      </div>
     ),
   },
   {
-    accessorKey: "total_profit",
-    header: () => <div className="text-center">จำนวนเงิน (กำไร)</div>,
+    accessorKey: "cost_price",
+    header: () => <div className="text-center">ราคาทุน</div>,
     cell: ({ row }) => (
-      <div className="text-center text-[#1a6b5a]">
-        + ฿{row.original.amount}
-      </div>
+      <div className="text-center">{row.getValue("cost_price")}</div>
+    ),
+  },
+  {
+    accessorKey: "min_price",
+    header: () => <div className="text-center">ราคาขายขั้นต่ำ</div>,
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("min_price")}</div>
+    ),
+  },
+  {
+    accessorKey: "stock",
+    header: () => <div className="text-center">จํานวน</div>,
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("stock")}</div>
     ),
   },
 ];

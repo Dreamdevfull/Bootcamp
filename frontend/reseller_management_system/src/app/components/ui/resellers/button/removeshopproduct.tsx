@@ -2,14 +2,14 @@
 
 type Props = {
   id: number;
-  onSuccess?: () => void;
+  onSuccess?: () => void; // optional: บอก parent ให้ refetch
 }
 
 const RemoveShopProductButton = ({ id, onSuccess }: Props) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const handleClick = async () => {
-    const res = await fetch(`${API_URL}/reseller/my-shop/products/${id}`, {
-      method: "DELETE",
+    const res = await fetch(`${API_URL}/catalog/add/${id}`, {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });

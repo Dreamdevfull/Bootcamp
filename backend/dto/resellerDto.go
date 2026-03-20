@@ -3,9 +3,9 @@ package dto
 type ProductCatalogResponse struct {
 	ID             uint    `json:"id"`
 	Name           string  `json:"name"`
-	ImageURL       string  `json:"image_url" gorm:"column:image_url"`
-	MinPrice       float64 `json:"min_price" gorm:"column:min_price"`
-	CostPrice      float64 `json:"cost_price" gorm:"column:cost_price"`
+	ImageURL       string  `json:"image_url"`
+	MinPrice       float64 `json:"min_price"`
+	CostPrice      float64 `json:"cost_price"`
 	Stock          int     `json:"stock"`
 	IsAdded        bool    `json:"is_added"`         // ใช้เช็คเพื่อเปลี่ยนปุ่ม เพิ่ม/แก้ไข
 	IsMine         bool    `json:"is_mine"`          // เราเป็นเจ้าของใช่ไหม (True/False)

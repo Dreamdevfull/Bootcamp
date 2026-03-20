@@ -16,27 +16,17 @@ func NewAuthController(service *services.AuthService) *AuthController {
 }
 
 func (a *AuthController) Register(c fiber.Ctx) error {
+
 	var req dto.RegisterRequest
 
 	if err := c.Bind().Body(&req); err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "รูปแบบข้อมูลไม่ถูกต้อง",
-		})
-	}
-
-	if req.Name == "" || req.Email == "" || req.Phone == "" || req.Password == "" || req.Shop_name == "" || req.Address == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"error": "กรุณากรอกข้อมูลให้ครบถ้วนทุกช่อง",
-		})
-	}
-
-	if len(req.Password) < 8 {
-		return c.Status(400).JSON(fiber.Map{
-			"error": "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร",
+			"error": "invalid request",
 		})
 	}
 
 	err := a.service.Register(req)
+
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": err.Error(),
@@ -44,7 +34,7 @@ func (a *AuthController) Register(c fiber.Ctx) error {
 	}
 
 	return c.Status(201).JSON(dto.RegisterResponse{
-		Message: "สมัครสมาชิกสำเร็จ",
+		Message: "User registered successfully",
 	})
 }
 
@@ -141,7 +131,7 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 		Name:     "jwt",
 		Value:    result.Token,
 		HTTPOnly: true,
-		Secure:   false,
+		Secure:   false, // true ถ้าใช้ https
 		SameSite: "Lax",
 		MaxAge:   86400,
 	})

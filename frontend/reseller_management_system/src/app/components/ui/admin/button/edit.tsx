@@ -20,7 +20,7 @@ const EditButton = () => {
         แก้ไข
       </button>
 
-      
+      <PopEditProducts open={open} onClose={() => setOpen(false)} />
     </div>
   )
 }

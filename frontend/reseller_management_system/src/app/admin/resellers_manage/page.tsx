@@ -5,7 +5,6 @@ import { DataTable } from '@/app/components/ui/datatable'
 import { ResellersManage as columns } from '@/app/components/columnsadmin/resellersmanage';
 import  { useEffect, useState } from 'react';
 import { Approval as ApprovalType } from '@/app/types/model';
-import { FilterSearchAndDropdown } from '@/app/components/ui/filter';
 
 const mockmain = {
   text1: "อนุมัติตัวแทน",
@@ -38,7 +37,6 @@ const ResellersManagepage = () => {
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
       <Main main={mockmain}/>
-      <FilterSearchAndDropdown/>
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading}  />
       </div>
