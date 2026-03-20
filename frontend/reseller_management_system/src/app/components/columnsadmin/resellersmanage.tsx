@@ -14,6 +14,11 @@ interface Approval {
   created_at: string;
 }
 
+const truncateText = (text: string | null | undefined, maxLength: number) => {
+    if (!text) return '-'; 
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
 export const getResellerColumns = (onSuccess: () => void): ColumnDef<Approval>[] => [
   // {
   //   id: "index",
@@ -65,7 +70,7 @@ export const getResellerColumns = (onSuccess: () => void): ColumnDef<Approval>[]
     accessorKey: "name",
     header: () => <div className="text-center">ชื่อ-นามสกุล</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("name")}</div>
+      <div className="text-center" title={row.getValue("name")}>{truncateText(row.getValue("name")?? "-", 30)}</div>
     ),
   },
   {
@@ -79,7 +84,7 @@ export const getResellerColumns = (onSuccess: () => void): ColumnDef<Approval>[]
     accessorKey: "address",
     header: () => <div className="text-center">ชื่อร้าน</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("address")}</div>
+      <div className="text-center" title={row.getValue("address")}>{truncateText(row.getValue("address") ?? "-", 30)}</div>
     ),
   },
   {

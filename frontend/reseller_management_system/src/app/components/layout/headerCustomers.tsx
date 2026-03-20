@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
@@ -5,6 +6,7 @@ import Link from 'next/link';
 
 const HeaderCustomers = () => {
   const pathname = usePathname();
+  const shop_slug = pathname.split("/")[2] ?? ""
   const sidebarLinkClass = (path: string) =>
     `flex mb-0.5 items-center p-2 rounded-lg font-medium w-30 justify-center border border-white/30 hover:bg-[#1a6b5a] hover:text-white transition cursor-pointer ${
     pathname === path ? "bg-[#1a6b5a] text-white" : ""}`;
@@ -25,6 +27,12 @@ const HeaderCustomers = () => {
         </div>
       </div>
       <div className="flex gap-4">
+        <Link href={`/shop/${shop_slug}`}>
+          <button className={sidebarLinkClass(`/shop/${shop_slug}`)}>หน้าร้าน</button>
+        </Link>
+        <Link href={`/shop/${shop_slug}/tracking`}>
+          <button className={sidebarLinkClass(`/shop/${shop_slug}/tracking`)}>ติดตามสินค้า</button>
+        </Link>
         <button type="button" className="flex items-center gap-2 bg-[#ef9f27] text-black border border-black px-6 py-2 rounded-lg hover:bg-[#BA7517] transition cursor-pointer">
           <svg
             className="w-5 h-5"

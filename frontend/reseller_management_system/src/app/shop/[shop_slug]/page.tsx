@@ -56,7 +56,7 @@ if (loading) return (
             <FilterSearchAndDropdown />
           </div>
           {data?.products && data.products.length > 0 ? (
-            <CradShopslug products={paginatedProducts} />
+            <CradShopslug products={paginatedProducts} shop_slug={shop_slug} />
           ) : (
             <div className="text-center py-10 text-gray-400">ไม่มีสินค้า</div>
           )}
