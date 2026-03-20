@@ -39,13 +39,13 @@ func (s *AuthService) Register(input dto.RegisterRequest) error {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
 
 	user := models.Users{
-		Name:      input.Name,
-		Email:     input.Email,
-		Phone:     input.Phone,
-		Password:  string(hashedPassword),
-		Role:      "reseller",
-		Status:    "pending",
-		Address:   input.Address,
+		Name:     input.Name,
+		Email:    input.Email,
+		Phone:    input.Phone,
+		Password: string(hashedPassword),
+		Role:     "reseller",
+		Status:   "pending",
+
 		Create_at: time.Now(),
 	}
 

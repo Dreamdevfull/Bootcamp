@@ -24,7 +24,7 @@ func (a *AuthController) Register(c fiber.Ctx) error {
 		})
 	}
 
-	if req.Name == "" || req.Email == "" || req.Phone == "" || req.Password == "" || req.Shop_name == "" || req.Address == "" {
+	if req.Name == "" || req.Email == "" || req.Phone == "" || req.Password == "" || req.Shop_name == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "กรุณากรอกข้อมูลให้ครบถ้วนทุกช่อง",
 		})
