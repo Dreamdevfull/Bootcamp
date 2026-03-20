@@ -2,6 +2,8 @@
 "use client"
 import { useState } from "react"
 import { Getshop } from "@/app/types/model"
+import PopCustomersOrder from "../ui/popup/popcustomers/order"
+import React from "react"
 
 type Product = Getshop["products"][number]  // ดึง type product จาก Getshop
 
@@ -24,6 +26,9 @@ const ShopProductCard = ({ products }: ShopProductCardProps) => {
 function ProductItem({ item }: { item: Product }) {
   const [count, setCount] = useState(1)
   const API_URL = process.env.NEXT_PUBLIC_API_URL
+  
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClose = () => setIsOpen(false);
   
   const truncateText = (text: string | null | undefined, maxLength: number) => {
     if (!text) return '-'; 
@@ -66,9 +71,11 @@ function ProductItem({ item }: { item: Product }) {
         <button className="flex-1 bg-[#e1f5ee] border border-[#1d9e75] text-[#085041] rounded-lg py-2 text-sm hover:bg-[#9FE1CB] cursor-pointer">
           🛒 เพิ่มลงตะกร้า
         </button>
-        <button className="flex-1 bg-[#EF9F27] text-white rounded-lg py-2 text-sm hover:bg-[#BA7517] cursor-pointer">
+        <button onClick={() => setIsOpen(true)} className="flex-1 bg-[#EF9F27] text-white rounded-lg py-2 text-sm hover:bg-[#BA7517] cursor-pointer">
           ซื้อสินค้า
         </button>
+        <PopCustomersOrder open={isOpen} onClose={handleClose}/>
+
       </div>
     </div>
   )
