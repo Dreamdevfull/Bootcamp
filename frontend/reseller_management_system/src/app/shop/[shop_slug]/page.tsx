@@ -53,7 +53,7 @@ if (loading) return (
         </section>
         <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
           <div className="mb-5">
-            <FilterSearchAndDropdown />
+            <FilterSearchAndDropdown  />
           </div>
           {data?.products && data.products.length > 0 ? (
             <CradShopslug products={paginatedProducts} shop_slug={shop_slug} />
