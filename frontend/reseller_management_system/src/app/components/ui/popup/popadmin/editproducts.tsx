@@ -2,9 +2,10 @@
 
 import React from "react";
 
-export default function PopEditProducts({ open, onClose, id, name, image_url, description, cost_price, min_price, stock }: {
+export default function PopEditProducts({ open, onClose, onSuccess, id, name, image_url, description, cost_price, min_price, stock }: {
   open: boolean;
   onClose: () => void;
+  onSuccess: () => void;
   id: number;
   name: string;
   image_url: string;
@@ -42,12 +43,30 @@ export default function PopEditProducts({ open, onClose, id, name, image_url, de
     formData.append("stock", newStock.toString());
     if (newImage) formData.append("image", newImage);
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products/edit/${id}`, {
-      method: "PATCH",
-      credentials: "include",
-      body: formData,
-    });
-    onClose();
+    // await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products/edit/${id}`, {
+    //   method: "PATCH",
+    //   credentials: "include",
+    //   body: formData,
+    // });
+    // onClose();
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products/edit/${id}`, {
+        method: "PATCH",
+        credentials: "include",
+        body: formData,
+      });
+
+      if (response.ok) {
+        // 3. ถ้าแก้ไขสำเร็จ ให้เรียก onSuccess เพื่อรีเฟรชตาราง แล้วค่อยปิด Popup
+        onSuccess(); 
+        onClose();
+      } else {
+        console.error("Failed to update product");
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+ 
   };
 
   if (!open) return null;

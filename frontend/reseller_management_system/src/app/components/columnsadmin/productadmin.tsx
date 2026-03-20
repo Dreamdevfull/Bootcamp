@@ -6,7 +6,7 @@ import PopEditProducts from '../ui/popup/popadmin/editproducts';
 import { Product as ProductType } from '@/app/types/model';
 import React from 'react';
 
-function ActionCell({ id, name, image_url, description, cost_price, min_price, stock }: {
+function ActionCell({ id, name, image_url, description, cost_price, min_price, stock ,onSuccess}: {
   id: number;
   name: string;
   image_url: string;
@@ -14,6 +14,7 @@ function ActionCell({ id, name, image_url, description, cost_price, min_price, s
   cost_price: number;
   min_price: number;
   stock: number;
+  onSuccess: () => void;
 }) {
   const [open, setOpen] = React.useState(false);
   return (
@@ -23,7 +24,8 @@ function ActionCell({ id, name, image_url, description, cost_price, min_price, s
       </button>
       <PopEditProducts id={id}
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {setOpen(false);}}
+        onSuccess={onSuccess}
         image_url={image_url}
         description={description}
         cost_price={cost_price}
@@ -36,7 +38,7 @@ function ActionCell({ id, name, image_url, description, cost_price, min_price, s
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-export const productColumns: ColumnDef<ProductType>[] = [
+export const productColumns = (onSuccess: () => void): ColumnDef<ProductType>[] => [
   {
     id: "index",
     header: () => <div className="text-center">ลำดับ</div>,
@@ -97,8 +99,8 @@ export const productColumns: ColumnDef<ProductType>[] = [
     header: () => <div className="text-center">จัดการ</div>,
     cell: ({ row }) => (
       <div className="flex items-center justify-center gap-2">
-        <ActionCell id={row.original.id} name={row.original.name} image_url={row.original.image_url} description={row.original.description} cost_price={row.original.cost_price} min_price={row.original.min_price} stock={row.original.stock} />
-        <SoftDeleteButton id={row.original.id} />
+        <ActionCell id={row.original.id} name={row.original.name} image_url={row.original.image_url} description={row.original.description} cost_price={row.original.cost_price} min_price={row.original.min_price} stock={row.original.stock} onSuccess={onSuccess} />
+        <SoftDeleteButton id={row.original.id} onSuccess={onSuccess}/>
       </div>
     ),
   },
