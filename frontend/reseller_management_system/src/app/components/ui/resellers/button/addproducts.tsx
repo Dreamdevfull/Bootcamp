@@ -4,10 +4,14 @@ import { useState } from "react";
 import AddProducts from "../../popup/popresellers/addproducts";
 type Props = {
   id: number
+  name: string         // เพิ่ม
+  image_url: string    // เพิ่ม
+  cost_price: number   // เพิ่ม
+  min_price: number
   onSuccess?: () => void
 }
 
-const AddProductsButton = ({ id, onSuccess }: Props) => {
+const AddProductsButton = ({ id, name, image_url, cost_price, min_price ,onSuccess = () => {} }: Props) => {
   const [open, setOpen] = useState(false);
   // const API_URL = process.env.NEXT_PUBLIC_API_URL;
   // const handleClick = async () => {
@@ -34,6 +38,10 @@ const AddProductsButton = ({ id, onSuccess }: Props) => {
         open={open}
         onClose={() => setOpen(false)}
         id={id}
+        name={name}            // ส่งไป
+        image_url={image_url}  // ส่งไป
+        cost_price={cost_price} // ส่งไป
+        min_price={min_price}
         onSuccess={onSuccess}
       />
     </>

@@ -6,14 +6,16 @@ import React from 'react'
 interface CatalogCardProps {
   data: CatalogType[]
   loading: boolean
+  fetchCatalog: () => void
 }
  
-function ActionCell({ id, name, image_url, cost_price, min_price }: {
+function ActionCell({ id, name, image_url, cost_price, min_price ,onSuccess}: {
   id: number;
   name: string;
   image_url: string;
   cost_price: number;
   min_price: number;
+  onSuccess: () => void;
 }) {
   const [open, setOpen] = React.useState(false);
   return (
@@ -29,6 +31,7 @@ function ActionCell({ id, name, image_url, cost_price, min_price }: {
         id={id}
         open={open}
         onClose={() => setOpen(false)}
+        onSuccess={onSuccess}
         image_url={image_url}
         cost_price={cost_price}
         name={name}
@@ -38,7 +41,7 @@ function ActionCell({ id, name, image_url, cost_price, min_price }: {
   );
 }
  
-const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
+const CatalogCrad = ({ data, loading ,fetchCatalog}: CatalogCardProps) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
@@ -125,6 +128,7 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
                       image_url={item.image_url}
                       cost_price={item.cost_price}
                       min_price={item.min_price}
+                      onSuccess={fetchCatalog}
                     />
                   )}
                 </div>

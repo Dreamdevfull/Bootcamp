@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-export default function AddProducts({ open, onClose, id, name, image_url, cost_price, min_price }: {
+export default function AddProducts({ open, onClose,onSuccess, id, name, image_url, cost_price, min_price }: {
   open: boolean;
   onClose: () => void;
+  onSuccess: () => void;
   id: number;
   name: string;
   image_url: string;
@@ -37,6 +38,7 @@ export default function AddProducts({ open, onClose, id, name, image_url, cost_p
       }),
     })
     if (res.ok) {
+      if (onSuccess) onSuccess();
       onClose()
     } else {
       alert("เพิ่มสินค้าไม่สำเร็จ")
