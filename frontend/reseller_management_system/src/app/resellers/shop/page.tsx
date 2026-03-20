@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState, useCallback, use } from 'react'
+import React, { useEffect, useState, useCallback, useMemo} from 'react'
 import HeaderReseller from '@/app/components/layout/headerReseller'
 import Main from '@/app/components/layout/main'
 import { ProductsColumn } from '@/app/components/columnsreseller/myproducts';
@@ -13,6 +13,8 @@ const Shoppage = () => {
   const [shopSlug, setShopSlug] = useState("")
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("all");
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const fetchData = useCallback(async () => {
@@ -37,6 +39,29 @@ const Shoppage = () => {
     fetchData();
   }, [fetchData]);
 
+  const filteredData = useMemo(() => {
+    let result = [...data];
+
+    
+    if (searchTerm) {
+      result = result.filter((item) =>
+        item.product?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    
+    if (sortOrder === "lowToHigh") {
+      result.sort((a, b) => a.selling_price - b.selling_price);
+    } else if (sortOrder === "highToLow") {
+      result.sort((a, b) => b.selling_price - a.selling_price);
+    } else {
+      
+      result.sort((a, b) => b.id - a.id);
+    }
+
+    return result;
+  }, [data, searchTerm, sortOrder]);
+
   const mockmain = {
     text1: "จัดการหน้าร้าน",
     text2: "สินค้าที่คุณกำลังขายในหน้าร้านคุณ",
@@ -50,9 +75,17 @@ const Shoppage = () => {
     <div className="min-h-screen bg-[#F5F3EE]">
       <HeaderReseller />
       <Main main={mockmain} />
-      <FilterSearchAndDropdown />
+     <FilterSearchAndDropdown 
+          onSearch={setSearchTerm}
+          onSortPrice={setSortOrder}
+          onFilterType={() => {}} 
+        />
       <div className='px-8 py-1'>
-        <DataTable columns={ProductsColumn(fetchData)} data={data} loading={loading} />
+       <DataTable 
+          columns={ProductsColumn(fetchData)} 
+          data={filteredData} 
+          loading={loading} 
+        />
       </div>
     </div>
   );

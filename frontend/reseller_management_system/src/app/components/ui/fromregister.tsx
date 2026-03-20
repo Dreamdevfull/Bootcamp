@@ -2,6 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
 
 const FromRegister = () => {
   const classNamelabel = "text-sm font-medium text-[#2C2C2A]"
@@ -22,12 +23,17 @@ const FromRegister = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("รหัสผ่านไม่ตรงกัน");
+      Swal.fire({
+        icon: 'warning',
+        title: 'รหัสผ่านไม่ตรงกัน',
+        text: 'กรุณาตรวจสอบรหัสผ่านและยืนยันรหัสผ่านอีกครั้ง',
+        confirmButtonColor: '#EF9F27'
+      });
       return;
     }
     setLoading(true);
     try {
-      const res = await fetch(`${URL}/register`, {  // ← แก้เป็น /register
+      const res = await fetch(`${URL}/register`, { 
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -35,13 +41,44 @@ const FromRegister = () => {
       });
       const result = await res.json();
       if (res.ok) {
-        router.push("/resellers/dashboard");
+        await Swal.fire({
+          title: 'ลงทะเบียนสำเร็จ',
+          text: 'กรุณารอการอนุมัติจากผู้ดูแลระบบ',
+          icon: 'success',
+          iconColor: '#1a6b5a',
+          
+          
+          showConfirmButton: false, 
+          timer: 2500,               
+          padding: '4rem',           
+          
+          
+          backdrop: `rgba(0,0,0,0.4)`, 
+          
+          
+          customClass: {
+            popup: 'rounded-[2rem]', 
+            title: 'text-2xl font-bold text-[#0d3d30] py-4',
+            htmlContainer: 'text-lg text-[#888780]',       
+          }
+        });
+        router.push("/login");
       } else {
-        alert(result.message || "สมัครสมาชิกไม่สำเร็จ");
+        Swal.fire({
+          icon: 'error',
+          title: 'สมัครสมาชิกไม่สำเร็จ',
+          text: result.message || 'ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง',
+          confirmButtonColor: '#EF9F27'
+        });
       }
     } catch (err) {
       console.error(err);
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: 'เซิร์ฟเวอร์ขัดข้อง กรุณาลองใหม่อีกครั้ง',
+        confirmButtonColor: '#EF9F27'
+      });
     } finally {
       setLoading(false);
     }

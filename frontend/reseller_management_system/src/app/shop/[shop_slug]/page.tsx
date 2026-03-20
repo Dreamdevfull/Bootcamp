@@ -1,6 +1,6 @@
 // app/shop/[shopId]/page.tsx
 "use client"
-import { useState, useEffect, use } from "react"
+import { useState, useEffect, use, useMemo } from "react"
 import { Getshop } from "@/app/types/model"
 import CradShopslug from "@/app/components/cradcustomer/cradshopslug"
 import HeaderCustomers from "@/app/components/layout/headerCustomers"
@@ -15,6 +15,8 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
   const [pageSize, setPageSize] = useState(5);
   const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("all");
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   useEffect(() => {
@@ -25,6 +27,8 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
       })
       .finally(() => setLoading(false))
   }, [shop_slug])
+
+  
 
   const allProducts = data?.products ?? []
   const totalItems = allProducts.length
