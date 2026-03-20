@@ -6,7 +6,6 @@ const authRoutes = ["/login", "/register", "/"];
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-
   const token = req.cookies.get("jwt")?.value;
 
   if (authRoutes.some((r) => pathname === r)) {
@@ -52,6 +51,16 @@ export default async function proxy(req: NextRequest) {
   if (!res.ok) {
     const loginUrl = new URL("/login", req.url);
     return NextResponse.redirect(loginUrl);
+  }
+
+  const data = await res.json();
+  
+  if (isAdmin && data.role !== "admin") {
+    return NextResponse.redirect(new URL("/resellers/dashboard", req.url));
+  }
+
+  if (isReseller && data.role !== "reseller") {
+    return NextResponse.redirect(new URL("/admin/dashboard", req.url));
   }
 
   return NextResponse.next();

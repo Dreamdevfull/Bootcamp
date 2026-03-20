@@ -32,7 +32,9 @@ function ActionCell({ id, image_url, cost_price, min_price, name, selling_price 
   );
 }
 
-export const ProductsColumn: ColumnDef<MyProductsType>[] = [
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+export const ProductsColumn = (refetchData: () => void): ColumnDef<MyProductsType>[] => [
   {
     id: "index",
     header: () => <div className="text-center">ลำดับ</div>,
@@ -51,10 +53,11 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
     accessorKey: "name",
     header: "สินค้า",
     cell: ({ row }) => (
+      
       <div className="flex items-center gap-3">
         {row.original.product.image_url ? (
           <img
-            src={row.original.product.image_url}
+            src={API_URL +row.original.product.image_url}
             alt={row.original.product.name}
             className="w-10 h-10 rounded-md object-cover"
           />
@@ -95,7 +98,7 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
     accessorKey: "product.cost_price",
     header: () => <div className="text-center">ราคาทุน</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.original.product.cost_price}</div>
+      <div className="text-center">{row.original.product?.cost_price}</div>
     ),
   },
   {
@@ -117,13 +120,7 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
       </div>
     ),
   },
-  // {
-  //   accessorKey: "selling_price",
-  //   header: () => <div className="text-center">กำไรสูงสุด</div>,
-  //   cell: ({ row }) => (
-  //     <div className="text-center">{row.original.selling_price}</div>
-  //   ),
-  // },
+  
   {
     accessorKey: "product.stock",
     header: () => <div className="text-center">สต๊อก</div>,
@@ -137,7 +134,7 @@ export const ProductsColumn: ColumnDef<MyProductsType>[] = [
     cell: ({ row }) => (
      <div className="flex items-center justify-center gap-1">
       <ActionCell id={row.original.id} image_url={row.original.product.image_url} cost_price={row.original.product.cost_price} name={row.original.product.name} min_price={row.original.product.min_price} selling_price={row.original.selling_price} />
-      <RemoveShopProductButton id={row.original.id} />
+      <RemoveShopProductButton  id={row.original.id} onSuccess={refetchData} />
     </div>
       )
   }
