@@ -49,7 +49,7 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
   const [sortOrder, setSortOrder] = useState("all");
   
   const filteredProducts = useMemo(() => {
-    let result = allProducts.filter((item) =>
+    const result = allProducts.filter((item) =>
       item.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 

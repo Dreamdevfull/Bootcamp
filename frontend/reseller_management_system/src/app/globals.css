@@ -126,3 +126,16 @@
     @apply font-sans;
     }
 }
+
+.swal-deny-custom {
+  color: #2C2C2A !important;
+  border: 2px solid #2C2C2A !important;
+  font-weight: 600 !important;
+  background-color: #FFFFFF !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+}
+
+.swal-deny-custom:hover {
+  background-color: #F5F3EE !important;
+}
