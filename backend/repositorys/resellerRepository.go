@@ -54,7 +54,11 @@ func (r *resellerRepository) AddProductToShop(shopProduct *models.ShopProducts) 
 
 func (r *resellerRepository) GetMyShopProducts(shopID uint) ([]models.ShopProducts, error) {
 	var myProducts []models.ShopProducts
-	err := r.db.Debug().Preload("Product").Where("shop_id = ?", shopID).Find(&myProducts).Error
+	err := r.db.Debug().
+		Preload("Product").
+		Preload("Shop").
+		Where("shop_id = ?", shopID).
+		Find(&myProducts).Error
 	return myProducts, err
 }
 
