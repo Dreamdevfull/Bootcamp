@@ -1,8 +1,19 @@
-"use client"
+"use client";
 
 import React from "react";
 
-export default function PopEditProducts({ open, onClose, onSuccess, id, name, image_url, description, cost_price, min_price, stock }: {
+export default function PopEditProducts({
+  open,
+  onClose,
+  onSuccess,
+  id,
+  name,
+  image_url,
+  description,
+  cost_price,
+  min_price,
+  stock,
+}: {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
@@ -50,15 +61,18 @@ export default function PopEditProducts({ open, onClose, onSuccess, id, name, im
     // });
     // onClose();
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products/edit/${id}`, {
-        method: "PATCH",
-        credentials: "include",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/products/edit/${id}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          body: formData,
+        },
+      );
 
       if (response.ok) {
         // 3. ถ้าแก้ไขสำเร็จ ให้เรียก onSuccess เพื่อรีเฟรชตาราง แล้วค่อยปิด Popup
-        onSuccess(); 
+        if (onSuccess) onSuccess(); // ใส่ if เช็คก่อนเรียกใช้
         onClose();
       } else {
         console.error("Failed to update product");
@@ -66,7 +80,6 @@ export default function PopEditProducts({ open, onClose, onSuccess, id, name, im
     } catch (error) {
       console.error("Error updating product:", error);
     }
- 
   };
 
   if (!open) return null;
@@ -79,14 +92,19 @@ export default function PopEditProducts({ open, onClose, onSuccess, id, name, im
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-[#2C2C2A]">แก้ไขสินค้า</h2>
-          <button onClick={onClose} className="text-[#888780] hover:text-[#2C2C2A] text-xl cursor-pointer transition">
+          <button
+            onClick={onClose}
+            className="text-[#888780] hover:text-[#2C2C2A] text-xl cursor-pointer transition"
+          >
             ✕
           </button>
         </div>
 
         <div className="flex flex-col gap-3">
           <div>
-            <label className="block text-sm text-[#2C2C2A] mb-1">ชื่อสินค้า</label>
+            <label className="block text-sm text-[#2C2C2A] mb-1">
+              ชื่อสินค้า
+            </label>
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
@@ -115,7 +133,9 @@ export default function PopEditProducts({ open, onClose, onSuccess, id, name, im
           </div>
 
           <div>
-            <label className="block text-sm text-[#2C2C2A] mb-1">รายละเอียด</label>
+            <label className="block text-sm text-[#2C2C2A] mb-1">
+              รายละเอียด
+            </label>
             <input
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
@@ -126,7 +146,9 @@ export default function PopEditProducts({ open, onClose, onSuccess, id, name, im
 
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-sm text-[#2C2C2A] mb-1">ราคาทุน</label>
+              <label className="block text-sm text-[#2C2C2A] mb-1">
+                ราคาทุน
+              </label>
               <input
                 value={newCostPrice}
                 onChange={(e) => setNewCostPrice(Number(e.target.value))}
@@ -135,7 +157,9 @@ export default function PopEditProducts({ open, onClose, onSuccess, id, name, im
               />
             </div>
             <div className="flex-1">
-              <label className="block text-sm text-[#2C2C2A] mb-1">ราคาขั้นต่ำ</label>
+              <label className="block text-sm text-[#2C2C2A] mb-1">
+                ราคาขั้นต่ำ
+              </label>
               <input
                 value={newMinPrice}
                 onChange={(e) => setNewMinPrice(Number(e.target.value))}
