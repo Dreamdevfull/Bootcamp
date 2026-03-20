@@ -141,9 +141,9 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 		Name:     "jwt",
 		Value:    result.Token,
 		HTTPOnly: true,
-		Secure:   false,
-		SameSite: "Lax",
-		MaxAge:   86400,
+		Secure:   true,   // *** ต้องเป็น true เท่านั้นเมื่อใช้ HTTPS (DuckDNS) ***
+		SameSite: "None", // *** ต้องเป็น "None" หาก Frontend กับ Backend อยู่คนละที่ ***
+		Path:     "/",
 	})
 
 	return c.Status(200).JSON(result)
