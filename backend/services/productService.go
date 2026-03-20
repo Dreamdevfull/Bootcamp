@@ -65,8 +65,8 @@ func (s *ProductService) CreateProduct(input dto.AddProductRequest, imageBytes [
 		ID:          product.Id,
 		Name:        product.Name,
 		Description: product.Description,
-		ImageURL:    product.Image,
-		CostPrice:   product.Cost_price,
+		Image:       product.Image,
+		Cost_price:  product.Cost_price,
 		MinPrice:    product.Min_price,
 		Stock:       product.Stock,
 	}, nil
@@ -182,8 +182,8 @@ func (s *ProductService) mapToResponse(p *models.Products) *dto.ProductResponse 
 		ID:          p.Id,
 		Name:        p.Name,
 		Description: p.Description,
-		ImageURL:    p.Image,
-		CostPrice:   p.Cost_price,
+		Image:       p.Image,
+		Cost_price:  p.Cost_price,
 		MinPrice:    p.Min_price,
 		Stock:       p.Stock,
 	}

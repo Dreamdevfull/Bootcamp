@@ -33,7 +33,7 @@ export default function PopCustomersOrder({ open, onClose }: PopCustomersOrderPr
 
                     <div className="p-6 max-h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden">
                         {/* Product List */}
-                        <div className="space-y-4 mb-6 border p-3 rounded-lg">
+                        <div className="space-y-3 mb-6 border p-3 rounded-lg">
                             <div className="flex justify-between text-[13px] font-medium text-[#888780] px-1">
                                 <span>รายการสินค้า</span>
                                 <span>ราคารวม</span>
@@ -68,18 +68,18 @@ export default function PopCustomersOrder({ open, onClose }: PopCustomersOrderPr
                                     <input
                                         type="text"
                                         placeholder="ชื่อ-นามสกุล"
-                                        className="w-full px-4 py-2.5 text-sm border border-[#D3D1C7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-2.5 text-sm border border-[#D3D1C7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all placeholder:text-[13px]"
                                     />
                                     <input
                                         type="tel"
                                         placeholder="เบอร์โทรศัพท์"
-                                        className="w-full px-4 py-2.5 text-sm border border-[#D3D1C7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-2.5 text-sm border border-[#D3D1C7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all placeholder:text-[13px]"
                                     />
                                 </div>
                                 <textarea
-                                    placeholder="ที่อยู่จัดส่งโดยละเอียด"
+                                    placeholder="บ้านเลขที่, ซอย, หมู่, ถนน, แขวน/ตำบล, จังหวัด, เขต/อำเภอ, รหัสไปรษณีย์"
                                     rows={3}
-                                    className="w-full px-4 py-2.5 text-sm border border-[#D3D1C7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all resize-none"
+                                    className="w-full px-4 py-2.5 text-sm border border-[#D3D1C7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all resize-none placeholder:text-[13px]"
                                 />
                             </div>
 

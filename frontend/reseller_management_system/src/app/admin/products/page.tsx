@@ -1,8 +1,8 @@
 "use client"
 import HeaderAdmin from '@/app/components/layout/headeradmin'
-import { useEffect, useState } from 'react';
+import { useEffect, useState , useCallback} from 'react';
 import { DataTable } from '@/app/components/ui/datatable';
-import { productColumns as columns } from '@/app/components/columnsadmin/productadmin';
+import { productColumns as columns, productColumns } from '@/app/components/columnsadmin/productadmin';
 import Main from '@/app/components/layout/main';
 import { Product as ProductType } from '@/app/types/model';
 import PopAddProducts from '@/app/components/ui/popup/popadmin/addproducts';
@@ -24,23 +24,47 @@ const ProductsPage = () => {
   }
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`${API_URL}/admin/products`, {
-          credentials: "include",
-        });
-        const result = await res.json();
-        setData(result.data ?? []);
-      } catch {
-        setData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetch(`${API_URL}/admin/products`, {
+  //         credentials: "include",
+  //       });
+  //       const result = await res.json();
+  //       setData(result.data ?? []);
+  //     } catch {
+  //       setData([]);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
+  //   fetchData();
+  // }, [API_URL]);
+
+  // 1. แยก fetchData ออกมาให้เรียกซ้ำได้
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_URL}/admin/products`, {
+        credentials: "include",
+      });
+      const result = await res.json();
+      setData(result.data ?? []);
+    } catch {
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
   }, [API_URL]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // 2. สร้าง columns โดยส่ง fetchData เข้าไป
+  const columns = productColumns(fetchData);
+
   return (
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
@@ -48,9 +72,14 @@ const ProductsPage = () => {
       <FilterSearchAndDropdown/>
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading}/>
-        <PopAddProducts open={open} onClose={() => setOpen(false)} onSuccess={function (): void {
+        {/* <PopAddProducts open={open} onClose={() => setOpen(false)} onSuccess={function (): void {
           throw new Error('Function not implemented.');
-        } }/>
+        } }/> */}
+
+        <PopAddProducts open={open} onClose={() => setOpen(false)} onSuccess={() => {
+            fetchData(); // ดึงข้อมูลใหม่
+            setOpen(false); // ปิด Popup
+          }}/>
       </div>
     </div>
   )
