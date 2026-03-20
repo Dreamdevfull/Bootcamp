@@ -12,7 +12,7 @@ export default async function proxy(req: NextRequest) {
     if (token) {
       try {
         // ตรวจ role แล้ว redirect ไปหน้าของคนนั้น
-        const res = await fetch("http://localhost:8080/api/auth/me", {
+        const res = await fetch("http://127.0.0.1:8080/api/auth/me", {
           headers: { Cookie: `jwt=${token}` },
         });
         console.log("status:", res.status)
@@ -44,7 +44,7 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const res = await fetch("http://localhost:8080/api/auth/me", {
+  const res = await fetch("http://127.0.0.1:8080/api/auth/me", {
     headers: { Cookie: `jwt=${token}` },
   });
 
