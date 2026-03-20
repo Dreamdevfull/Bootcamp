@@ -89,17 +89,17 @@ const FromLogin = () => {
     <main className="flex-1 flex justify-center items-center p-4">
       
       <form onSubmit={handleSubmit} className="w-[503px] h-[472px] bg-white rounded-2xl shadow-md border border-gray-200 p-8">
-        <h1 className='text-[#0d3d30] text-[24px] text-center font-bold'>ผู้ดูแลระบบ(Admin)</h1>
+        <h1 className='text-[#0d3d30] text-[28px] text-center font-bold'>เข้าสู่ระบบ</h1>
         <p className='text-[#000000] text-[16px] text-center mt-2'>เข้าสู่ระบบเพื่อจัดการระบบทั้งหมด</p>
         
         <div className="w-full">
           <label htmlFor="email" className="block text-[16px] text-[#000000] mb-1 mt-16">
-            อีเมล (Email)
+            อีเมล 
           </label>
           <input
             id="email"
             type="text"
-            placeholder="admin@example.com"
+            placeholder="test@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0d3d30] transition"
@@ -109,7 +109,7 @@ const FromLogin = () => {
 
         <div className="w-full">
           <label htmlFor="password" className="block text-[16px] text-[#000000] mb-1 mt-4">
-            รหัสผ่าน (Password)
+            รหัสผ่าน <span className='text-red-500'>*</span>
           </label>
           <input
             id="password"

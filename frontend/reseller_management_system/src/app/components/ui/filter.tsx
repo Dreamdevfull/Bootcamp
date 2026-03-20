@@ -33,7 +33,7 @@ export const FilterSearchAndDropdown = ({ onSearch, onSortPrice, onFilterType }:
                   </select>
               </div>
               {/* Dropdown ประเภทสินค้า */}
-              <div className="w-[220px]">
+              {/* <div className="w-[220px]">
                 
                   <select
                   onChange={(e) => onFilterType(e.target.value)} className="block w-full pl-3 pr-10 py-2 text-base border border-black focus:outline-none focus:ring-black focus:border-black rounded-md">
@@ -41,7 +41,7 @@ export const FilterSearchAndDropdown = ({ onSearch, onSortPrice, onFilterType }:
                       <option>เสื้อผ้า</option>
                       <option>ของเล่น</option>
                   </select>
-              </div>
+              </div> */}
           </div>
       </div>
   )
