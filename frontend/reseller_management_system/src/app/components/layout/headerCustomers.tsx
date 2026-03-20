@@ -25,7 +25,7 @@ const HeaderCustomers = () => {
         </div>
       </div>
       <div className="flex gap-4">
-        <button type="button" className="flex items-center gap-2 bg-[#ef9f27] text-black border border-black px-6 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">
+        <button type="button" className="flex items-center gap-2 bg-[#ef9f27] text-black border border-black px-6 py-2 rounded-lg hover:bg-[#BA7517] transition cursor-pointer">
           <svg
             className="w-5 h-5"
             xmlns="http://www.w3.org/2000/svg"
