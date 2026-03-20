@@ -14,6 +14,7 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   useEffect(() => {
@@ -22,6 +23,7 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
       .then((data: Getshop) => {
         setData(data)
       })
+      .finally(() => setLoading(false))
   }, [shop_slug])
 
   const allProducts = data?.products ?? []
@@ -30,10 +32,14 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
     currentPage * pageSize,
     (currentPage + 1) * pageSize
   )
-
+if (loading) return (
+  <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee]">
+    <p className="text-gray-400">กำลังโหลด...</p>
+  </div>
+)
   return (
     <>
-    {shop_slug !== shop_slug ?(
+    {data?.shop_name ?(
       <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
         <HeaderCustomers />
         <section className='w-full h-[200px] bg-gradient-to-r from-[#0d3d30] via-[#1a6b5a] to-[#1d9e75]'>
