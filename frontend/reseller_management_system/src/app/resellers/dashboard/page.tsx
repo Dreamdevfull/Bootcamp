@@ -1,32 +1,3 @@
-// "use client"
-
-// import { useState } from "react"
-// import Modal from "@/app/components/ui/popup/popadmin/test"
-// import HeaderReseller from '@/app/components/layout/headerReseller'
-// import PopCustomersOrder from "@/app/components/ui/popup/popcustomers/order"
-
-// export default function Page() {
-//   const [open, setOpen] = useState(false)
-
-//   return (
-//     <div className="min-h-screen bg-[#F5F3EE]">
-//       <HeaderReseller />
-//       <div className="p-2">
-//         {/* ปุ่มเปิด popup */}
-//         <button
-//           onClick={() => setOpen(true)}
-//           className="bg-[#0d3d30] text-white px-6 py-3 rounded-xl hover:bg-[#0d3d30]/90 transition"
-//         >
-//           เปิด Popup
-//         </button>
-//       </div>
-
-//       {/* Modal */}
-//       <PopCustomersOrder open={open} onClose={() => setOpen(false)}/>
-//     </div>
-//   )
-// }
-
 "use client"
 import HeaderReseller from '@/app/components/layout/headerReseller'
 import { ShoppingCart, TrendingUp, Package, Clock, Users, UserCheck } from "lucide-react";
@@ -57,7 +28,7 @@ export default function DashboardPage() {
         <h1 className="text-[#0d3d30] text-3xl font-bold tracking-tight">Dashboard</h1>
       </div>
       {/* กล่องรวมด้านบน */}
-      <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mx-8">
+      <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mx-8">
         {/* ยอดขายรวม */}
         <div className="relative flex flex-col justify-between bg-white border border-gray-100 rounded-2xl p-5 shadow-sm overflow-hidden">
           <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center mb-3">
@@ -92,25 +63,6 @@ export default function DashboardPage() {
           </div>
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">ออเดอร์รอดำเนินการ</p>
           <p className="text-[22px] font-bold text-gray-800 leading-tight">20</p>
-        </div>
-        {/* จำนวนตัวแทนทั้งหมด */}
-        <div className="relative flex flex-col justify-between bg-white border border-gray-100 rounded-2xl p-5 shadow-sm overflow-hidden">
-          <div className="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center mb-3">
-            <Users size={18} className="text-sky-600" />
-          </div>
-          <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">จำนวนตัวแทนทั้งหมด</p>
-          <p className="text-[22px] font-bold text-gray-800 leading-tight">100</p>
-        </div>
-        {/* ตัวแทนที่รออนุมัติ */}
-        <div className="relative flex flex-col justify-between bg-white border border-gray-100 rounded-2xl p-5 shadow-sm overflow-hidden">
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center">
-              <UserCheck size={18} className="text-rose-600" />
-            </div>
-            <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-rose-50 text-rose-500">รออนุมัติ</span>
-          </div>
-          <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">ตัวแทนที่รออนุมัติ</p>
-          <p className="text-[22px] font-bold text-gray-800 leading-tight">3</p>
         </div>
       </section>
       {/* กราฟเส้น */}
