@@ -9,21 +9,22 @@ type Product = Getshop["products"][number]  // ดึง type product จาก 
 
 interface ShopProductCardProps {
   products: Product[]
+  shop_slug: string
 }
 
-const ShopProductCard = ({ products }: ShopProductCardProps) => {
+const ShopProductCard = ({ products, shop_slug }: ShopProductCardProps) => {
 
   return (
     <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5'>
       {products.map((item) => (
-        <ProductItem key={item.product_id} item={item} />
+        <ProductItem key={item.product_id} item={item} shop_slug={shop_slug} />
       ))}
     </div>
   )
 }
 
 // แยก component ย่อยเพื่อให้จัดการ state count แยกกันแต่ละสินค้า
-function ProductItem({ item }: { item: Product }) {
+function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) {
   const [count, setCount] = useState(1)
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   
@@ -74,7 +75,20 @@ function ProductItem({ item }: { item: Product }) {
         <button onClick={() => setIsOpen(true)} className="flex-1 bg-[#EF9F27] text-white rounded-lg py-2 text-sm hover:bg-[#BA7517] cursor-pointer">
           ซื้อสินค้า
         </button>
-        <PopCustomersOrder open={isOpen} onClose={handleClose}/>
+        <PopCustomersOrder
+          open={isOpen}
+          onClose={handleClose}
+          product={{
+            product_id: item.product_id,
+            product_name: item.product_name,
+            selling_price: item.selling_price,
+            image_url: item.image_url,
+            stock: item.stock,
+            description: item.description
+          }}
+          quantity={count}
+          shop_slug={shop_slug}
+        />
 
       </div>
     </div>
