@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, use } from 'react'
 import HeaderReseller from '@/app/components/layout/headerReseller'
 import Main from '@/app/components/layout/main'
 import { ProductsColumn } from '@/app/components/columnsreseller/myproducts';
@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 
 const Shoppage = () => {
   const [data, setData] = useState<ShopProductsType[]>([]);
+  const [shopSlug, setShopSlug] = useState("")
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -21,8 +22,10 @@ const Shoppage = () => {
         credentials: "include",
       });
       const result = await res.json();
+      console.log("result:", result)
       console.log("fetchData result:", result.data);
       setData((result.data ?? []).sort((a: ShopProductsType, b: ShopProductsType) => b.id - a.id));
+      setShopSlug(result.data?.[0]?.shop?.shop_slug ?? "")
     } catch {
       setData([]);
     } finally {
@@ -39,7 +42,7 @@ const Shoppage = () => {
     text2: "สินค้าที่คุณกำลังขายในหน้าร้านคุณ",
     button: {
       label: "ดูหน้าร้านค้า",
-      onClick: () => router.push(`/customers/name`)
+      onClick: () => router.push(`/shop/${shopSlug}`),
     },
   };
 
