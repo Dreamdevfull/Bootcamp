@@ -2,7 +2,7 @@
 import HeaderReseller from '@/app/components/layout/headerReseller'
 import Link from 'next/link'
 
-const track = () => {
+const TrackOrdersPage = () => {
 
     return (
       <div className="min-h-screen bg-[#F5F3EE]">
@@ -64,4 +64,4 @@ const track = () => {
     )
   }
 
-export default track
+export default TrackOrdersPage
