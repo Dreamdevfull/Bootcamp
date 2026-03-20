@@ -1,7 +1,9 @@
 "use client"
 import { Catalog as CatalogType } from '@/app/types/model'
 import AddProducts from '../ui/popup/popresellers/addproducts'
-import React from 'react'
+import React, { useState } from 'react'
+import { FilterSearchAndDropdown } from '../ui/filter'
+import { PaginationCrad } from '../ui/paginationcrad'
  
 interface CatalogCardProps {
   data: CatalogType[]
@@ -39,40 +41,21 @@ function ActionCell({ id, name, image_url, cost_price, min_price }: {
 }
  
 const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
+  const [currentPage, setCurrentPage] = useState(0)
+  const [pageSize, setPageSize] = useState(5)  
   const API_URL = process.env.NEXT_PUBLIC_API_URL
+  const allProducts = data ?? []
+  const totalItems = allProducts.length
+  const paginatedProducts = allProducts.slice(
+    currentPage * pageSize,
+    (currentPage + 1) * pageSize
+  )
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
-      <section className='bg-white p-6 min-h-screen rounded-2xl shadow-md border border-gray-100'>
-        <div className='bg-[#f5f3ee] p-6 mb-6 shadow-md border border-gray-100 flex justify-between items-center rounded-xl'>
+      <section className='bg-white p-6 max-h-auto rounded-2xl shadow-md border border-gray-100'>
           {/* search bar */}
-          <div className="relative w-full max-w-sm">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 sm:text-sm"
-              placeholder="ค้นหาสินค้า..."
-            />
-          </div>
-          <div className='ml-auto flex gap-4'>
-            <div className="w-[220px]">
-              <select className="block w-full pl-3 pr-10 py-2 text-base border border-black focus:outline-none focus:ring-black focus:border-black rounded-md">
-                <option>ราคาทั้งหมด</option>
-                <option>ราคาน้อยไปมาก</option>
-                <option>ราคามากไปน้อย</option>
-              </select>
-            </div>
-            <div className="w-[220px]">
-              <select className="block w-full pl-3 pr-10 py-2 text-base border border-black focus:outline-none focus:ring-black focus:border-black rounded-md">
-                <option>ประเภทสินค้าทั้งหมด</option>
-                <option>เสื้อผ้า</option>
-                <option>ของเล่น</option>
-              </select>
-            </div>
-          </div>
+        <div className='mb-6'>
+          <FilterSearchAndDropdown/>
         </div>
  
         {loading ? (
@@ -81,7 +64,7 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
           <div className="text-center py-10 text-gray-400">ไม่มีสินค้าส่วนกลาง</div>
         ) : (
           <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5'>
-            {data.map((item) => (
+            {paginatedProducts.map((item) => (
               <div
                 key={item.id}
                 className='bg-white p-4 border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition duration-200'
@@ -132,6 +115,13 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
             ))}
           </div>
         )}
+        <PaginationCrad
+          totalItems={totalItems}
+          pageSize={pageSize}
+          onPageSizeChange={(size) => { setPageSize(size); setCurrentPage(0) }}
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </section>
     </main>
   )

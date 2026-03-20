@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
-import { Link } from 'lucide-react';
+import Link from 'next/link';
 
 const HeaderCustomers = () => {
   const pathname = usePathname();
@@ -25,9 +25,7 @@ const HeaderCustomers = () => {
         </div>
       </div>
       <div className="flex gap-4">
-        <Link href="/customers"><button className={sidebarLinkClass("/customers")}>หน้าร้าน</button></Link>
-        <Link><button className="w-[162px] h-[60px] text-[#000000]px-6 py-2 rounded-lg hover:bg-[#1a6b5a] transition cursor-pointer">ตรวจสอบสถานะ</button></Link>
-        <button className="flex items-center gap-2 bg-[#ef9f27] text-black border border-black px-6 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">
+        <button type="button" className="flex items-center gap-2 bg-[#ef9f27] text-black border border-black px-6 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">
           <svg
             className="w-5 h-5"
             xmlns="http://www.w3.org/2000/svg"
