@@ -7,6 +7,8 @@ const authRoutes = ["/login", "/register", "/"];
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("jwt")?.value;
+
+  console.log("Token in Middleware:", token ? "Found" : "Not Found");
   const API_BASE = "http://127.0.0.1:8080";
 
   if (authRoutes.some((r) => pathname === r)) {
