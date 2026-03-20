@@ -2,11 +2,12 @@
 
 import React from "react"
 
-export default function EditSellingpriceReseller({ open, onClose, id, image_url, cost_price, min_price, name, selling_price }: {
+export default function EditSellingpriceReseller({ open, onClose, id, image_url, cost_price, min_price, name, selling_price,onSuccess }: {
   open: boolean;
   onClose: () => void;
   id: number;
   image_url: string;
+  onSuccess: () => void;
   cost_price: number;
   name: string;
   min_price: number
@@ -16,13 +17,19 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   const handleSubmit = async () => {
     console.log({ id, selling_price: price })
-    await fetch(`${API_URL}/reseller/my-products/update-price`, {
+    const res =await fetch(`${API_URL}/reseller/my-products/update-price`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({ id, selling_price: price }),
     });
-    onClose();
+    if (res.ok) {
+        onSuccess(); 
+        onClose();   
+      }else {
+        alert("บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+
+      }
   }
 
   if (!open) return null
@@ -96,7 +103,11 @@ export default function EditSellingpriceReseller({ open, onClose, id, image_url,
       {/* ปุ่ม */}
       <div className="flex gap-2">
         <button
-          onClick={onClose}
+          onClick={() => {
+    onSuccess(); 
+    onClose();
+  }}
+          
           type="button"
           className="w-full px-4 py-2 rounded-lg border border-[#D3D1C7] text-[#2C2C2A] hover:bg-[#E1F5EE] transition cursor-pointer"
         >
