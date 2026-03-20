@@ -3,6 +3,11 @@ import { ColumnDef } from '@tanstack/table-core';
 import { OrderReseller as OrderResellerType } from '@/app/types/model';
 import DetailOrderButton from '../ui/resellers/button/detailorder';
 
+const truncateText = (text: string | null | undefined, maxLength: number) => {
+    if (!text) return '-'; 
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
 export const OrdersColumn: ColumnDef<OrderResellerType>[] = [
   // {
   //   id: "index",
@@ -29,7 +34,7 @@ export const OrdersColumn: ColumnDef<OrderResellerType>[] = [
     accessorKey: "customer_name",
     header: () => <div>ชื่อลูกค้า</div>,
     cell: ({ row }) => (
-      <div>{row.getValue("customer_name")}</div>
+      <div title={row.getValue("customer_name")}>{truncateText(row.getValue("customer_name") ?? "-", 40)}</div>
     ),
   },
   // {
@@ -67,9 +72,8 @@ export const OrdersColumn: ColumnDef<OrderResellerType>[] = [
       return (
         <div>
           {preview.map((item, index) => (
-          <div key={index}>
-              {item.product_name} ({item.quantity})
-            </div>
+          <div key={index} title={item.product_name}>{truncateText(item.product_name ?? "-", 40)} ({item.quantity})
+          </div>
             
           ))}
           {remaining > 0 && (
