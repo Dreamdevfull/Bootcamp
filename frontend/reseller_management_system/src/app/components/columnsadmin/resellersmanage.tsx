@@ -14,7 +14,7 @@ interface Approval {
   created_at: string;
 }
 
-export const ResellersManage: ColumnDef<Approval>[] =  [
+export const getResellerColumns = (onSuccess: () => void): ColumnDef<Approval>[] => [
   // {
   //   id: "index",
   //   header: () => <div className="text-center">ลำดับ</div>,
@@ -118,14 +118,14 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
       if (status === "pending") {
         return (
           <div className="flex gap-2 justify-center">
-            <ApprovalButton id={row.original.id} />
-            <RejectedButton id={row.original.id} />
+            <ApprovalButton id={row.original.id} onSuccess={onSuccess}/>
+            <RejectedButton id={row.original.id} onSuccess={onSuccess} />
           </div>
         );
       } else if (status === "approved") {
         return (
           <div className="flex justify-center">
-            <BockButton id={row.original.id}/>
+            <BockButton id={row.original.id} onSuccess={onSuccess}/>
           </div>
         );
       } else {
