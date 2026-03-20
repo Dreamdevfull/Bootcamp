@@ -16,8 +16,8 @@ func main() {
 	app.Get("/uploads/*", static.New("./public/uploads"))
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000", "https://cpebc1.duckdns.org"},
-		AllowMethods:     []string{"GET,POST,PUT,DELETE,PATCH", "OPTIONS"},
-		AllowHeaders:     []string{"Origin,Content-Type,Accept,Authorization,X-Requested-With"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
 		AllowCredentials: true,
 	}))
 
