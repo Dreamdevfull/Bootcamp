@@ -130,10 +130,11 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
 		Name:     "jwt",
 		Value:    result.Token,
-		HTTPOnly: true,
-		Secure:   false, // true ถ้าใช้ https
-		SameSite: "Lax",
 		MaxAge:   86400,
+		HTTPOnly: true,
+		Secure:   true,   // *** ต้องเป็น true เท่านั้นเมื่อใช้ HTTPS (DuckDNS) ***
+		SameSite: "None", // *** ต้องเป็น "None" หาก Frontend กับ Backend อยู่คนละที่ ***
+		Path:     "/",
 	})
 
 	return c.Status(200).JSON(result)

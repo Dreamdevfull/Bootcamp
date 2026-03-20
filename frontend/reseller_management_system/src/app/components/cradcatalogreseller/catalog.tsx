@@ -90,6 +90,7 @@ import AddProductsButton from '../ui/resellers/button/addproducts'
 interface CatalogCardProps  {
   data: CatalogType[]
   loading: boolean
+  fetchCatalog: () => void
 }
 
 const CatalogCrad = ({ data, loading }: CatalogCardProps ) => {
