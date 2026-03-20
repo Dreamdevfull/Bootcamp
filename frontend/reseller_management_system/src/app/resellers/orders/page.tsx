@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { OrderReseller as OrderResellerType } from '@/app/types/model'
 import HeaderReseller from '@/app/components/layout/headerReseller'
 import Main from '@/app/components/layout/main'
@@ -15,6 +15,8 @@ const mockmain = {
 const OrdersPage = () => {
   const [data, setData] = useState<OrderResellerType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   useEffect(() => {
@@ -34,13 +36,34 @@ const OrdersPage = () => {
 
     fetchData();
   })
+
+  const filteredOrders = useMemo(() => {
+    return data.filter((order) => {
+      const matchesSearch = 
+        order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customer_name.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }, [data, searchTerm, statusFilter]);
+
   return (
     <div className="min-h-screen bg-[#F5F3EE]">
       <HeaderReseller/>
       <Main main={mockmain}/>
-      <FilterSearchAndDropdown/>
+      
+     
+      <FilterSearchAndDropdown 
+        onSearch={setSearchTerm}
+        onFilterType={setStatusFilter}
+        onSortPrice={() => {}} 
+      />
+
       <div className='px-8 py-1'>
-        <DataTable columns={columns} data={data} loading={loading} />
+        
+        <DataTable columns={columns} data={filteredOrders} loading={loading} />
       </div>
     </div>
   )
