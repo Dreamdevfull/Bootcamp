@@ -6,6 +6,10 @@ const authRoutes = ["/login", "/register", "/"];
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  const allCookies = req.cookies.getAll();
+  console.log("All Cookies Available:", allCookies);
+
   const token = req.cookies.get("jwt")?.value;
 
   console.log("Token in Middleware:", token ? "Found" : "Not Found");
