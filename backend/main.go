@@ -15,7 +15,7 @@ func main() {
 	// config.AutoMigrate(config.DB)
 	app.Get("/uploads/*", static.New("./public/uploads"))
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "https://cpebc1.duckdns.org"},
+		AllowOrigins:     []string{"http://localhost:3000", "https://cpebc1.duckdns.org", "https://cpebc1b.duckdns.org"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
 		AllowCredentials: true,
