@@ -14,7 +14,7 @@ const FromRegister = () => {
   const [shop_name, setShopName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [address, setAddress] = React.useState("");
+  // const [address, setAddress] = React.useState("");
 
   const router = useRouter();
   const URL = process.env.NEXT_PUBLIC_API_URL;
@@ -73,7 +73,7 @@ const FromRegister = () => {
             <label htmlFor="shopName" className={classNamelabel}>ชื่อร้าน</label>
             <input value={shop_name} onChange={(e) => setShopName(e.target.value)} className={classNameinput} id="shopName" placeholder="เช่น มินนี่ช็อป" required />
           </div>
-          <div>
+          {/* <div>
             <label htmlFor="address" className={classNamelabel}>ที่อยู่ร้าน</label>
             <textarea
               value={address}
@@ -83,7 +83,7 @@ const FromRegister = () => {
               placeholder="เช่น 123 หมู่ 1 ต.แม่กา อ.เมือง จ.พะเยา"
               required
             />
-          </div>
+          </div> */}
           <p className="text-xs text-[#0d3d30] font-mono bg-white p-2 rounded">
             URL หน้าร้านของคุณจะเป็น: <strong>/shop/ชื่อร้าน</strong>
           </p>
