@@ -1,7 +1,7 @@
 "use client"
 import { Catalog as CatalogType } from '@/app/types/model'
 import AddProducts from '../ui/popup/popresellers/addproducts'
-import React, { useState } from 'react'
+import React, { useState, useMemo} from 'react'
 import { FilterSearchAndDropdown } from '../ui/filter'
 import { PaginationCrad } from '../ui/paginationcrad'
  
@@ -45,11 +45,30 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
   const [pageSize, setPageSize] = useState(5)  
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   const allProducts = data ?? []
-  const totalItems = allProducts.length
-  const paginatedProducts = allProducts.slice(
-    currentPage * pageSize,
-    (currentPage + 1) * pageSize
-  )
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("all");
+  
+  const filteredProducts = useMemo(() => {
+    let result = allProducts.filter((item) =>
+      item.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (sortOrder === "lowToHigh") {
+      result.sort((a, b) => a.min_price - b.min_price);
+    } else if (sortOrder === "highToLow") {
+      result.sort((a, b) => b.min_price - a.min_price);
+    }
+
+    return result;
+  }, [allProducts, searchTerm, sortOrder]);
+
+  const totalItems = filteredProducts.length
+  const paginatedProducts = filteredProducts.slice(
+  currentPage * pageSize,
+  (currentPage + 1) * pageSize
+)
+
+  
 
   const truncateText = (text: string | null | undefined, maxLength: number) => {
     if (!text) return '-'; 
@@ -61,12 +80,16 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
       <section className='bg-white p-6 max-h-auto rounded-2xl shadow-md border border-gray-100'>
           {/* search bar */}
         <div className='mb-6'>
-          <FilterSearchAndDropdown/>
+         <FilterSearchAndDropdown 
+            onSearch={(value) => { setSearchTerm(value); setCurrentPage(0); }}
+            onSortPrice={setSortOrder}
+            onFilterType={() => {}} 
+          />
         </div>
  
         {loading ? (
           <div className="text-center py-10 text-gray-400">กำลังโหลด...</div>
-        ) : data.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center py-10 text-gray-400">ไม่มีสินค้าส่วนกลาง</div>
         ) : (
           <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5'>
