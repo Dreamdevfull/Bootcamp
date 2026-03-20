@@ -80,7 +80,7 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
       </div>
 
       {/* ปุ่ม + - */}
-      <div className={`flex items-center justify-between mt-auto bg-[#F5F3EE] px-3 py-1 rounded-md ${outOfStock ? "opacity-40" : ""}`}>
+      {/* <div className={`flex items-center justify-between mt-auto bg-[#F5F3EE] px-3 py-1 rounded-md ${outOfStock ? "opacity-40" : ""}`}>
         <button
           className="bg-[#1A6B5A]/40 hover:bg-[#1A6B5A] text-white rounded w-7 h-7 transition disabled:opacity-40"
           onClick={() => setCount(c => Math.max(1, c - 1))}
@@ -92,7 +92,7 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
           onClick={() => setCount(c => Math.min(item.stock, c + 1))}
           disabled={count === item.stock || outOfStock}
         >+</button>
-      </div>
+      </div> */}
 
       {/* ปุ่มซื้อ */}
       <div className="flex gap-2 mt-3">
