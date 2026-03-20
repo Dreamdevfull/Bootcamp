@@ -65,7 +65,7 @@ export const OrdersColumn: ColumnDef<OrderResellerType>[] = [
     id: "items",
     header: () => <div>สินค้า(จำนวน)</div>,
     cell: ({ row }) => {
-      const item = row.original.items
+      const item = row.original.items || [];
       const preview = item.slice(0, 2)
       const remaining = item.length - 2
 

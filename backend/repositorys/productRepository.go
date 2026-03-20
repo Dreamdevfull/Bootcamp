@@ -87,8 +87,17 @@ func (r *productRepository) HasActiveOrder(productID uint) (bool, error) {
 }
 
 func (r *productRepository) Delete(product *models.Products) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("product_id = ?", product.Id).Delete(&models.ShopProducts{}).Error; err != nil {
+			return err
+		}
 
-	return r.db.Delete(product).Error
+		if err := tx.Delete(product).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 func (r *productRepository) GetDeletedProducts() ([]models.Products, error) {
 	var products []models.Products
@@ -96,10 +105,19 @@ func (r *productRepository) GetDeletedProducts() ([]models.Products, error) {
 	return products, err
 }
 func (r *productRepository) Restore(id uint) error {
-	// ต้อง Unscoped() เพื่อให้ GORM หาข้อมูลที่ถูกลบเจอ แล้วเซต deleted_at เป็น null
-	return r.db.Unscoped().Model(&models.Products{}).Where("id = ?", id).Update("deleted_at", nil).Error
-}
+	return r.db.Transaction(func(tx *gorm.DB) error {
 
+		if err := tx.Unscoped().Model(&models.Products{}).Where("id = ?", id).Update("deleted_at", nil).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Unscoped().Model(&models.ShopProducts{}).Where("product_id = ?", id).Update("deleted_at", nil).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+}
 func (r *productRepository) HardDeleteOldRecords(days int) error {
 	limitDate := time.Now().AddDate(0, 0, -days)
 	// ต้อง Unscoped() เพื่อสั่ง DELETE จริงๆ ออกจากฐานข้อมูล
