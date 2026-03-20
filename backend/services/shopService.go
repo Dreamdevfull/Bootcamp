@@ -38,7 +38,11 @@ func (s *shopService) GetShopFrontData(slug string) (*dto.ShopFrontResponse, err
 	var productList []dto.ShopProductResponse
 	for _, item := range shopItems {
 
-		p, _ := s.productRepo.FindByID(item.Products_id)
+		p, err := s.productRepo.FindByID(item.Products_id)
+
+		if err != nil || p == nil {
+			continue
+		}
 		productList = append(productList, dto.ShopProductResponse{
 			ProductID:    item.Products_id,
 			ProductName:  p.Name,
