@@ -76,24 +76,21 @@ func (r *resellerRepository) UpdatePrice(shopProductID uint, newPrice float64) e
 // 		Delete(&models.ShopProducts{}).Error
 // }
 
-func (r *resellerRepository) DeleteFromShop(shopID uint, productID uint) error {
+func (r *resellerRepository) DeleteFromShop(shopID uint, shopProductID uint) error {
 	return r.db.Unscoped().
-		Where("shop_id = ? AND product_id = ?", shopID, productID).
+		Where("id = ? AND shop_id = ?", shopProductID, shopID).
 		Delete(&models.ShopProducts{}).Error
 }
 
-func (r *resellerRepository) HasActiveOrder(productID uint, shopID uint) (bool, error) {
+func (r *resellerRepository) HasActiveOrder(shopProductID uint, shopID uint) (bool, error) {
 	var count int64
 	err := r.db.Table("order_items").
 		Joins("JOIN orders ON orders.id = order_items.order_id").
-		Where("order_items.product_id = ? AND orders.shop_id = ? AND orders.status != ?", productID, shopID, "completed").
+		Joins("JOIN shop_products ON shop_products.product_id = order_items.product_id").
+		Where("shop_products.id = ? AND orders.shop_id = ? AND orders.status != ?", shopProductID, shopID, "completed").
 		Count(&count).Error
 
-	if err != nil {
-		return false, err
-	}
-
-	return count > 0, nil
+	return count > 0, err
 }
 
 func (r *resellerRepository) GetMyOrders(userID uint) ([]models.Orders, error) {

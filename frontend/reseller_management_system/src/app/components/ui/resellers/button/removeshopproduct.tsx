@@ -2,7 +2,7 @@
 
 type Props = {
   id: number;
-  onSuccess?: () => void; // optional: บอก parent ให้ refetch
+  onSuccess?: () => void;
 }
 
 const RemoveShopProductButton = ({ id, onSuccess }: Props) => {

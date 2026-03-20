@@ -58,6 +58,8 @@ export interface Catalog {
   min_price: number
   stock: number
   Create_at: string
+  is_added: boolean;
+  is_mine: boolean; 
 }
 
 export interface ShopProducts {
@@ -98,7 +100,6 @@ export interface OrderReseller {
 }
 
 export interface Wallet {
-  balance: number;
   history: {
     id: number;
     wallet_id: number;
@@ -106,4 +107,12 @@ export interface Wallet {
     amount: number;
     created_at: string;
   }[]
+  pending_amount: number;
+  received_amount: number;
+  total_profit: number;
+}
+
+export interface AddProductToShopRequest {
+  product_id: number;
+  selling_price: number;
 }
