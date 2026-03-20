@@ -30,6 +30,9 @@ func (ctrl *UserController) GetResellers(c fiber.Ctx) error {
 
 func (ctrl *UserController) UpdateStatus(c fiber.Ctx) error {
 	id := c.Params("id")
+	if id == "" {
+		return c.Status(400).JSON(fiber.Map{"message": "ไม่พบ ID ของตัวแทน"})
+	}
 
 	type UpdateStatusRequest struct {
 		Status string `json:"status"`

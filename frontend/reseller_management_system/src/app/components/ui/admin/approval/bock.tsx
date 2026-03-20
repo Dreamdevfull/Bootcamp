@@ -12,11 +12,13 @@ const BockButton = ({ id, onSuccess }: Props) => {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ status: "" }),
+      body: JSON.stringify({ status: "pending" }),
     });
 
     if (res.ok) {
-      onSuccess?.();
+      if (onSuccess) {
+          onSuccess(); 
+        }
     }
   };
 
