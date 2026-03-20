@@ -50,6 +50,12 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
     currentPage * pageSize,
     (currentPage + 1) * pageSize
   )
+
+  const truncateText = (text: string | null | undefined, maxLength: number) => {
+    if (!text) return '-'; 
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
   return (
     <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
       <section className='bg-white p-6 max-h-auto rounded-2xl shadow-md border border-gray-100'>
@@ -82,7 +88,7 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
                 )}
  
                 <div className="p-3 flex flex-col gap-2">
-                  <p className="text-sm font-medium line-clamp-2">{item.name}</p>
+                  <p title={item.name} className="text-sm font-medium line-clamp-2">{truncateText(item.name ?? "-", 33)}</p>
  
                   <div className="flex justify-between items-center">
                     <span className="text-[#1a6b5a] font-semibold text-lg">
