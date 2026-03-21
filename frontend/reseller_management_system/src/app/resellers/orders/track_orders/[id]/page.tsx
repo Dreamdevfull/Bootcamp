@@ -7,7 +7,7 @@ import { OrderReseller as OrderType } from '@/app/types/model'
 
 const TrackOrdersPage = () => {
   const { id } = useParams()
-  const [order, setOrder] = useState<any | null>(null) // ใช้ any ชั่วคราวเพื่อเช็คค่า
+  const [order, setOrder] = useState<OrderType>() // ใช้ any ชั่วคราวเพื่อเช็คค่า
   const [loading, setLoading] = useState(true)
   const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -15,11 +15,12 @@ const TrackOrdersPage = () => {
     const fetchOrderDetail = async () => {
       try {
         const res = await fetch(`${API_URL}/reseller/orders/${id}`, {
+          method: "GET",
           credentials: "include",
         })
         const result = await res.json()
         if (res.ok) {
-          console.log("Data from Backend:", result.data); // 🚩 มึงเปิด F12 ดูตรงนี้!
+          // console.log("Data from Backend:", result.data); // 🚩 มึงเปิด F12 ดูตรงนี้!
           setOrder(result.data) 
         }
       } catch (err) {
@@ -30,6 +31,9 @@ const TrackOrdersPage = () => {
     }
     if (id) fetchOrderDetail()
   }, [id, API_URL])
+
+  const STEPS = ["รอดำเนินการ", "กำลังจัดส่ง", "จัดส่งเสร็จสมบูรณ์"];
+  const currentStep = STEPS.indexOf(order?.status ?? "");
 
   if (loading) return <div className="text-center py-20 font-bold text-[#1a6b5a]">กำลังโหลดข้อมูลออเดอร์...</div>
   if (!order) return <div className="text-center py-20 text-[#888780]">ไม่พบข้อมูลคำสั่งซื้อ (ID: {id})</div>
@@ -46,8 +50,41 @@ const TrackOrdersPage = () => {
             </button>
           </Link>
         </div>
+        <div className="flex items-center justify-between relative">
+          {/* เส้น background */}
+          <div className="absolute top-center left-5 right-2 h-4 bg-[#D3D1C7] z-0" />
+          {/* เส้น progress */}
+          <div
+            className="absolute top-center left-8 h-4 bg-[#1A6B5A] z-0 transition-all"
+            style={{ width: `${(currentStep / (STEPS.length - 1)) * 90}%` }}
+          />
+          {STEPS.map((step, idx) => (
+            <div key={step} className="flex flex-col items-center gap-2 z-10">
+              <div className={`w-35 h-35 rounded-full flex items-center justify-center border-2 transition ${
+                idx < currentStep
+                  ? "bg-[#1A6B5A] border-[#1A6B5A] text-white"
+                  : idx === currentStep
+                  ? "bg-[#1D9E75] border-[#1D9E75] text-white ring-4 ring-[#9FE1CB]"
+                  : "bg-white border-[#D3D1C7] text-[#888780]"
+              }`}>
+                <span className='text-[90px]'>{idx === 0 && "📦"}</span>
+                <span className='text-[90px]'>{idx === 1 && "🚚"}</span>
+                <span className='text-[90px]'>{idx === 2 && "✓"}</span>
+              </div>
+              <p className={`text-xs font-medium ${
+                idx < currentStep
+                  ? "text-[#1A6B5A]"
+                  : idx === currentStep
+                  ? "text-[#1D9E75] font-bold"
+                  : "text-[#888780]"
+              }`}>
+                {step}
+              </p>
+            </div>
+          ))}
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-5">
           <div className="bg-[#f5f3ee] p-6 rounded-lg shadow-sm border border-gray-200">
             <div className='text-[#888780] mb-2 text-sm'>หมายเลขคำสั่งซื้อ</div>
             <h1 className="font-bold text-lg">{order.order_number}</h1>

@@ -39,16 +39,50 @@
 
 // export default HeaderReseller
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import ButtonLogout from '../ui/admin/button/logout'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react' // อย่าลืมติดตั้ง lucide-react
 
+interface Reseller {
+  id: number;
+  role: string;
+  shop_name: string;
+}
+
 const HeaderReseller = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState<Reseller>();
+  const [loading, setLoading] = useState(true);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${API_URL}/reseller/status`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const result = await res.json();
+        // console.log(result);
+        setData(result);
+      } catch {
+        setData(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  },[]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const firstLetter = data?.shop_name.charAt(0).toUpperCase();
 
   const sidebarLinkClass = (path: string) =>
     `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 
@@ -62,17 +96,12 @@ const HeaderReseller = () => {
         
         {/* Logo Section */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-lg overflow-hidden">
-            <Image 
-              src="/bear.webp" 
-              alt="TinyStore Logo" 
-              width={40} 
-              height={40} 
-            />
+          <div className="w-10 h-10 bg-white/20 rounded-lg overflow-hidden flex items-center justify-center">
+            <span className="text-2xl font-bold">{firstLetter}</span>
           </div>
           <div className="hidden sm:block">
-            <h1 className="text-xl font-bold">TinyStore</h1>
-            <p className="text-[10px] text-gray-300">Reseller Management System</p>
+            <h1 className="text-xl font-bold">{data?.shop_name}</h1>
+            <p className="text-[16px] text-gray-300">@{data?.role}</p>
           </div>
         </div>
         

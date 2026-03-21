@@ -63,8 +63,8 @@ const HeaderCustomers = () => {
   const pathname = usePathname()
   const router = useRouter()
   const shop_slug = pathname.split("/")[2] ?? ""
-  const { totalItems } = useCart()
-
+  const { totalItems } = useCart();
+  
   const sidebarLinkClass = (path: string) =>
     `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 hover:bg-[#1a6b5a] hover:text-white ${
       pathname === path ? "bg-[#1a6b5a] text-white" : ""
