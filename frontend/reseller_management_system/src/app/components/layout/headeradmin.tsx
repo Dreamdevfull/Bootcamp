@@ -99,7 +99,7 @@ const HeaderAdmin = () => {
     hover:bg-[#1a6b5a] hover:text-white justify-center w-full md:w-32 mb-3
     ${pathname === path ? "bg-[#1a6b5a] text-white" : "text-white/90"}`;
 
-    const firstLetter = data?.shop_name.charAt(0).toUpperCase();
+  const firstLetter = data?.shop_name.charAt(0).toUpperCase();
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-[#0d3d30] text-white shadow-md">

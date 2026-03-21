@@ -75,13 +75,6 @@ const CardWallet = ({ data, loading }: CardWalletProps) => {
               ฿{data?.received_amount?.toLocaleString() || 0}
             </p>
           </div>
-          
-          <div className="flex justify-between items-center py-3">
-            <p className="text-[#888780] text-sm sm:text-base">รอดำเนินการ (รอจัดส่ง)</p>
-            <p className="font-bold text-[#633806] text-lg">
-              ฿{data?.pending_amount?.toLocaleString() || 0}
-            </p>
-          </div>
         </div>
       </div>
     </section>
