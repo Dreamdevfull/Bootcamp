@@ -5,7 +5,7 @@ import { useEffect, useState, useMemo } from "react";
 import { DataTable } from "@/app/components/ui/datatable";
 import Main from "@/app/components/layout/main";
 import { Orders as OrdersType } from "@/app/types/model";
-import { FilterSearchAndDropdown } from "@/app/components/ui/filter";
+import { FilterSearchAndDropdown } from "@/app/components/ui/search/filter";
 
 const mockmain = {
   text1: "จัดการออเดอร์",

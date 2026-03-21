@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '@/app/components/layout/header'
 import Image from "next/image"
 import Link from 'next/link'
-import { FilterSearchAndDropdown } from '../components/ui/filter'
+import { FilterSearchAndDropdown } from '../components/ui/search/filter'
 import { PaginationCrad } from '../components/ui/paginationcrad'
 import CradShop from "@/app/components/cradcustomer/cradshop"
 import { Shop } from '../types/model'  // ✅ use Shop, not User

@@ -5,7 +5,7 @@ import Main from '@/app/components/layout/main'
 import { ProductsColumn } from '@/app/components/columnsreseller/myproducts';
 import { ShopProducts as ShopProductsType } from '@/app/types/model';
 import { DataTable } from '@/app/components/ui/datatable';
-import { FilterSearchAndDropdown } from '@/app/components/ui/filter';
+import { FilterSearchAndDropdown } from '@/app/components/ui/search/filter';
 import { useRouter } from 'next/navigation';
 
 const Shoppage = () => {
