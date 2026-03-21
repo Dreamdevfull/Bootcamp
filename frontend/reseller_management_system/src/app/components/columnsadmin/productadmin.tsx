@@ -6,6 +6,7 @@ import PopEditProducts from '../ui/popup/popadmin/editproducts';
 import { Product as ProductType } from '@/app/types/model';
 import React from 'react';
 
+
 function ActionCell({ id, name, image_url, description, cost_price, min_price, stock ,onSuccess}: {
   id: number;
   name: string;
