@@ -97,7 +97,7 @@ export const getResellerColumns = (onSuccess: () => void): ColumnDef<Approval>[]
       let color = "";
 
       if (status === "pending") {
-        text = "รอดำเนินการ";
+        text = "กำลังส่ง";
         color = "text-amber-700 dark:text-amber-300 border-2 border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-950 rounded-md px-2 py-1 font-medium";
       } else if (status === "approved") {
         text = "อนุมัติแล้ว";

@@ -240,10 +240,10 @@ type TrackingResult = {
   }[]
 }
 
-const statusSteps = ["pending", "shipped", "completed"]
+const statusSteps = [ "shipped", "pending",  "completed"]
 const statusLabel: Record<string, string> = {
-  pending: "รอดำเนินการ",
-  shipped: "จัดส่งแล้ว",
+  pending: "กำลังส่ง",
+  shipped: "รอดำเนินการ",
   completed: "เสร็จสิ้น",
 }
 const statusColor: Record<string, string> = {
@@ -376,7 +376,7 @@ const TrackingContent = () => {
             </div>
 
             {/* Legend */}
-            <div className="flex flex-wrap justify-center gap-3 mt-6 text-xs text-gray-500 dark:text-gray-400">
+            {/* <div className="flex flex-wrap justify-center gap-3 mt-6 text-xs text-gray-500 dark:text-gray-400">
               <div className="flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-700 dark:bg-emerald-500 inline-block" aria-hidden="true" /> ดำเนินแล้ว
               </div>
@@ -386,7 +386,7 @@ const TrackingContent = () => {
               <div className="flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 inline-block" aria-hidden="true" /> รอดำเนินการ
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Order Info */}
