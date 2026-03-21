@@ -31,3 +31,17 @@ func (c *ShopController) GetShopFront(ctx fiber.Ctx) error {
 	}
 	return ctx.JSON(data)
 }
+
+func (ctrl *ShopController) GetShopsList(c fiber.Ctx) error {
+	shops, err := ctrl.svc.GetAllShops()
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"error": "ไม่สามารถดึงข้อมูลร้านค้าได้",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"total": len(shops),
+		"data":  shops,
+	})
+}

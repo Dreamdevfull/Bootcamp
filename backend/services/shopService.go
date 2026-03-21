@@ -12,6 +12,7 @@ import (
 type ShopService interface {
 	GetShopFrontData(slug string) (*dto.ShopFrontResponse, error)
 	GetShopBySlug(slug string) (*models.Shops, error)
+	GetAllShops() ([]models.Shops, error)
 }
 
 type shopService struct {
@@ -68,4 +69,8 @@ func (s *shopService) GetShopBySlug(slug string) (*models.Shops, error) {
 		return nil, err
 	}
 	return shop, nil
+}
+
+func (s *shopService) GetAllShops() ([]models.Shops, error) {
+	return s.repo.FindAllActiveShops()
 }
