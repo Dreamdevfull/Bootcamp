@@ -85,7 +85,7 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
       {/* ปุ่ม + - */}
       <div className={`flex items-center justify-between mt-auto bg-[#F5F3EE] px-3 py-1 rounded-md ${outOfStock ? "opacity-40" : ""}`}>
         <button
-          className="bg-[#1A6B5A]/40 hover:bg-[#1A6B5A] text-white rounded w-7 h-7 transition disabled:opacity-40"
+          className="w-7 h-7 flex items-center justify-center rounded bg-[#1A6B5A] hover:bg-[#0D3D30] text-white shadow-sm transition cursor-pointer disabled:opacity-30"
           onClick={() => setCount(c => Math.max(1, c - 1))}
           disabled={count === 1 || outOfStock}
         >-</button>
