@@ -73,7 +73,7 @@ func (r *shopRepository) FindAllActiveShops() ([]models.Shops, error) {
 	// ดึงข้อมูลร้านค้า โดยพ่วงข้อมูล User (เจ้าของ) ที่สถานะเป็น 'approved' มาด้วย
 	err := r.db.Preload("User").
 		Joins("JOIN users ON users.id = shops.user_id").
-		Where("users.status = ?", "approved").
+		Where("users.status = ? AND users.role = ?", "approved", "reseller").
 		Find(&shops).Error
 	return shops, err
 }
