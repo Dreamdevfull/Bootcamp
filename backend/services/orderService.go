@@ -16,6 +16,7 @@ type OrderService interface {
 	ProcessCheckout(slug string, req dto.CheckoutRequest) (*models.Orders, error)
 	ConfirmPayment(orderID uint) (*models.Orders, error)
 	GetOrderTracking(orderNumber string) (*models.Orders, error)
+	GetDashboardStats(userID uint) (*dto.DashboardStats, error)
 }
 
 type orderService struct {
@@ -92,7 +93,6 @@ func (s *orderService) ProcessCheckout(slug string, req dto.CheckoutRequest) (*m
 			return nil, fmt.Errorf("ไม่พบสินค้า ID %d", itemReq.ProductID)
 		}
 
-		// BR-27: ตรวจสอบสต็อก
 		if shopProduct.Product.Stock < itemReq.Quantity {
 			return nil, fmt.Errorf("สินค้า %s ไม่เพียงพอ", shopProduct.Product.Name)
 		}
@@ -155,7 +155,17 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 func (s *orderService) GetOrderTracking(orderNumber string) (*models.Orders, error) {
 	order, err := s.repo.FindByOrderNumber(orderNumber)
 	if err != nil {
-		return nil, err // จะถูกส่งไปเป็น "ไม่พบออเดอร์นี้"
+		return nil, err
 	}
 	return order, nil
+}
+
+func (s *orderService) GetDashboardStats(userID uint) (*dto.DashboardStats, error) {
+
+	stats, err := s.repo.GetDashBoardStats(userID)
+	if err != nil {
+		return nil, fmt.Errorf("ไม่สามารถดึงข้อมูล Dashboard ได้: %v", err)
+	}
+
+	return stats, nil
 }
