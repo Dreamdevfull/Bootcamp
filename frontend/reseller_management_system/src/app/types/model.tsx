@@ -145,3 +145,26 @@ export interface Getshop {
     stock: number;
   }[]
 }
+
+// customer
+
+export interface Shop {
+  id: number
+  users_id: number
+  shop_name: string
+  shop_slug: string
+  user: User  // ✅ back-reference to owner
+}
+
+export interface User {
+  id: number
+  name: string
+  email: string
+  password?: string  // ✅ optional — never expose on frontend
+  phone: string
+  role: 'admin' | 'user' | 'seller'
+  status: 'approved' | 'pending' | 'rejected'
+  address: string
+  created_at: string
+  shop?: Shop  // ✅ optional — not every user has a shop
+}
