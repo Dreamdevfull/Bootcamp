@@ -42,6 +42,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	resellerGroup.Get("/orders", c.ResellerController.GetOrdersForReseller)
 	resellerGroup.Get("/wallet", c.WalletController.GetWallet)
 	resellerGroup.Get("/orders/:id", c.ResellerController.GetOrderDetail)
+	resellerGroup.Get("/dashboard", c.OrderController.GetDashboardStats)
 	// resellerGroup.Get("/shop", c.ShopController.MyShop)
 
 	app.Get("/shop/:shop_slug", c.ShopController.GetShopFront)

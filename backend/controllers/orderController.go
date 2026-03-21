@@ -231,3 +231,29 @@ func translateStatus(status string) string {
 		return "ไม่ทราบสถานะ"
 	}
 }
+
+func (oc *OrderController) GetDashboardStats(c fiber.Ctx) error {
+
+	userID := c.Locals("user_id")
+	role := c.Locals("role")
+
+	var targetID uint = 0
+
+	if userID != nil && role != "admin" {
+		targetID = userID.(uint)
+	}
+
+	stats, err := oc.service.GetDashboardStats(targetID)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  "error",
+			"message": "ไม่สามารถดึงข้อมูล Dashboard ได้: " + err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status": "success",
+		"data":   stats,
+	})
+}
