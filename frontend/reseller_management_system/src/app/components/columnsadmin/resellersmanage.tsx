@@ -122,7 +122,7 @@ export const getResellerColumns = (onSuccess: () => void): ColumnDef<Approval>[]
 
       if (status === "pending") {
         return (
-          <div className="flex gap-2 justify-center">
+          <div  className="flex gap-2 justify-center items-center min-h-[45px] min-w-[120px] py-1">
             <ApprovalButton id={row.original.id} onSuccess={onSuccess}/>
             <RejectedButton id={row.original.id} onSuccess={onSuccess} />
           </div>

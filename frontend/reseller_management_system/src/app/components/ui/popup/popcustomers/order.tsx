@@ -52,8 +52,14 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
       })
       const checkoutResult = await checkoutRes.json()
       if (!checkoutRes.ok) {
-        alert(checkoutResult.message || "เกิดข้อผิดพลาด")
-        return
+        Swal.fire({
+                icon: 'warning',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'เกิดข้อผิดพลาด',
+                confirmButtonColor: '#EF9F27'
+              });
+              return;
+      
       }
 
       const order_id = checkoutResult.order_id
@@ -65,8 +71,14 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
       })
       const paymentResult = await paymentRes.json()
       if (!paymentRes.ok) {
-        alert(paymentResult.message || "ชำระเงินไม่สำเร็จ")
-        return
+        Swal.fire({
+                icon: 'warning',
+                title: 'ชำระเงินไม่สำเร็จ',
+                text: 'ชำระเงินไม่สำเร็จ',
+                confirmButtonColor: '#EF9F27'
+              });
+              return;
+        
       }
 
       onClose()
@@ -109,7 +121,13 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
         }
       })
     } catch {
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่")
+      Swal.fire({
+                icon: 'warning',
+                title: 'เกิดข้อผิดพลาด กรุณาลองใหม่',
+                text: 'เกิดข้อผิดพลาด กรุณาลองใหม่',
+                confirmButtonColor: '#EF9F27'
+              });
+              return;
     }
   }
 

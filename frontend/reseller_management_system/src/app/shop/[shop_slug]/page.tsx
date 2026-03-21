@@ -12,7 +12,7 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
   const { shop_slug } = use(params);
   const [data, setData] = useState<Getshop | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,7 +47,7 @@ if (loading) return (
       <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
         <HeaderCustomers />
         <section className='w-full h-[200px] bg-gradient-to-r from-[#0d3d30] via-[#1a6b5a] to-[#1d9e75]'>
-          <h1 className='text-white text-center text-[40px] pt-8'>ยินดีต้องรับเข้าสู่ร้าน</h1>
+          <h1 className='text-white text-center text-[40px] pt-8'>ยินดีต้อนรับเข้าสู่ร้าน</h1>
           <p className='text-white text-center text-[40px] pt-2'>{data?.shop_name}</p>
 
         </section>

@@ -45,7 +45,7 @@ function ActionCell({ id, name, image_url, cost_price, min_price,onSuccess }: {
  
 const CatalogCrad = ({ data, loading, onSuccess }: CatalogCardProps) => {
   const [currentPage, setCurrentPage] = useState(0)
-  const [pageSize, setPageSize] = useState(5)  
+  const [pageSize, setPageSize] = useState(10)  
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   const allProducts = data ?? []
   const [searchTerm, setSearchTerm] = useState("");
