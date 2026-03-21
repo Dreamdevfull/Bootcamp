@@ -80,6 +80,7 @@ const Header = () => {
         {/* Desktop Menu - ซ่อนเมื่อจอเล็ก (hidden) และแสดงเมื่อ md ขึ้นไป (md:flex) */}
         <div className="hidden md:flex gap-4">
             <Link href="/"><button className={sidebarLinkClass("/")}>หน้าหลัก</button></Link>
+            <Link href="/shop"><button className={sidebarLinkClass("/shop")}>ร้านค้า</button></Link>
             <Link href="/login"><button className={sidebarLinkClass("/login")}>เข้าสู่ระบบ</button></Link>
             <Link href="/register"><button className={sidebarLinkClass("/register")}>สมัครตัวแทน</button></Link>
         </div>
@@ -97,6 +98,9 @@ const Header = () => {
         <div className="md:hidden bg-[#0d3d30] border-t border-white/10 px-8 py-4 flex flex-col gap-2">
           <Link href="/" onClick={() => setIsOpen(false)}>
             <button className={sidebarLinkClass("/")}>หน้าหลัก</button>
+          </Link>
+          <Link href="/shop" onClick={() => setIsOpen(false)}>
+            <button className={sidebarLinkClass("/shop")}>ร้านค้า</button>
           </Link>
           <Link href="/login" onClick={() => setIsOpen(false)}>
             <button className={sidebarLinkClass("/login")}>เข้าสู่ระบบ</button>
