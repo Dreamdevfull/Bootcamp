@@ -9,7 +9,7 @@ import {
 import Main from "@/app/components/layout/main";
 import { Product as ProductType } from "@/app/types/model";
 import PopAddProducts from "@/app/components/ui/popup/popadmin/addproducts";
-import { FilterSearchAndDropdown } from "@/app/components/ui/search/filter";
+import { FilterSearchAndDropdown1 } from "@/app/components/ui/search/filter1";
 
 const ProductsPage = () => {
   const [data, setData] = useState<ProductType[]>([]);
@@ -92,7 +92,7 @@ const ProductsPage = () => {
       <HeaderAdmin />
       <Main main={mockmain} />
 
-      <FilterSearchAndDropdown
+      <FilterSearchAndDropdown1
         onSearch={setSearchTerm}
         onSortPrice={setSortOrder}
         onFilterType={setTypeFilter}

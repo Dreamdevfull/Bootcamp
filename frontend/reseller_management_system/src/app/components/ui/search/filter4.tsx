@@ -85,7 +85,7 @@ interface FilterProps {
   onFilterType: (value: string) => void;
 }
 
-export const FilterSearchAndDropdown1 = ({
+export const FilterSearchAndDropdown4 = ({
   onSearch,
   onSortPrice,
   onFilterType,
@@ -128,7 +128,7 @@ export const FilterSearchAndDropdown1 = ({
           </div>
           <input
             type="search"
-            aria-label="ค้นหา"
+            aria-label="ค้นหาเลขออเดอร์"
             className="block w-full pl-10 pr-3 py-2.5
                        border-2 border-gray-300 dark:border-gray-600
                        rounded-full
@@ -139,7 +139,7 @@ export const FilterSearchAndDropdown1 = ({
                        focus:ring-amber-400 dark:focus:ring-amber-500
                        focus:border-transparent
                        text-sm transition-all"
-            placeholder="ค้นหาชื่อสินค้า"
+            placeholder="ค้นหาเลขออเดอร์และชื่อลูกค้า"
             onChange={(e) => onSearch(e.target.value)}
           />
         </div>
@@ -170,6 +170,32 @@ export const FilterSearchAndDropdown1 = ({
               </svg>
             </div>
           </div>
+
+          {/* กรองสถานะ */}
+          <div className="w-full md:w-[200px] relative">
+            <select
+              onChange={(e) => onFilterType(e.target.value)}
+              aria-label="กรองตามสถานะ"
+              className="block w-full pl-3 pr-10 py-2.5 text-sm
+                         border-2 border-gray-300 dark:border-gray-600
+                         bg-white dark:bg-gray-900
+                         text-gray-700 dark:text-gray-100
+                         focus:outline-none focus:ring-2
+                         focus:ring-amber-400 dark:focus:ring-amber-500
+                         rounded-xl appearance-none cursor-pointer transition-all"
+            >
+              <option value="all">สถานะทั้งหมด</option>
+              <option value="pending">⏳ รอดำเนินการ</option>
+              <option value="shopped">🚚 กำลังจัดส่ง</option>
+              <option value="completed">✅ เสร็จสมบูรณ์</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 dark:text-gray-500">
+              <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+              </svg>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

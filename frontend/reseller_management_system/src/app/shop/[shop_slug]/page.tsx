@@ -4,7 +4,7 @@ import { useState, useEffect, use, useMemo } from "react"
 import { Getshop } from "@/app/types/model"
 import CradShopslug from "@/app/components/cradcustomer/cradshopslug"
 import HeaderCustomers from "@/app/components/layout/headerCustomers"
-import { FilterSearchAndDropdown } from "@/app/components/ui/search/filter"
+import { FilterSearchAndDropdown1 } from "@/app/components/ui/search/filter1"
 import { PaginationCrad } from "@/app/components/ui/paginationcrad"
 import { useRouter } from "next/navigation"
 
@@ -86,7 +86,7 @@ if (loading) return (
         </section>
         <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
           <div className="mb-5">
-          <FilterSearchAndDropdown 
+          <FilterSearchAndDropdown1 
                 onSearch={(value) => setSearchTerm(value)} 
                 onSortPrice={(value) => setSortOrder(value)}
                 onFilterType={() => {}} 

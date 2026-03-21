@@ -5,7 +5,7 @@ import { DataTable } from '@/app/components/ui/datatable'
 import { getResellerColumns } from '@/app/components/columnsadmin/resellersmanage';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Approval as ApprovalType } from '@/app/types/model';
-import { FilterSearchAndDropdown } from '@/app/components/ui/search/filter';
+import { FilterSearchAndDropdown3 } from '@/app/components/ui/search/filter3';
 
 const mockmain = {
   text1: "อนุมัติตัวแทน",
@@ -63,7 +63,7 @@ const ResellersManagepage = () => {
       <Main main={mockmain}/>
 
       
-      <FilterSearchAndDropdown 
+      <FilterSearchAndDropdown3 
         onSearch={setSearchTerm} 
         onFilterType={setStatusFilter} 
         onSortPrice={() => {}} 

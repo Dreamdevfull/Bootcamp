@@ -85,7 +85,7 @@ interface FilterProps {
   onFilterType: (value: string) => void;
 }
 
-export const FilterSearchAndDropdown = ({
+export const FilterSearchAndDropdown2 = ({
   onSearch,
   onSortPrice,
   onFilterType,
@@ -139,7 +139,7 @@ export const FilterSearchAndDropdown = ({
                        focus:ring-amber-400 dark:focus:ring-amber-500
                        focus:border-transparent
                        text-sm transition-all"
-            placeholder="ค้นหา..."
+            placeholder="ค้นหาชื่อร้าน"
             onChange={(e) => onSearch(e.target.value)}
           />
         </div>
