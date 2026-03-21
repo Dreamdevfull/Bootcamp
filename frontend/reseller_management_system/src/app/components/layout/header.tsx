@@ -47,6 +47,7 @@ import Image from "next/image";
 import Link from 'next/link';
 import { useState } from 'react'; // เพิ่ม useState สำหรับเปิด-ปิดเมนู
 import { Menu, X } from 'lucide-react'; // อย่าลืม npm install lucide-react
+import { ThemeToggle } from '../drakmode/ThemeToggle';
 
 const Header = () => {
   const pathname = usePathname();
@@ -57,6 +58,7 @@ const Header = () => {
     pathname === path ? "bg-[#1a6b5a] text-white" : ""}`;
 
   return (
+  <div>
     <nav className="sticky top-0 z-50 w-full bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white shadow-md">
       {/* Main Container */}
       <div className="flex items-center justify-between px-8 h-20">
@@ -105,6 +107,7 @@ const Header = () => {
         </div>
       )}
     </nav>
+  </div>
   )
 }
 
