@@ -49,6 +49,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	app.Post("/shop/:shop_slug/checkout", c.OrderController.Checkout)
 	app.Post("/shop/:shop_slug/payment/:order_id", c.OrderController.SimulatePayment)
 	app.Get("/track-order", c.OrderController.TrackOrder)
+	app.Get("/shops", c.ShopController.GetShopsList)
 	// app.Post("/shop/:sh")
 
 	app.Get("/test/:name", func(c fiber.Ctx) error {
