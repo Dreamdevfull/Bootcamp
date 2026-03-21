@@ -144,6 +144,7 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 		Secure:   false,
 		SameSite: "Lax",
 		MaxAge:   86400,
+		Path:     "/",
 	})
 
 	return c.Status(200).JSON(result)

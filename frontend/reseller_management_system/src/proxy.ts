@@ -2,32 +2,41 @@ import { NextRequest, NextResponse } from "next/server";
 
 const adminRoutes = ["/admin"];
 const resellerRoutes = ["/resellers"];
-const authRoutes = ["/login", "/register", "/"]; 
+const authRoutes = ["/login", "/register", "/"];
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("jwt")?.value;
 
+  console.log("Token in Middleware:", token ? "Found" : "Not Found");
+  const API_BASE = "http://127.0.0.1:8080";
+
   if (authRoutes.some((r) => pathname === r)) {
     if (token) {
       try {
         // ตรวจ role แล้ว redirect ไปหน้าของคนนั้น
-        const res = await fetch("http://localhost:8080/api/auth/me", {
-          headers: { Cookie: `jwt=${token}` },
+        const res = await fetch(`${API_BASE}/api/auth/me`, {
+          headers: {
+            Cookie: `jwt=${token}`,
+            Authorization: `Bearer ${token}`, // ส่งสำรองไปในกรณีที่ Go เช็คจาก Header ด้วย
+          },
+          cache: "no-store",
         });
-        console.log("status:", res.status)
+        console.log("status:", res.status);
 
         if (res.ok) {
           const data = await res.json();
-          console.log("data:", data)
+          console.log("data:", data);
           if (data.role === "admin") {
             return NextResponse.redirect(new URL("/admin/dashboard", req.url));
           } else if (data.role === "reseller") {
-            return NextResponse.redirect(new URL("/resellers/dashboard", req.url));
+            return NextResponse.redirect(
+              new URL("/resellers/dashboard", req.url),
+            );
           }
         }
       } catch (err) {
-        console.log("fetch error:", err)
+        console.log("fetch error:", err);
         return NextResponse.redirect(new URL("/", req.url));
       }
     }
@@ -44,7 +53,7 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const res = await fetch("http://localhost:8080/api/auth/me", {
+  const res = await fetch("http://127.0.0.1:8080/api/auth/me", {
     headers: { Cookie: `jwt=${token}` },
   });
 
