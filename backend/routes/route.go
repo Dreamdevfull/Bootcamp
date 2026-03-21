@@ -24,6 +24,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	adminGroup.Post("/products/:id/restore", c.ProductsController.Restore)
 	adminGroup.Post("/products/empty-garbage", c.ProductsController.EmptyGarbage)
 	adminGroup.Get("/resellers", c.UserController.GetResellers)
+	adminGroup.Get("/orders/:id", c.ResellerController.GetOrderDetailForAdmin)
 
 	//==========================================
 	// adminGroup.Patch("/resellers/:id", controllers.UpdateResellerStatus(db))
@@ -40,6 +41,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	resellerGroup.Patch("/my-products/update-price", c.ResellerController.UpdateProductPrice)
 	resellerGroup.Delete("/my-shop/products/:id", c.ResellerController.RemoveProductFromShop)
 	resellerGroup.Get("/orders", c.ResellerController.GetOrdersForReseller)
+
 	resellerGroup.Get("/wallet", c.WalletController.GetWallet)
 	resellerGroup.Get("/orders/:id", c.ResellerController.GetOrderDetail)
 	resellerGroup.Get("/dashboard", c.OrderController.GetDashboardStats)

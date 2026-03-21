@@ -235,3 +235,31 @@ func (ctrl *ResellerController) GetOrderDetail(c fiber.Ctx) error {
 		"data":    result,
 	})
 }
+
+// 🚩 สำหรับ Admin: ดึงรายละเอียดออเดอร์ไส้ใน (ดูได้ทุกร้าน)
+func (ctrl *ResellerController) GetOrderDetailForAdmin(c fiber.Ctx) error {
+	// 1. ดึง orderID จาก URL Param (เช่น /admin/orders/:id)
+	orderIDStr := c.Params("id")
+	orderID, err := strconv.Atoi(orderIDStr)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"success": false,
+			"message": "Invalid Order ID",
+		})
+	}
+
+	// 2. เรียกใช้ Service ตัวที่มึงเพิ่งสร้าง (ตัวที่ไม่มี userID)
+	result, err := ctrl.services.GetOrderDetailForAdmin(uint(orderID))
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"success": false,
+			"message": "ไม่พบข้อมูลออเดอร์ในระบบ",
+		})
+	}
+
+	// 3. ส่งข้อมูลกลับไปให้ Admin (Next.js)
+	return c.Status(200).JSON(fiber.Map{
+		"success": true,
+		"data":    result,
+	})
+}
