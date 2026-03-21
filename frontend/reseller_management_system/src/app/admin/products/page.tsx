@@ -68,7 +68,7 @@ const ProductsPage = () => {
   }, [fetchData]);
 
   const filteredProducts = useMemo(() => {
-    let result = data.filter((item) =>
+    const result = data.filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 

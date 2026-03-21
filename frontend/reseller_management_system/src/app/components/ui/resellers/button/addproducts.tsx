@@ -9,6 +9,17 @@ type Props = {
 
 const AddProductsButton = ({ id, onSuccess }: Props) => {
   const [open, setOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<{
+    image_url: string;
+    cost_price: number;
+    min_price: number;
+  } | null>(null);
+
+  const handleSuccess = () => {
+    setSelectedItem(null);
+    setOpen(false);
+    onSuccess?.();
+  }
   // const API_URL = process.env.NEXT_PUBLIC_API_URL;
   // const handleClick = async () => {
   //   const res = await fetch(`${API_URL}/catalog/add/${id}`, {
@@ -30,12 +41,17 @@ const AddProductsButton = ({ id, onSuccess }: Props) => {
     >
       เพิ่มเข้าร้าน
     </button>
+    {selectedItem && (
      <AddProducts
         open={open}
         onClose={() => setOpen(false)}
         id={id}
-        onSuccess={onSuccess}
+        image_url={selectedItem.image_url}
+        cost_price={selectedItem.cost_price}
+        min_price={selectedItem.min_price}
+        onSuccess={handleSuccess}
       />
+    )}
     </>
   );
 };
