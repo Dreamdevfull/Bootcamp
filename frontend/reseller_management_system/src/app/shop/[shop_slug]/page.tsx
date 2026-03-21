@@ -47,7 +47,7 @@ if (loading) return (
       <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
         <HeaderCustomers />
         <section className='w-full h-[200px] bg-gradient-to-r from-[#0d3d30] via-[#1a6b5a] to-[#1d9e75]'>
-          <h1 className='text-white text-center text-[40px] pt-8'>ยินดีต้องรับเข้าสู่ร้าน</h1>
+          <h1 className='text-white text-center text-[40px] pt-8'>ยินดีต้อนรับเข้าสู่ร้าน</h1>
           <p className='text-white text-center text-[40px] pt-2'>{data?.shop_name}</p>
 
         </section>
