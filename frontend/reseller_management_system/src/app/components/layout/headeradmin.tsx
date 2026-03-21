@@ -46,7 +46,7 @@ import Image from 'next/image';
 import ButtonLogout from '@/app/components/ui/admin/button/logout';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react'; // อย่าลืม npm install lucide-react
+import { Menu, X } from 'lucide-react'; 
 
 const HeaderAdmin = () => {
   const pathname = usePathname();
@@ -55,6 +55,11 @@ const HeaderAdmin = () => {
   const sidebarLinkClass = (path: string) =>
     `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 
     hover:bg-[#1a6b5a] hover:text-white justify-center w-full md:w-32
+    ${pathname === path ? "bg-[#1a6b5a] text-white" : "text-white/90"}`;
+
+    const sidebarLinkMobileClass = (path: string) =>
+    `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 
+    hover:bg-[#1a6b5a] hover:text-white justify-center w-full md:w-32 mb-3
     ${pathname === path ? "bg-[#1a6b5a] text-white" : "text-white/90"}`;
 
   return (
@@ -111,16 +116,16 @@ const HeaderAdmin = () => {
       <div className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? "max-h-[500px] border-t border-white/10" : "max-h-0"}`}>
         <div className="px-4 py-4 space-y-2 bg-[#0d3d30]">
           <Link href="/admin/dashboard" onClick={() => setIsOpen(false)}>
-            <button className={sidebarLinkClass("/admin/dashboard")}>แดชบอร์ด</button>
+            <button className={sidebarLinkMobileClass("/admin/dashboard")}>แดชบอร์ด</button>
           </Link>
           <Link href="/admin/products" onClick={() => setIsOpen(false)}>
-            <button className={sidebarLinkClass("/admin/products")}>จัดการสินค้า</button>
+            <button className={sidebarLinkMobileClass("/admin/products")}>จัดการสินค้า</button>
           </Link>
           <Link href="/admin/resellers_manage" onClick={() => setIsOpen(false)}>
-            <button className={sidebarLinkClass("/admin/resellers_manage")}>อนุมัติตัวแทน</button>
+            <button className={sidebarLinkMobileClass("/admin/resellers_manage")}>อนุมัติตัวแทน</button>
           </Link>
           <Link href="/admin/orders" onClick={() => setIsOpen(false)}>
-            <button className={sidebarLinkClass("/admin/orders")}>จัดการออเดอร์</button>
+            <button className={sidebarLinkMobileClass("/admin/orders")}>จัดการออเดอร์</button>
           </Link>
           <div className="pt-2 sm:hidden block"> {/* แสดงปุ่ม Logout ในเมนูสำหรับมือถือจอเล็ก */}
             <ButtonLogout />
