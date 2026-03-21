@@ -15,6 +15,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	app.Get("/api/auth/me", middlewares.AuthMiddleware(""), c.AuthController.Me)
 
 	adminGroup := app.Group("/admin", middlewares.AuthMiddleware("admin"))
+	adminGroup.Get("/status", c.UserController.GetMyStatus)
 	adminGroup.Get("/products", c.ProductsController.GetProducts)
 	adminGroup.Post("/products/add", c.ProductsController.CreatedProduct)
 	adminGroup.Patch("/products/edit/:id", c.ProductsController.UpdateProduct)
@@ -33,6 +34,7 @@ func SetupRoutes(app *fiber.App, c *container.Container) {
 	// --------------------------------------------------
 	resellerGroup := app.Group("/reseller", middlewares.AuthMiddleware("reseller"))
 	resellerGroup.Get("/catalog", c.ResellerController.GetCatalog)
+	resellerGroup.Get("/status", c.UserController.GetMyStatus)
 	resellerGroup.Post("/catalog/add", c.ResellerController.AddProductToShop)
 	resellerGroup.Get("/my-products", c.ResellerController.GetMyShopProducts)
 	resellerGroup.Patch("/my-products/update-price", c.ResellerController.UpdateProductPrice)

@@ -141,7 +141,7 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 		Name:     "jwt",
 		Value:    result.Token,
 		HTTPOnly: true,
-		Secure:   false,
+		Secure:   true,
 		SameSite: "Lax",
 		MaxAge:   86400,
 		Path:     "/",
