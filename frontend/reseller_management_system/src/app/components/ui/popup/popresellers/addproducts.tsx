@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import Swal from 'sweetalert2'
 
 export default function AddProducts({ open, onClose, id, name, image_url, cost_price, min_price, onSuccess }: {
   open: boolean;
@@ -24,7 +25,12 @@ export default function AddProducts({ open, onClose, id, name, image_url, cost_p
 
   const handleClick = async () => {
     if (price < min_price) {
-      alert("ราคาห้ามต่ำกว่าขั้นต่ำ")
+      Swal.fire({
+        icon: 'error',
+        title: 'ราคาต่ำเกินไป',
+        text: `ราคาขายต้องไม่ต่ำกว่าราคาขั้นต่ำ ฿${min_price.toLocaleString()}`,
+        confirmButtonColor: '#1A6B5A'
+      })
       return
     }
 
@@ -38,10 +44,23 @@ export default function AddProducts({ open, onClose, id, name, image_url, cost_p
       }),
     })
     if (res.ok) {
+     await Swal.fire({
+        icon: 'success',
+        title: 'เพิ่มสินค้าสำเร็จ!',
+        text: 'สินค้าถูกเพิ่มเข้าหน้าร้านของคุณแล้ว',
+        showConfirmButton: false,
+        timer: 1500
+      });
       onSuccess();
       onClose()
     } else {
-      alert("เพิ่มสินค้าไม่สำเร็จ")
+      const errorData = await res.json()
+      Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: errorData.error || 'ไม่สามารถเพิ่มสินค้าได้',
+          confirmButtonColor: '#EF9F27'
+        })
     }
   }
 
