@@ -1,16 +1,18 @@
 "use client"
-import { Shop } from "@/app/types/model"  // ✅ use Shop type
+import { Shop } from "@/app/types/model"
 import { useRouter } from "next/navigation"
+import { Store } from "lucide-react"  // ✅ import store icon
+import Image from "next/image";
 
 interface ShopCardProps {
-  shops: Shop[]  // ✅ Shop[], not User[]
+  shops: Shop[]
 }
 
-const ShopCard = ({ shops }: ShopCardProps) => {  // ✅ removed shop_slug prop
+const ShopCard = ({ shops }: ShopCardProps) => {
   return (
     <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 items-stretch'>
       {shops.map((item) => (
-        <ShopItem key={item.id} item={item} />  // ✅ each shop has its own slug
+        <ShopItem key={item.id} item={item} />
       ))}
     </div>
   )
@@ -18,7 +20,7 @@ const ShopCard = ({ shops }: ShopCardProps) => {  // ✅ removed shop_slug prop
 
 function ShopItem({ item }: { item: Shop }) {
   const Router = useRouter()
-  const handleClick = () => Router.push(`/shop/${item.shop_slug}`)  // ✅ use item's own slug
+  const handleClick = () => Router.push(`/shop/${item.shop_slug}`)
 
   const truncateText = (text: string | null | undefined, maxLength: number) => {
     if (!text) return '-'
@@ -28,10 +30,17 @@ function ShopItem({ item }: { item: Shop }) {
   return (
     <div className='bg-white p-4 border border-[#D3D1C7] rounded-xl shadow-sm hover:shadow-md flex flex-col h-full transition duration-200'>
 
-      {/* Shop avatar / placeholder */}
+      {/* Shop icon */}
       <div className="relative w-full h-50 mb-3">
-        <div className="w-full h-full bg-[#F5F3EE] rounded-lg flex items-center justify-center text-[#888780] text-2xl font-bold">
-          {item.shop_name.charAt(0).toUpperCase()}  {/* ✅ show first letter as avatar */}
+        <div className="w-full h-full bg-[#F5F3EE] rounded-lg flex items-center justify-center">
+          <Image 
+            src="/shop.jpg" 
+            alt="TinyStore Logo"
+            className="rounded-lg"
+            width={160} 
+            height={160} 
+          />
+          {/* <Store size={48} className="text-[#1A6B5A]" />  ✅ store icon */}
         </div>
       </div>
 

@@ -91,6 +91,7 @@ const HeaderCustomers = () => {
         
         {/* เมนูสำหรับ PC (ย้ายมาไว้ด้านขวา) */}
         <div className="hidden md:flex gap-3">
+          <Link href="/"><button className={sidebarLinkClass("/")}>หน้าหลัก</button></Link>
           <Link href={`/shop/${shop_slug}`}>
             <button className={`${sidebarLinkClass(`/shop/${shop_slug}`)} px-4`}>หน้าร้าน</button>
           </Link>
@@ -133,6 +134,7 @@ const HeaderCustomers = () => {
       {/* Mobile Menu Dropdown (แสดงเมื่อกด Hamburger) */}
       {isMenuOpen && (
         <div className="absolute top-20 left-0 w-full bg-[#0d3d30] border-t border-white/10 p-4 flex flex-col gap-3 md:hidden z-10 shadow-2xl">
+          <Link href="/"><button onClick={() => setIsMenuOpen(false)}>หน้าหลัก</button></Link>
           <Link href={`/shop/${shop_slug}`} onClick={() => setIsMenuOpen(false)}>
             <button className={`${sidebarLinkClass(`/shop/${shop_slug}`)} w-full justify-start`}>
               หน้าร้าน
