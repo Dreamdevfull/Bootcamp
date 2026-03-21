@@ -27,15 +27,49 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
       })
       .finally(() => setLoading(false))
   }, [shop_slug])
+  const filteredProducts = useMemo(() => {
+    if (!data?.products) return [];
+
+    let result = [...data.products];
+
+    if (searchTerm.trim() !== "") {
+      result = result.filter((p) =>
+        p.product_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+   
+    if (sortOrder === "lowToHigh") {
+      result.sort((a, b) => a.selling_price - b.selling_price);
+    } else if (sortOrder === "highToLow") {
+      result.sort((a, b) => b.selling_price - a.selling_price);
+    } else {
+      
+      result.sort((a, b) =>b.product_id - a.product_id);
+    }
+
+    return result;
+  }, [data?.products, searchTerm, sortOrder]);
 
   
-
-  const allProducts = data?.products ?? []
-  const totalItems = allProducts.length
-  const paginatedProducts = allProducts.slice(
+  const totalItems = filteredProducts.length;
+  const paginatedProducts = filteredProducts.slice(
     currentPage * pageSize,
     (currentPage + 1) * pageSize
-  )
+  );
+
+  // เมื่อพิมพ์ค้นหา ให้กลับไปหน้า 1 เสมอ
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [searchTerm, sortOrder]);
+  
+
+  // const allProducts = data?.products ?? []
+  // const totalItems = allProducts.length
+  // const paginatedProducts = allProducts.slice(
+  //   currentPage * pageSize,
+  //   (currentPage + 1) * pageSize
+  // )
 if (loading) return (
   <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee]">
     <p className="text-gray-400">กำลังโหลด...</p>
@@ -53,7 +87,11 @@ if (loading) return (
         </section>
         <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
           <div className="mb-5">
-            <FilterSearchAndDropdown onFilterType={(value) => setSortOrder(value) } onSearch={(value) => setSearchTerm(value)} onSortPrice={(value) => setSortOrder(value)}  />
+          <FilterSearchAndDropdown 
+                onSearch={(value) => setSearchTerm(value)} 
+                onSortPrice={(value) => setSortOrder(value)}
+                onFilterType={() => {}} 
+              />
           </div>
           {data?.products && data.products.length > 0 ? (
             <CradShopslug products={paginatedProducts} shop_slug={shop_slug} />
