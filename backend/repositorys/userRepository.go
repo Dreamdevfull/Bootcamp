@@ -80,3 +80,5 @@ func (r *userRepository) GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, err
 
 	return &result, err
 }
+
+//ddd
