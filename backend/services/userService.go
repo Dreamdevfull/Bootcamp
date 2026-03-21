@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
 )
@@ -12,7 +11,6 @@ import (
 type UserService interface {
 	GetResellers() ([]models.Users, error)
 	UpdateResellerStatus(id string, status string) error
-	GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, error)
 }
 
 type userService struct {
@@ -64,9 +62,4 @@ func (s *userService) UpdateResellerStatus(id string, status string) error {
 	}
 
 	return nil
-}
-
-func (s *userService) GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, error) {
-
-	return s.resellerRepo.GetUserRoleAndShop(userID)
 }

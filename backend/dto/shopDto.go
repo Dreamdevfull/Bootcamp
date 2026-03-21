@@ -18,10 +18,5 @@ type ShopProductResponse struct {
 type ResellerDashboardResponse struct {
 	ShopName string `json:"shop_name"`
 	ShopSlug string `json:"shop_slug"`
-	ShopURL  string `json:"shop_url"`
-}
-
-type UserShopInfo struct {
-	Role     string `json:"role"`
-	ShopName string `json:"shop_name" gorm:"column:shop_name"`
+	ShopURL  string `json:"shop_url"` // เช่น /shop/bestshop
 }
