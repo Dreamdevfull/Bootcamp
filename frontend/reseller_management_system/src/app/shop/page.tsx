@@ -67,7 +67,7 @@ const ShopPage = () => {
           </Link>
         </div>
       </div>
-      <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
+      <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100 dark:bg-[#1a1a18] dark:border-gray-700'>
         <div className="mb-5">
           <FilterSearchAndDropdown2
             onFilterType={(value) => setSortOrder(value)}

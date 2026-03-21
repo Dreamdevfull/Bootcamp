@@ -70,21 +70,21 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
   //   (currentPage + 1) * pageSize
   // )
 if (loading) return (
-  <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee]">
+  <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee] dark:bg-[#1a1a18]">
     <p className="text-gray-400">กำลังโหลด...</p>
   </div>
 )
   return (
     <>
     {data?.shop_name ?(
-      <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
+      <main className='bg-[#f5f3ee] min-h-screen flex flex-col dark:bg-gray-800'>
         <HeaderCustomers />
         <section className='w-full h-[200px] bg-gradient-to-r from-[#0d3d30] via-[#1a6b5a] to-[#1d9e75]'>
           <h1 className='text-white text-center text-[40px] pt-8'>ยินดีต้อนรับเข้าสู่ร้าน</h1>
           <p className='text-white text-center text-[40px] pt-2'>{data?.shop_name}</p>
 
         </section>
-        <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
+        <section className='bg-white dark:bg-[#1a1a18] max-h-auto p-6 m-3 rounded-2xl shadow-md border-2 border-gray-100 dark:border-gray-700 transition-colors duration-200'>
           <div className="mb-5">
           <FilterSearchAndDropdown1 
                 onSearch={(value) => setSearchTerm(value)} 

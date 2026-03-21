@@ -28,11 +28,11 @@ function ShopItem({ item }: { item: Shop }) {
   }
 
   return (
-    <div className='bg-white p-4 border border-[#D3D1C7] rounded-xl shadow-sm hover:shadow-md flex flex-col h-full transition duration-200'>
+    <div className='bg-white dark:bg-gray-800 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md flex flex-col h-full transition duration-200'>
 
       {/* Shop icon */}
       <div className="relative w-full h-50 mb-3">
-        <div className="w-full h-full bg-[#F5F3EE] rounded-lg flex items-center justify-center">
+        <div className="w-full h-full bg-[#F5F3EE] dark:bg-gray-700 rounded-lg flex items-center justify-center">
           <Image 
             src="/shop.jpg" 
             alt="TinyStore Logo"
@@ -45,12 +45,12 @@ function ShopItem({ item }: { item: Shop }) {
       </div>
 
       {/* ชื่อร้านค้า */}
-      <p className="text-sm font-medium line-clamp-2 text-[#2C2C2A]" title={item.shop_name}>
+      <p className="text-sm font-medium line-clamp-2 text-[#2C2C2A] dark:text-gray-100" title={item.shop_name}>
         {truncateText(item.shop_name, 30)}
       </p>
 
       {/* ชื่อเจ้าของร้าน */}
-      <p className="text-[#888780] text-sm">
+      <p className="text-gray-500 dark:text-gray-400 text-sm">
         {truncateText(item.user?.name ?? "-", 40)}
       </p>
 
@@ -63,7 +63,7 @@ function ShopItem({ item }: { item: Shop }) {
       <div className="flex gap-2 mt-auto pt-3">
         <button
           onClick={handleClick}
-          className="flex-1 bg-[#EF9F27] text-white rounded-lg py-2 text-sm hover:bg-[#BA7517] cursor-pointer transition"
+          className="flex-1 bg-[#EF9F27] text-white rounded-lg py-2 text-sm hover:bg-[#BA7517] cursor-pointer transition dark:bg-amber-600 dark:hover:bg-amber-700"
         >
           ไปยังร้านค้า
         </button>
