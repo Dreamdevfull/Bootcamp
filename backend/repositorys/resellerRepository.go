@@ -22,6 +22,7 @@ type ResellerRepository interface {
 	// GetWalletByUserID(userID uint) (*models.Wallet, error)
 	// CreateWallet(wallet *models.Wallet) error
 	GetProductOwner(productID uint) (uint, error)
+	GetOrderByID(orderID uint, userID uint) (models.Orders, error)
 }
 
 type resellerRepository struct {
@@ -109,6 +110,19 @@ func (r *resellerRepository) GetMyOrders(userID uint) ([]models.Orders, error) {
 
 	return orders, err
 
+}
+
+func (r *resellerRepository) GetOrderByID(orderID uint, userID uint) (models.Orders, error) {
+	var order models.Orders
+
+	// ดึงข้อมูลออเดอร์ โดยต้องเช็คด้วยว่าเป็นของร้านที่เป็นของ User คนนี้จริง (กันคนแอบดูออเดอร์คนอื่น)
+	err := r.db.Model(&models.Orders{}).
+		Preload("OrderItems.Product"). // ดึงรายการสินค้าและรายละเอียดสินค้า
+		Joins("JOIN shops ON shops.id = orders.shop_id").
+		Where("orders.id = ? AND shops.user_id = ?", orderID, userID).
+		First(&order).Error
+
+	return order, err
 }
 
 // func (r *resellerRepository) GetWalletByUserID(userID uint) (*models.Wallet, error) {

@@ -17,6 +17,7 @@ type ResellerService interface {
 	RemoveProductFromShop(userID uint, productID uint) error
 	GetOrdersForReseller(resellerID uint) ([]dto.ResellerOrderResponse, error)
 	// GetWalletByUserID(userID uint) (*models.Wallet, error)
+	GetOrderDetail(userID uint, orderID uint) (*dto.ResellerOrderResponse, error)
 }
 
 type resellerService struct {
@@ -118,10 +119,11 @@ func (s *resellerService) GetOrdersForReseller(resellerID uint) ([]dto.ResellerO
 			profit := (item.Selling_price - item.Cost_price) * float64(item.Quantity)
 			totalProfit += profit
 
-			// เก็บชื่อสินค้าและจำนวนไว้ใน Slice เพื่อรอ Join เป็น String
 			itemSummaryParts = append(itemSummaryParts, dto.OrderItemDetail{
 				ProductName: item.Product_name,
 				Quantity:    item.Quantity,
+				Price:       item.Selling_price,
+				ImageURL:    item.Product.Image,
 			})
 		}
 
@@ -130,7 +132,8 @@ func (s *resellerService) GetOrdersForReseller(resellerID uint) ([]dto.ResellerO
 			OrderID:      o.Id,
 			OrderNumber:  o.Order_number,
 			CustomerName: o.Customer_name,
-			ItemsSummary: itemSummaryParts, // "เสื้อ (2), กางเกง (1)"
+
+			ItemsSummary: itemSummaryParts,
 			TotalAmount:  o.Total_amount,
 			MyProfit:     totalProfit,
 			CreatedAt:    o.Created_at.Format("02/01/2006 15:04"),
@@ -159,3 +162,42 @@ func mapStatusThai(status string) string {
 
 // 	return s.repo.GetWalletByUserID(userID)
 // }
+
+func (s *resellerService) GetOrderDetail(userID uint, orderID uint) (*dto.ResellerOrderResponse, error) {
+	// 1. ไปเรียก Repo ที่เราเพิ่งเพิ่ม GetOrderByID ไป (อย่าลืมไปแก้ Repo ก่อนนะมึง)
+	order, err := s.repo.GetOrderByID(orderID, userID)
+	if err != nil {
+		return nil, errors.New("order not found")
+	}
+
+	// 2. คำนวณกำไร และเตรียมรายการสินค้าเหมือนที่มึงทำใน GetOrdersForReseller
+	var totalProfit float64
+	var itemsDetail []dto.OrderItemDetail
+
+	for _, item := range order.OrderItems {
+		profit := (item.Selling_price - item.Cost_price) * float64(item.Quantity)
+		totalProfit += profit
+
+		itemsDetail = append(itemsDetail, dto.OrderItemDetail{
+			ProductName: item.Product_name,
+			Quantity:    item.Quantity,
+			Price:       item.Selling_price,
+			ImageURL:    item.Product.Image,
+		})
+	}
+
+	// 3. ปั้นข้อมูลส่งกลับไปหน้าบ้าน
+	return &dto.ResellerOrderResponse{
+		OrderID:      order.Id,
+		OrderNumber:  order.Order_number,
+		CustomerName: order.Customer_name,
+
+		CustomerPhone:   order.Customer_phone,
+		ShippingAddress: order.Shipping_address,
+		ItemsSummary:    itemsDetail,
+		TotalAmount:     order.Total_amount,
+		MyProfit:        totalProfit,
+		CreatedAt:       order.Created_at.Format("02/01/2006 15:04"),
+		Status:          mapStatusThai(string(order.Status)),
+	}, nil
+}
