@@ -45,7 +45,7 @@ func (r *userRepository) FindResellers() ([]models.Users, error) {
 	var resellers []models.Users
 
 	err := r.db.Select("id", "name", "email", "phone", "status", "address", "created_at").
-		Where("role = ?", "reseller").
+		Where("role = ? AND status != ?", "reseller", "rejected").
 		Order("created_at DESC").
 		Find(&resellers).Error
 
