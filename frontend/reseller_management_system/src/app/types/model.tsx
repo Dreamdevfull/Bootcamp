@@ -89,9 +89,14 @@ export interface OrderReseller {
   order_id: number;
   order_number: string;
   customer_name: string;
+  customer_phone: string; 
+  shipping_address: string;
   items: {
     product_name: string;
+    image_url: string;
     quantity: number;
+    price: number;
+
   }[];
   total_amount: number;
   my_profit: number;
@@ -115,4 +120,16 @@ export interface Wallet {
 export interface AddProductToShopRequest {
   product_id: number;
   selling_price: number;
+}
+
+export interface Getshop {
+  shop_name: string
+  products: {
+    product_id: number;
+    product_name: string;
+    description: string;
+    image_url: string;
+    selling_price: number;
+    stock: number;
+  }[]
 }

@@ -14,7 +14,12 @@ interface Approval {
   created_at: string;
 }
 
-export const ResellersManage: ColumnDef<Approval>[] =  [
+const truncateText = (text: string | null | undefined, maxLength: number) => {
+    if (!text) return '-'; 
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
+export const getResellerColumns = (onSuccess: () => void): ColumnDef<Approval>[] => [
   // {
   //   id: "index",
   //   header: () => <div className="text-center">ลำดับ</div>,
@@ -65,7 +70,7 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
     accessorKey: "name",
     header: () => <div className="text-center">ชื่อ-นามสกุล</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("name")}</div>
+      <div className="text-center" title={row.getValue("name")}>{truncateText(row.getValue("name")?? "-", 30)}</div>
     ),
   },
   {
@@ -79,7 +84,7 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
     accessorKey: "address",
     header: () => <div className="text-center">ชื่อร้าน</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("address")}</div>
+      <div className="text-center" title={row.getValue("address")}>{truncateText(row.getValue("address") ?? "-", 30)}</div>
     ),
   },
   {
@@ -118,14 +123,14 @@ export const ResellersManage: ColumnDef<Approval>[] =  [
       if (status === "pending") {
         return (
           <div className="flex gap-2 justify-center">
-            <ApprovalButton id={row.original.id} />
-            <RejectedButton id={row.original.id} />
+            <ApprovalButton id={row.original.id} onSuccess={onSuccess}/>
+            <RejectedButton id={row.original.id} onSuccess={onSuccess} />
           </div>
         );
       } else if (status === "approved") {
         return (
           <div className="flex justify-center">
-            <BockButton id={row.original.id}/>
+            <BockButton id={row.original.id} onSuccess={onSuccess}/>
           </div>
         );
       } else {

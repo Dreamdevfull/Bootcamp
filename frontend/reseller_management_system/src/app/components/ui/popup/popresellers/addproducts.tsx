@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function AddProducts({ open, onClose, id, name, image_url, cost_price, min_price }: {
+export default function AddProducts({ open, onClose, id, name, image_url, cost_price, min_price, onSuccess }: {
   open: boolean;
   onClose: () => void;
   id: number;
@@ -10,6 +10,7 @@ export default function AddProducts({ open, onClose, id, name, image_url, cost_p
   image_url: string;
   cost_price: number;
   min_price: number;
+  onSuccess: () => void;
 }) {
   const [price, setPrice] = useState<number>(min_price)
 
@@ -37,6 +38,7 @@ export default function AddProducts({ open, onClose, id, name, image_url, cost_p
       }),
     })
     if (res.ok) {
+      onSuccess();
       onClose()
     } else {
       alert("เพิ่มสินค้าไม่สำเร็จ")

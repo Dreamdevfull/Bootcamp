@@ -205,3 +205,33 @@ func (p *ResellerController) GetOrdersForReseller(c fiber.Ctx) error {
 // 		},
 // 	})
 // }
+
+// 🚩 เพิ่มฟังก์ชันดึงรายละเอียดออเดอร์รายชิ้น
+func (ctrl *ResellerController) GetOrderDetail(c fiber.Ctx) error {
+	// 1. ดึง userID จาก Middleware (เหมือนฟังก์ชันอื่น)
+	userID, ok := c.Locals("user_id").(uint)
+	if !ok {
+		return c.Status(401).JSON(fiber.Map{"message": "Unauthorized"})
+	}
+
+	// 2. ดึง orderID จาก URL Param (เช่น /reseller/orders/21)
+	orderIDStr := c.Params("id")
+	orderID, err := strconv.Atoi(orderIDStr)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"message": "Invalid Order ID"})
+	}
+
+	// 3. เรียกใช้ Service (ตัวที่มึงเพิ่งแก้ไปก่อนหน้านี้)
+	result, err := ctrl.services.GetOrderDetail(userID, uint(orderID))
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"message": "ไม่พบข้อมูลออเดอร์ หรือคุณไม่มีสิทธิ์เข้าถึง",
+		})
+	}
+
+	// 4. ส่งข้อมูลกลับไปให้หน้าบ้าน (Next.js)
+	return c.JSON(fiber.Map{
+		"success": true,
+		"data":    result,
+	})
+}
