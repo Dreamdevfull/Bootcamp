@@ -9,7 +9,7 @@ export default async function proxy(req: NextRequest) {
   const token = req.cookies.get("jwt")?.value;
 
   console.log("Token in Middleware:", token ? "Found" : "Not Found");
-  const API_BASE = "http://127.0.0.1:8080";
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
   if (authRoutes.some((r) => pathname === r)) {
     if (token) {
@@ -53,7 +53,7 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const res = await fetch("http://127.0.0.1:8080/api/auth/me", {
+  const res = await fetch(`${API_BASE}/api/auth/me`, {
     headers: { Cookie: `jwt=${token}` },
   });
 
