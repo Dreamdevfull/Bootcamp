@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 type PopAddProductsProps = {
   open: boolean;
@@ -57,8 +58,14 @@ export default function PopAddProducts({
 
   const handleSubmit = async () => {
     if (!name || !costPrice || !minPrice) {
-      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+      Swal.fire({
+        icon: 'warning',
+        title: 'ข้อมูลไม่ครบ',
+        text: 'กรุณากรอกชื่อสินค้า ราคาทุน และราคาขายให้ครบถ้วน',
+        confirmButtonColor: '#EF9F27'
+      });
       return;
+      
     }
 
     setLoading(true);
@@ -82,17 +89,33 @@ export default function PopAddProducts({
       });
 
       if (res.ok) {
-        alert("บันทึกสินค้าสำเร็จ");
+        await Swal.fire({
+          icon: 'success',
+          title: 'บันทึกสำเร็จ!',
+          text: 'เพิ่มข้อมูลสินค้าใหม่เรียบร้อยแล้ว',
+          showConfirmButton: false,
+          timer: 1500
+        });
         onSuccess();
         handleClose();
       } else {
         const err = await res.json();
-        alert("ผิดพลาด: " + (err.message || "ไม่สามารถบันทึกได้"));
+        Swal.fire({
+          icon: 'error',
+          title: 'บันทึกไม่สำเร็จ',
+          text: err.message || "ไม่สามารถบันทึกข้อมูลได้",
+          confirmButtonColor: '#d33'
+        });
       }
     } catch (error) {
       if (loading) {
         console.error("Fetch error:", error);
-        alert("ไม่สามารถติดต่อ Server ได้");
+        Swal.fire({
+        icon: 'error',
+        title: 'การเชื่อมต่อผิดพลาด',
+        text: 'ไม่สามารถติดต่อ Server ได้ กรุณาลองใหม่อีกครั้ง',
+        confirmButtonColor: '#d33'
+      });
       }
     } finally {
       setLoading(false);
