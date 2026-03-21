@@ -21,6 +21,31 @@ const FromRegister = () => {
 
   const router = useRouter()
   const URL = process.env.NEXT_PUBLIC_API_URL
+  const [emailError, setEmailError] = useState("")
+  const [phoneError, setPhoneError] = useState("")
+
+  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setEmail(val)
+    if (val && !val.endsWith("@gmail.com")) {
+      setEmailError("อีเมลต้องลงท้ายด้วย @gmail.com เท่านั้น")
+    } else {
+      setEmailError("")
+    }
+  }
+
+  const handlePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setPhone(val)
+
+    if (val.length > 0 && !val.startsWith("0")) {
+      setPhoneError("เบอร์โทรต้องขึ้นต้นด้วย 0")
+    } else if (val.length > 0 && val.length !== 10) {
+      setPhoneError("เบอร์โทรต้องมี 10 หลัก")
+    } else {
+      setPhoneError("")
+    }
+  }
 
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
@@ -40,12 +65,23 @@ const FromRegister = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (emailError || phoneError || passwordError || confirmError) return
+
+    // ✅ เช็คค่าซ้ำกัน กรณีกด submit โดยไม่ได้แตะ field
+    if (!email.endsWith(".com")) {
+      setEmailError("อีเมลต้องลงท้ายด้วย .com เท่านั้น")
+      return
+    }
+    if (!phone.startsWith("0") || phone.length !== 10) {
+      setPhoneError(!phone.startsWith("0") ? "เบอร์โทรต้องขึ้นต้นด้วย 0" : "เบอร์โทรต้องมี 10 หลัก")
+      return
+    }
     if (password.length < 8) {
-      Swal.fire({ icon: 'warning', title: 'รหัสผ่านสั้นเกินไป', text: 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร', confirmButtonColor: '#EF9F27' })
+      setPasswordError("รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร")
       return
     }
     if (password !== confirmPassword) {
-      Swal.fire({ icon: 'warning', title: 'รหัสผ่านไม่ตรงกัน', text: 'กรุณาตรวจสอบรหัสผ่านอีกครั้ง', confirmButtonColor: '#EF9F27' })
+      setConfirmError("รหัสผ่านไม่ตรงกัน")
       return
     }
 
@@ -86,8 +122,8 @@ const FromRegister = () => {
           icon: 'error',
           title: (() => {
             if (msg.includes("email") || msg.includes("อีเมล")) return "อีเมลนี้ถูกใช้งานแล้ว"
-            if (msg.includes("phone") || msg.includes("เบอร์"))  return "เบอร์โทรนี้ถูกใช้งานแล้ว"
-            if (msg.includes("shop") || msg.includes("ร้าน"))   return "ชื่อร้านนี้ถูกใช้งานแล้ว"
+            if (msg.includes("phone") || msg.includes("เบอร์")) return "เบอร์โทรนี้ถูกใช้งานแล้ว"
+            if (msg.includes("shop") || msg.includes("ร้าน")) return "ชื่อร้านนี้ถูกใช้งานแล้ว"
             return "ข้อมูลไม่ถูกต้อง"
           })(),
           text: result.message || 'กรุณาตรวจสอบข้อมูลอีกครั้ง',
@@ -118,21 +154,40 @@ const FromRegister = () => {
 
       <div className="space-y-1">
         <div>
-          <label htmlFor="fullName" className={classNamelabel}>ชื่อ-นามสกุล</label>
+          <label htmlFor="fullName" className={classNamelabel}>ชื่อ-นามสกุล <span className='text-red-500'>*</span></label>
           <input value={name} onChange={(e) => setFullName(e.target.value)} className={classNameinput} id="fullName" placeholder="นาย ตัวอย่าง นามสมมติ" required />
         </div>
         <div>
-          <label htmlFor="email" className={classNamelabel}>อีเมล์</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} className={classNameinput} id="email" type="email" placeholder="example@email.com" required />
+          <label htmlFor="email" className={classNamelabel}>อีเมล์ <span className='text-red-500'>*</span></label>
+          <input
+            value={email}
+            onChange={handleEmail}
+            className={`${classNameinput} ${emailError ? "border-red-400 focus:ring-red-200" : ""}`}
+            id="email"
+            type="email"
+            placeholder="example@email.com"
+            required
+          />
+          {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
         </div>
+
         <div>
-          <label htmlFor="phone" className={classNamelabel}>เบอร์โทรศัพท์</label>
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} className={classNameinput} id="phone" type="tel" placeholder="080-000-0000" required />
+          <label htmlFor="phone" className={classNamelabel}>เบอร์โทรศัพท์ <span className='text-red-500'>*</span></label>
+          <input
+            value={phone}
+            onChange={handlePhone}
+            className={`${classNameinput} ${phoneError ? "border-red-400 focus:ring-red-200" : ""}`}
+            id="phone"
+            type="tel"
+            placeholder="080-000-0000"
+            required
+          />
+          {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
         </div>
 
         <div className="p-3 bg-[#e1f5ee] rounded-lg space-y-2">
           <div>
-            <label htmlFor="shopName" className={classNamelabel}>ชื่อร้าน</label>
+            <label htmlFor="shopName" className={classNamelabel}>ชื่อร้าน <span className='text-red-500'>*</span></label>
             <input value={shop_name} onChange={(e) => setShopName(e.target.value)} className={classNameinput} id="shopName" placeholder="เช่น มินนี่ช็อป" required />
           </div>
           <div>
@@ -160,8 +215,11 @@ const FromRegister = () => {
         </div>
       </div>
 
-      <button disabled={loading || !!passwordError || !!confirmError} type="submit"
-        className="w-full bg-[#EF9F27] text-white hover:bg-[#BA7517] cursor-pointer rounded-md px-4 py-2 text-base disabled:opacity-50">
+      <button
+        disabled={loading || !!emailError || !!phoneError || !!passwordError || !!confirmError}
+        type="submit"
+        className="w-full bg-[#EF9F27] text-white hover:bg-[#BA7517] cursor-pointer rounded-md px-4 py-2 text-base disabled:opacity-50"
+      >
         {loading ? "กำลังสมัคร..." : "สมัครสมาชิก"}
       </button>
 
