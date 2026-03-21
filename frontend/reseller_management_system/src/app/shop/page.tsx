@@ -38,7 +38,7 @@ const ShopPage = () => {
   )
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee]">
+    <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee] dark:bg-[#1a1a18]">
       <p className="text-gray-400">กำลังโหลด...</p>
     </div>
   )
