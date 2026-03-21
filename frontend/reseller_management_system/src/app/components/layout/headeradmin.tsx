@@ -47,6 +47,7 @@ import ButtonLogout from '@/app/components/ui/admin/button/logout';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react'; 
+import ThemeToggle from '../drakmode/ThemeToggle';
 
 interface admin {
   id: number;
@@ -103,6 +104,7 @@ const HeaderAdmin = () => {
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-[#0d3d30] text-white shadow-md">
+      <ThemeToggle/>
       {/* Container หลัก */}
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">

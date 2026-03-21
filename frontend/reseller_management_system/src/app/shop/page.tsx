@@ -9,8 +9,8 @@ import CradShop from "@/app/components/cradcustomer/cradshop"
 import { Shop } from '../types/model'  // ✅ use Shop, not User
 import { useRouter } from 'next/navigation'
 
-const ShopPage = () => {  // ✅ removed params — not a dynamic route
-  const [data, setData] = useState<Shop[]>([])  // ✅ Shop array
+const ShopPage = () => {
+  const [data, setData] = useState<Shop[]>([])
   const [currentPage, setCurrentPage] = useState(0)
   const [pageSize, setPageSize] = useState(10)
   const router = useRouter()
@@ -25,8 +25,8 @@ const ShopPage = () => {  // ✅ removed params — not a dynamic route
     fetch(`${API_URL}/shops`)
       .then(res => res.json())
       .then((result: { data: Shop[], total: number }) => {
-        setData(result.data)   // ✅ extract the array
-        setTotal(result.total) // ✅ use server total for pagination
+        setData(result.data)
+        setTotal(result.total)
       })
       .finally(() => setLoading(false))
   }, [])

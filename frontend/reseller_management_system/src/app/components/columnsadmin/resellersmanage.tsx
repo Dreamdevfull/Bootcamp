@@ -98,13 +98,13 @@ export const getResellerColumns = (onSuccess: () => void): ColumnDef<Approval>[]
 
       if (status === "pending") {
         text = "รอดำเนินการ";
-        color = "text-[#633806] border border-[#fac775] bg-[#faeeda] rounded-md px-2 py-1";
+        color = "text-amber-700 dark:text-amber-300 border-2 border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-950 rounded-md px-2 py-1 font-medium";
       } else if (status === "approved") {
         text = "อนุมัติแล้ว";
-        color = "text-[#085041] border border-[#9fe1cb] bg-[#e1f5ee] rounded-md px-2 py-1";
+        color = "text-emerald-700 dark:text-emerald-300 border-2 border-emerald-400 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-950 rounded-md px-2 py-1 font-medium";
       } else if (status === "rejected") {
         text = "ถูกปฏิเสธ";
-        color = "text-[#791f1f] border border-[#f7c1c1] bg-[#fcebeb] rounded-md px-2 py-1";
+        color = "text-rose-700 dark:text-rose-300 border-2 border-rose-400 dark:border-rose-600 bg-rose-50 dark:bg-rose-950 rounded-md px-2 py-1 font-medium";
       }
 
       return (

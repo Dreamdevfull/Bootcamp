@@ -23,7 +23,7 @@ const RejectedButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-      className="text-[#791f1f] border border-[#791f1f] hover:bg-[#fcebeb] rounded-sm p-2 cursor-pointer"
+      className="text-[#791f1f] border border-[#791f1f] hover:bg-[#fcebeb] rounded-sm p-2 cursor-pointer dark:text-rose-400 dark:border-rose-500 dark:hover:bg-rose-950"
     >
       ปฏิเสธ
     </button>
