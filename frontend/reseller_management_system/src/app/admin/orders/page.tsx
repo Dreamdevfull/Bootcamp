@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { DataTable } from '@/app/components/ui/datatable';
 import Main from '@/app/components/layout/main';
 import { Orders as OrdersType } from '@/app/types/model';
+import { FilterSearchAndDropdown } from '@/app/components/ui/filter';
 
 const mockmain = {
   text1: "จัดการออเดอร์",
@@ -39,6 +40,7 @@ const OrdersPage = () => {
     <div className='min-h-screen bg-[#F5F3EE]'>
       <HeaderAdmin />
       <Main main={mockmain}/>
+      <FilterSearchAndDropdown/>
       <div className='px-8 py-7'>
         <DataTable columns={columns} data={data} loading={loading} />
       </div>

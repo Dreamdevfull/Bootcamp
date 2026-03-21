@@ -3,7 +3,7 @@ import { ColumnDef } from '@tanstack/table-core';
 import CompletedButton from '@/app/components/ui/admin/button/order/completedbutton';
 import { Orders } from '@/app/types/model';
 
-export const ManageOrderAdmin = (onSuccess: () => void): ColumnDef<Orders>[] => [
+export const ManageOrderAdmin: ColumnDef<Orders>[] = [
   {
     accessorKey: "create_at",
     header: () => <div className="text-center">เวลาสั่งซื้อ</div>,
@@ -132,7 +132,7 @@ export const ManageOrderAdmin = (onSuccess: () => void): ColumnDef<Orders>[] => 
       else if (status === "shipped") {
         return (
           <div className="flex gap-2 justify-center">
-            <CompletedButton id={row.original.id} onSuccess={onSuccess}/>
+            <CompletedButton id={row.original.id} />
           </div>
         );
       } else if (status === "completed") {

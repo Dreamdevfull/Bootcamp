@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/Dreamdevfull/Bootcamp/dto"
@@ -63,10 +64,8 @@ func (ctrl *ResellerController) GetMyShopProducts(c fiber.Ctx) error {
 			"message": "Unaunthorized: Invalid user context",
 		})
 	}
-
-	shopID := userID
-
-	data, err := ctrl.services.GetMyShopProducts(shopID)
+	fmt.Println("UserID:", userID)
+	data, err := ctrl.services.GetMyShopProducts(userID)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",
