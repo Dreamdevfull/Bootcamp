@@ -2,7 +2,7 @@
 import { Catalog as CatalogType } from '@/app/types/model'
 import AddProducts from '../ui/popup/popresellers/addproducts'
 import React, { useState, useMemo} from 'react'
-import { FilterSearchAndDropdown } from '../ui/search/filter'
+import { FilterSearchAndDropdown1 } from '../ui/search/filter1'
 import { PaginationCrad } from '../ui/paginationcrad'
  
 interface CatalogCardProps {
@@ -83,7 +83,7 @@ const CatalogCrad = ({ data, loading, onSuccess }: CatalogCardProps) => {
       <section className='bg-white dark:bg-gray-800 p-6 max-h-auto rounded-2xl shadow-md border-2 border-gray-100 dark:border-gray-700 transition-colors duration-200'>
           {/* search bar */}
         <div className='mb-6'>
-         <FilterSearchAndDropdown 
+         <FilterSearchAndDropdown1 
             onSearch={(value) => { setSearchTerm(value); setCurrentPage(0); }}
             onSortPrice={setSortOrder}
             onFilterType={() => {}} 

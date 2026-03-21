@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '@/app/components/layout/header'
 import Image from "next/image"
 import Link from 'next/link'
-import { FilterSearchAndDropdown } from '../components/ui/search/filter'
+import { FilterSearchAndDropdown2 } from '../components/ui/search/filter2'
 import { PaginationCrad } from '../components/ui/paginationcrad'
 import CradShop from "@/app/components/cradcustomer/cradshop"
 import { Shop } from '../types/model'  // ✅ use Shop, not User
@@ -69,7 +69,7 @@ const ShopPage = () => {
       </div>
       <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
         <div className="mb-5">
-          <FilterSearchAndDropdown
+          <FilterSearchAndDropdown2
             onFilterType={(value) => setSortOrder(value)}
             onSearch={(value) => setSearchTerm(value)}
             onSortPrice={(value) => setSortOrder(value)}

@@ -85,7 +85,7 @@ interface FilterProps {
   onFilterType: (value: string) => void;
 }
 
-export const FilterSearchAndDropdown1 = ({
+export const FilterSearchAndDropdown3 = ({
   onSearch,
   onSortPrice,
   onFilterType,
@@ -139,7 +139,7 @@ export const FilterSearchAndDropdown1 = ({
                        focus:ring-amber-400 dark:focus:ring-amber-500
                        focus:border-transparent
                        text-sm transition-all"
-            placeholder="ค้นหาชื่อสินค้า"
+            placeholder="ค้นหาชื่อ-นามสกุล"
             onChange={(e) => onSearch(e.target.value)}
           />
         </div>
@@ -147,11 +147,11 @@ export const FilterSearchAndDropdown1 = ({
         {/* Dropdowns */}
         <div className="w-full md:w-auto md:ml-auto flex flex-col sm:flex-row gap-3">
 
-          {/* เรียงราคา */}
+          {/* กรองสถานะ */}
           <div className="w-full md:w-[200px] relative">
             <select
-              onChange={(e) => onSortPrice(e.target.value)}
-              aria-label="เรียงตามราคา"
+              onChange={(e) => onFilterType(e.target.value)}
+              aria-label="กรองตามสถานะ"
               className="block w-full pl-3 pr-10 py-2.5 text-sm
                          border-2 border-gray-300 dark:border-gray-600
                          bg-white dark:bg-gray-900
@@ -160,9 +160,10 @@ export const FilterSearchAndDropdown1 = ({
                          focus:ring-amber-400 dark:focus:ring-amber-500
                          rounded-xl appearance-none cursor-pointer transition-all"
             >
-              <option value="">ราคาทั้งหมด</option>
-              <option value="lowToHigh">ราคาน้อย → มาก</option>
-              <option value="highToLow">ราคามาก → น้อย</option>
+              <option value="all">สถานะทั้งหมด</option>
+              <option value="pending">⏳ รอดำเนินการ</option>
+              <option value="approved">✅ อนุมัติแล้ว</option>
+              <option value="rejected">❌ ปฎิเสธ</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 dark:text-gray-500">
               <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
@@ -170,6 +171,7 @@ export const FilterSearchAndDropdown1 = ({
               </svg>
             </div>
           </div>
+
         </div>
       </div>
     </div>
