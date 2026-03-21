@@ -6,7 +6,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { PieChart, Pie } from "recharts"
 import { Orders } from '@/app/types/model';
 
-export default function page() {
+export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState<Orders[]>([]);
   const [resellers, setResellers] = useState<any[]>([]);
