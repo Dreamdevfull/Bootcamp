@@ -45,12 +45,49 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ButtonLogout from '@/app/components/ui/admin/button/logout';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react'; 
 
+interface admin {
+  id: number;
+  role: string;
+  shop_name: string;
+
+}
 const HeaderAdmin = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState<admin>();
+  const [loading, setLoading] = useState(true);
+  
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${API_URL}/admin/status`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const result = await res.json();
+        // console.log(result);
+        setData(result);
+      } catch {
+        setData(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  },[]);
+
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white"></div>
+          <p className="text-white">Loading...</p>
+        </div>
+      );
+    }
 
   const sidebarLinkClass = (path: string) =>
     `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 
@@ -62,6 +99,8 @@ const HeaderAdmin = () => {
     hover:bg-[#1a6b5a] hover:text-white justify-center w-full md:w-32 mb-3
     ${pathname === path ? "bg-[#1a6b5a] text-white" : "text-white/90"}`;
 
+    const firstLetter = data?.shop_name.charAt(0).toUpperCase();
+
   return (
     <nav className="sticky top-0 z-50 w-full bg-[#0d3d30] text-white shadow-md">
       {/* Container หลัก */}
@@ -71,17 +110,13 @@ const HeaderAdmin = () => {
           {/* Logo Section */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-lg overflow-hidden">
-              <Image 
-                src="/bear.webp" 
-                alt="TinyStore Logo" 
-                width={40} 
-                height={40} 
-                className="object-cover"
-              />
+              <div className="w-10 h-10 bg-white/20 rounded-lg overflow-hidden flex items-center justify-center">
+            <span className="text-2xl font-bold">{firstLetter}</span>
+          </div>
             </div>
             <div className="hidden sm:block"> {/* ซ่อนสโลแกนในมือถือจอเล็กมากเพื่อประหยัดพื้นที่ */}
-              <h1 className="text-xl font-bold leading-tight">TinyStore</h1>
-              <p className="text-[10px] text-gray-300">Reseller Management System</p>
+              <h1 className="text-xl font-bold leading-tight">{data?.shop_name}</h1>
+              <p className="text-[10px] text-gray-300">@{data?.role}</p>
             </div>
           </div>
 
