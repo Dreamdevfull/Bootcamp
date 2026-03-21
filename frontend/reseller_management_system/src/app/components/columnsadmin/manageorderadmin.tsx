@@ -81,13 +81,13 @@ export const ManageOrderAdmin = (onSuccess: () => void): ColumnDef<Orders>[] => 
       
       if (status === "pending") {
         text = "รอดำเนินการ";
-        color = "text-[#633806] border border-[#fac775] bg-[#faeeda] rounded-md px-2 py-1";
+        color = "text-[#633806] border border-[#fac775] bg-[#faeeda] rounded-md px-2 py-1 dark:text-amber-300 dark:border-amber-600 dark:bg-amber-950";
       } else if (status === "shipped") {
         text = "จัดส่งแล้ว";
-        color = "text-blue-700 border border-blue-300 bg-blue-50 rounded-md px-2 py-1";
+        color = "text-emerald-700 dark:text-emerald-300 border-2 border-emerald-400 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-950 rounded-md px-2 py-1 font-medium";
       } else if (status === "completed") {
         text = "เสร็จสมบูรณ์";
-        color = "text-[#085041] border border-[#9fe1cb] bg-[#e1f5ee] rounded-md px-2 py-1";
+        color = "text-emerald-700 dark:text-emerald-300 border-2 border-emerald-400 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-950 rounded-md px-2 py-1 font-medium";
       }
 
       return (
@@ -115,7 +115,7 @@ export const ManageOrderAdmin = (onSuccess: () => void): ColumnDef<Orders>[] => 
       }
       
       // หากสถานะเป็น 'จัดส่งแล้ว' หรือ 'เสร็จสมบูรณ์' ถือว่าจบงาน 
-      return <div className="text-center text-gray-400 text-sm italic">จบงานแล้ว</div>;
+      return <div className="text-center text-gray-400 dark:text-gray-500 text-sm italic">จบงานแล้ว</div>;
     },
   },
 ];
