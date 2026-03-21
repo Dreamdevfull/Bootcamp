@@ -239,7 +239,8 @@ const FromRegister = () => {
         </p>
       </div>
 
-      <div className="space-y-1">
+      <div className="space-y-2">
+        {/* ชื่อ-นามสกุล */}
         <div>
           <label htmlFor="fullName" className={classNamelabel}>
             ชื่อ-นามสกุล <span className="text-red-500">*</span>
@@ -253,6 +254,8 @@ const FromRegister = () => {
             required
           />
         </div>
+
+        {/* อีเมล */}
         <div>
           <label htmlFor="email" className={classNamelabel}>
             อีเมล์ <span className="text-red-500">*</span>
@@ -260,10 +263,12 @@ const FromRegister = () => {
           <input
             value={email}
             onChange={handleEmail}
-            className={`${classNameinput} ${emailError ? "border-red-400 focus:ring-red-200" : ""}`}
+            className={`${classNameinput} ${emailError ? "border-red-500 focus:ring-red-400" : ""}`}
             id="email"
             type="email"
-            placeholder="example@email.com"
+            placeholder="example@gmail.com"
+            aria-required="true"
+            aria-describedby={emailError ? "email-error" : undefined}
             required
           />
           {emailError && (
@@ -271,6 +276,7 @@ const FromRegister = () => {
           )}
         </div>
 
+        {/* เบอร์โทร */}
         <div>
           <label htmlFor="phone" className={classNamelabel}>
             เบอร์โทรศัพท์ <span className="text-red-500">*</span>
@@ -278,10 +284,12 @@ const FromRegister = () => {
           <input
             value={phone}
             onChange={handlePhone}
-            className={`${classNameinput} ${phoneError ? "border-red-400 focus:ring-red-200" : ""}`}
+            className={`${classNameinput} ${phoneError ? "border-red-500 focus:ring-red-400" : ""}`}
             id="phone"
             type="tel"
             placeholder="080-000-0000"
+            aria-required="true"
+            aria-describedby={phoneError ? "phone-error" : undefined}
             required
           />
           {phoneError && (
@@ -289,7 +297,10 @@ const FromRegister = () => {
           )}
         </div>
 
-        <div className="p-3 bg-[#e1f5ee] rounded-lg space-y-2">
+        {/* ข้อมูลร้านค้า */}
+        <div className="p-3 bg-emerald-50 dark:bg-emerald-950 
+                        border-2 border-emerald-200 dark:border-emerald-800
+                        rounded-lg space-y-2">
           <div>
             <label htmlFor="shopName" className={classNamelabel}>
               ชื่อร้าน <span className="text-red-500">*</span>
@@ -316,11 +327,15 @@ const FromRegister = () => {
               required
             />
           </div>
-          <p className="text-xs text-[#0d3d30] font-mono bg-white p-2 rounded">
+          <p className="text-xs text-emerald-800 dark:text-emerald-300 
+                        font-mono bg-white dark:bg-gray-800 
+                        border border-emerald-200 dark:border-emerald-700
+                        p-2 rounded">
             URL หน้าร้านของคุณจะเป็น: <strong>/shop/ชื่อร้าน</strong>
           </p>
         </div>
 
+        {/* รหัสผ่าน */}
         <div className="flex gap-3">
           <div className="flex-1">
             <label htmlFor="password" className={classNamelabel}>
@@ -360,6 +375,7 @@ const FromRegister = () => {
         </div>
       </div>
 
+      {/* ปุ่มสมัคร */}
       <button
         disabled={
           loading ||
@@ -369,12 +385,30 @@ const FromRegister = () => {
           !!confirmError
         }
         type="submit"
-        className="w-full bg-[#EF9F27] text-white hover:bg-[#BA7517] cursor-pointer rounded-md px-4 py-2 text-base disabled:opacity-50"
+        aria-busy={loading}
+        aria-label={loading ? "กำลังสมัครสมาชิก" : "สมัครสมาชิก"}
+        className="w-full bg-amber-500 hover:bg-amber-600
+                   dark:bg-amber-500 dark:hover:bg-amber-600
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   text-white font-bold text-base
+                   cursor-pointer rounded-lg px-4 py-3
+                   focus:outline-none focus:ring-4
+                   focus:ring-amber-400 focus:ring-offset-2
+                   transition-all duration-200"
       >
-        {loading ? "กำลังสมัคร..." : "สมัครสมาชิก"}
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+            </svg>
+            กำลังสมัคร...
+          </span>
+        ) : "สมัครสมาชิก"}
       </button>
 
-      <p className="text-center text-sm text-[#888780]">
+      {/* ลิงก์เข้าสู่ระบบ */}
+      <p className="text-center text-sm text-gray-500 dark:text-gray-400">
         มีบัญชีอยู่แล้ว?{" "}
         <Link href="/reseller/login" className="text-[#BA7517] hover:underline">
           เข้าสู่ระบบ

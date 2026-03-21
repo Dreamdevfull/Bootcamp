@@ -57,7 +57,8 @@ import { useCart } from "@/app/components/cradcustomer/cartcontext"
 import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ThemeToggle } from "../drakmode/ThemeToggle"
+import ThemeToggle from "../drakmode/ThemeToggle"
+
 
 const HeaderCustomers = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -73,6 +74,7 @@ const HeaderCustomers = () => {
 
   return (
     <nav className="relative w-full h-20 bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white flex items-center justify-between px-4 md:px-8 shadow-md">
+      <ThemeToggle/>
       {/* ฝั่งซ้าย: Logo และ ชื่อหัวข้อ (แสดงเสมอ) */}
       <div className="flex items-center gap-3 z-20">
         <div className="w-10 h-10 bg-white/20 rounded-lg shrink-0">

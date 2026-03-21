@@ -5,7 +5,7 @@ import { Suspense } from "react";
 
 const LoginPage = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F3EE]">
+    <div className="min-h-screen flex flex-col bg-[#F5F3EE] dark:bg-[#1a1a18]">
       <Header/>
       <Suspense fallback={<div>Loading...</div>}>
         <FromLogin/>

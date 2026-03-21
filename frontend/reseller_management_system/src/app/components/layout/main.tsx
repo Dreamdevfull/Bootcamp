@@ -36,6 +36,7 @@
 // export default Main
 
 import React from 'react'
+import ThemeToggle from '../drakmode/ThemeToggle'
 
 interface mainType {
   main: {
