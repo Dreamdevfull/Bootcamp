@@ -235,7 +235,7 @@ const OrdersPage = () => {
 
   const filteredOrders = useMemo(() => {
     // กรองข้อมูล (Filter)
-    let result = data.filter((order) => {
+    const result = data.filter((order) => {
       const search = searchTerm.toLowerCase().trim();
       const orderNumber = order.order_number?.toLowerCase() || "";
       const customerName = order.customer_name?.toLowerCase() || "";

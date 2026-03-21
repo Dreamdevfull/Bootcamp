@@ -186,7 +186,7 @@ export const FilterSearchAndDropdown4 = ({
             >
               <option value="all">สถานะทั้งหมด</option>
               <option value="pending">⏳ รอดำเนินการ</option>
-              <option value="shopped">🚚 กำลังจัดส่ง</option>
+              {/* <option value="shopped">🚚 กำลังจัดส่ง</option> */}
               <option value="completed">✅ เสร็จสมบูรณ์</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 dark:text-gray-500">

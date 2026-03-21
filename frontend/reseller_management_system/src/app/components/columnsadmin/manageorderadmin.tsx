@@ -2,6 +2,7 @@
 import { ColumnDef } from '@tanstack/table-core';
 import CompletedButton from '@/app/components/ui/admin/button/order/completedbutton';
 import { Orders } from '@/app/types/model';
+import Link from 'next/link';
 
 const truncateText = (text: string | null | undefined, maxLength: number) => {
     if (!text) return '-'; 
@@ -10,7 +11,7 @@ const truncateText = (text: string | null | undefined, maxLength: number) => {
 
 export const ManageOrderAdmin = (onSuccess: () => void): ColumnDef<Orders>[] => [
   {
-    accessorKey: "create_at",
+    accessorKey: "created_at",
     header: () => <div className="bg-gray-50 dark:bg-teal-900/20 text-center ">เวลาสั่งซื้อ</div>,
     cell: ({ row }) => {
       const date = row.original.created_at;
@@ -118,4 +119,16 @@ export const ManageOrderAdmin = (onSuccess: () => void): ColumnDef<Orders>[] => 
       return <div className="text-center text-gray-400 dark:text-gray-500 text-sm italic">จบงานแล้ว</div>;
     },
   },
+  {
+    id: "actions2",
+    header: () => <div className="text-center"></div>,
+    cell: ({ row }) => (
+      <Link
+        href={`/admin/orders/${row.original.id}`}
+        className="text-[#1a6b5a] underline text-sm border border-[#1a6b5a] px-3 py-1 rounded hover:bg-[#1a6b5a] hover:text-white transition cursor-pointer"
+      >
+        ดูรายละเอียด
+      </Link>
+    ),
+  }
 ];
