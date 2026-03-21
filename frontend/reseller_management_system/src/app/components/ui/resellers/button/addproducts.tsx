@@ -43,7 +43,7 @@ const AddProductsButton = ({
         min_price={min_price}
         onSuccess={onSuccess || (() => {})}
       />
-    )}
+  
     </>
   );
 };
