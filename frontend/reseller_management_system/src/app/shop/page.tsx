@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Header from '@/app/components/layout/header'
 import Image from "next/image"
 import Link from 'next/link'
@@ -31,11 +31,31 @@ const ShopPage = () => {
       .finally(() => setLoading(false))
   }, [])
 
+    const filteredShops = useMemo(() => {
+    let result = [...data]
+
+    // กรองตามชื่อร้าน หรือ ชื่อเจ้าของร้าน
+    if (searchTerm.trim() !== "") {
+      const search = searchTerm.toLowerCase()
+      result = result.filter((shop) => 
+        shop.shop_name?.toLowerCase().includes(search) || 
+        shop.user?.name?.toLowerCase().includes(search)
+      )
+    }
+
+    // (เพิ่มเติม) ถ้ามี Logic การ Sort ตามตัวอักษรหรืออื่นๆ สามารถใส่ตรงนี้ได้
+    return result
+  }, [data, searchTerm])
   // Then use total from server instead of data.length
-  const paginatedShops = data.slice(
+  const totalFiltered = filteredShops.length
+  const paginatedShops = filteredShops.slice(
     currentPage * pageSize,
     (currentPage + 1) * pageSize
   )
+
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [searchTerm])
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee] dark:bg-[#1a1a18]">
