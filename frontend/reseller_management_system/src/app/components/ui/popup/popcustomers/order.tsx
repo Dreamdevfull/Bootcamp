@@ -134,7 +134,7 @@ export default function PopCustomersOrder({ open, onClose, product, quantity, sh
             <h2 className="text-xl font-bold text-[#2C2C2A]">ทำการสั่งซื้อ</h2>
             <button
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F5F3EE] text-[#888780] transition-colors"
+              className="text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer"
             >
               ✕
             </button>
