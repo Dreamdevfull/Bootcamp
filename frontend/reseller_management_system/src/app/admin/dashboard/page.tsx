@@ -682,7 +682,7 @@ export default function DashboardPage() {
 
   const Piedata = [
     { name: "สำเร็จ",      value: orders.filter(o => o.status === "completed").length },
-    { name: "รอดำเนินการ", value: orders.filter(o => o.status === "pending").length },
+    { name: "กำลังจัดส่ง", value: orders.filter(o => o.status === "pending").length },
     { name: "ยกเลิก",      value: orders.filter(o => o.status === "cancelled").length },
   ];
   // ใช้สีที่คนตาบอดสีแยกแยะได้ (ฟ้า/ส้ม/แดง แทน เขียว/เหลือง/แดง)
@@ -778,11 +778,11 @@ export default function DashboardPage() {
                              bg-amber-50 dark:bg-amber-900 
                              text-amber-600 dark:text-amber-400
                              border border-amber-200 dark:border-amber-700">
-              รอดำเนินการ
+              กำลังจัดส่ง
             </span>
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wide mb-1">
-            ออเดอร์รอดำเนินการ
+            ออเดอร์กำลังจัดส่ง
           </p>
           <p className="text-[22px] font-bold text-gray-800 dark:text-gray-100 leading-tight">
             {formatNum(pendingOrders)}

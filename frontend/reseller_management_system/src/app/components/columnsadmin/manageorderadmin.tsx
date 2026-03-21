@@ -81,10 +81,10 @@ export const ManageOrderAdmin = (onSuccess: () => void): ColumnDef<Orders>[] => 
 
       
       if (status === "pending") {
-        text = "รอดำเนินการ";
+        text = "กำลังส่ง";
         color = "text-[#633806] border border-[#fac775] bg-[#faeeda] rounded-md px-2 py-1 dark:text-amber-300 dark:border-amber-600 dark:bg-amber-950";
       } else if (status === "shipped") {
-        text = "จัดส่งแล้ว";
+        text = "รอดำเนินการ";
         color = "text-emerald-700 dark:text-emerald-300 border-2 border-emerald-400 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-950 rounded-md px-2 py-1 font-medium";
       } else if (status === "completed") {
         text = "เสร็จสมบูรณ์";
