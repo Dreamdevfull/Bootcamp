@@ -196,7 +196,7 @@ import HeaderAdmin from '@/app/components/layout/headeradmin'
 import Link from 'next/link'
 import { OrderReseller as OrderType } from '@/app/types/model'
 
-const STEPS = ["รอดำเนินการ", "กำลังจัดส่ง", "จัดส่งเสร็จสมบูรณ์"]
+const STEPS = ["รอดำเนินการ", "รอจัดส่ง", "จัดส่งเสร็จสมบูรณ์"]
 
 const OrdersPage = () => {
   const { id } = useParams()
@@ -229,27 +229,38 @@ const OrdersPage = () => {
     if (id) fetchOrderDetail()
   }, [id, API_URL])
 
-  useEffect(() => {
-    const updateTrack = () => {
+const [trackTop, setTrackTop] = useState(0)
+
+useEffect(() => {
+  const updateTrack = () => {
+    // รอ 1 frame ให้ DOM render เสร็จก่อน
+    requestAnimationFrame(() => {
       const first = stepRefs.current[0]
       const last = stepRefs.current[STEPS.length - 1]
       const curr = stepRefs.current[currentStep]
       const container = containerRef.current
       if (!first || !last || !curr || !container) return
 
-      const containerLeft = container.getBoundingClientRect().left
-      const firstCenter = first.getBoundingClientRect().left + first.offsetWidth / 2 - containerLeft
-      const lastCenter = last.getBoundingClientRect().left + last.offsetWidth / 2 - containerLeft
-      const currCenter = curr.getBoundingClientRect().left + curr.offsetWidth / 2 - containerLeft
+      const containerRect = container.getBoundingClientRect()
+      const firstRect = first.getBoundingClientRect()
+      const lastRect = last.getBoundingClientRect()
+      const currRect = curr.getBoundingClientRect()
 
+      const firstCenter = firstRect.left + firstRect.width / 2 - containerRect.left
+      const lastCenter = lastRect.left + lastRect.width / 2 - containerRect.left
+      const currCenter = currRect.left + currRect.width / 2 - containerRect.left
+      const top = firstRect.top + firstRect.height / 2 - containerRect.top
+
+      setTrackTop(top)
       setTrackStyle({ left: firstCenter, width: lastCenter - firstCenter })
       setFillWidth(currCenter - firstCenter)
-    }
+    })
+  }
 
-    updateTrack()
-    window.addEventListener("resize", updateTrack)
-    return () => window.removeEventListener("resize", updateTrack)
-  }, [currentStep, order])
+  updateTrack()
+  window.addEventListener("resize", updateTrack)
+  return () => window.removeEventListener("resize", updateTrack)
+}, [currentStep, order])
 
   if (loading) return (
     <div className="text-center py-20 font-bold text-emerald-700 dark:text-emerald-400" aria-live="polite">
@@ -285,15 +296,16 @@ const OrdersPage = () => {
         {/* Stepper */}
         <div ref={containerRef} className="relative flex items-start justify-between px-2 sm:px-4 pt-6 pb-2">
           {/* เส้น background */}
-          <div
-            className="absolute top-[2rem] sm:top-[2.5rem] md:top-[2.75rem] h-[3px] sm:h-1 md:h-[5px] rounded-full bg-gray-200 dark:bg-gray-700"
-            style={{ left: trackStyle.left, width: trackStyle.width }}
-          />
-          {/* เส้น progress */}
-          <div
-            className="absolute top-[2rem] sm:top-[2.5rem] md:top-[2.75rem] h-[3px] sm:h-1 md:h-[5px] rounded-full bg-emerald-600 dark:bg-emerald-500 transition-all duration-500"
-            style={{ left: trackStyle.left, width: fillWidth }}
-          />
+          {/* เส้น background */}
+<div
+  className="absolute h-[3px] sm:h-1 md:h-[5px] rounded-full bg-gray-200 dark:bg-gray-700 -translate-y-1/2"
+  style={{ top: trackTop, left: trackStyle.left, width: trackStyle.width }}
+/>
+{/* เส้น progress */}
+<div
+  className="absolute h-[3px] sm:h-1 md:h-[5px] rounded-full bg-emerald-600 dark:bg-emerald-500 transition-all duration-500 -translate-y-1/2"
+  style={{ top: trackTop, left: trackStyle.left, width: fillWidth }}
+/>
 
           {STEPS.map((step, idx) => (
             <div key={step} className="relative z-10 flex flex-1 flex-col items-center gap-1 sm:gap-2">
@@ -334,7 +346,7 @@ const OrdersPage = () => {
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-6 text-xs text-gray-500 dark:text-gray-400">
+        {/* <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-6 text-xs text-gray-500 dark:text-gray-400">
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-emerald-700 dark:bg-emerald-500 inline-block" aria-hidden="true" /> ดำเนินแล้ว
           </div>
@@ -344,7 +356,7 @@ const OrdersPage = () => {
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 inline-block" aria-hidden="true" /> รอดำเนินการ
           </div>
-        </div>
+        </div> */}
 
         {/* Info Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full mt-5">

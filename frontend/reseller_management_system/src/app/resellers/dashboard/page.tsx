@@ -436,7 +436,7 @@ export default function DashboardPage() {
   const totalSales    = orders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
   const totalProfit   = orders.filter(o => o.status === "จัดส่งเสร็จสมบูรณ์").reduce((sum, o) => sum + (Number(o.my_profit) || 0), 0);
   const totalOrders   = orders.length;
-  const pendingOrders = orders.filter(o => o.status === "กำลังจัดส่ง").length;
+  const pendingOrders = orders.filter(o => o.status === "รอจัดส่ง").length;
 
   const Linedata = useMemo(() => {
     if (orders.length === 0) return [];
@@ -457,8 +457,8 @@ export default function DashboardPage() {
 
   const Piedata = [
     { name: "✅ สำเร็จ",       value: orders.filter(o => o.status === "จัดส่งเสร็จสมบูรณ์").length },
-    { name: "🚚 กำลังจัดส่ง", value: orders.filter(o => o.status === "กำลังจัดส่ง").length },
-    { name: "⏳ รอดำเนินการ",  value: orders.filter(o => o.status === "รอจัดส่ง").length },
+    // { name: "🚚 กำลังจัดส่ง", value: orders.filter(o => o.status === "กำลังจัดส่ง").length },
+    { name: "⏳ รอจัดส่ง",  value: orders.filter(o => o.status === "รอจัดส่ง").length },
   ];
   // สีที่คนตาบอดสีแยกแยะได้ (ฟ้า/ส้ม/ม่วง)
   const COLORS  = ["#2563eb", "#f97316", "#7c3aed"];

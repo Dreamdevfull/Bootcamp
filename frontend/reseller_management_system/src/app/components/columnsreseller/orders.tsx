@@ -124,7 +124,7 @@ export const OrdersColumn: ColumnDef<OrderResellerType>[] = [
       let color = "";
 
       if (status === "รอจัดส่ง") {
-        text = "รอดำเนินการ";
+        text = "รอจัดส่ง";
         color = "text-[#633806] border border-[#FAC775] bg-[#FAEEDA] rounded-md px-2 py-1";
       } else if (status === "กำลังจัดส่ง") {
         text = "กำลังจัดส่ง";

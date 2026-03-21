@@ -66,15 +66,14 @@ const HeaderCustomers = () => {
   const router = useRouter()
   const shop_slug = pathname.split("/")[2] ?? ""
   const { totalItems } = useCart();
-  
+
   const sidebarLinkClass = (path: string) =>
-    `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 hover:bg-[#1a6b5a] hover:text-white ${
-      pathname === path ? "bg-[#1a6b5a] text-white" : ""
+    `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 hover:bg-[#1a6b5a] hover:text-white ${pathname === path ? "bg-[#1a6b5a] text-white" : ""
     }`
 
   return (
     <nav className="relative w-full h-20 bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white flex items-center justify-between px-4 md:px-8 shadow-md">
-      <ThemeToggle/>
+      <ThemeToggle />
       {/* ฝั่งซ้าย: Logo และ ชื่อหัวข้อ (แสดงเสมอ) */}
       <div className="flex items-center gap-3 z-20">
         <div className="w-10 h-10 bg-white/20 rounded-lg shrink-0">
@@ -88,10 +87,15 @@ const HeaderCustomers = () => {
 
       {/* ฝั่งขวา: เมนู PC + ตะกร้า + Hamburger */}
       <div className="flex items-center gap-2 md:gap-4 z-20">
-        
+
         {/* เมนูสำหรับ PC (ย้ายมาไว้ด้านขวา) */}
         <div className="hidden md:flex gap-3">
-          <Link href="/"><button className={sidebarLinkClass("/")}>หน้าหลัก</button></Link>
+          {/* <Link href="/"><button className={sidebarLinkClass("/")}>หน้าหลัก</button></Link> */}
+          <Link href="/" onClick={() => setIsMenuOpen(false)}>
+            <button className={`${sidebarLinkClass("/")} px-4`}>
+              หน้าหลัก
+            </button>
+          </Link>
           <Link href={`/shop/${shop_slug}`}>
             <button className={`${sidebarLinkClass(`/shop/${shop_slug}`)} px-4`}>หน้าร้าน</button>
           </Link>
@@ -115,7 +119,7 @@ const HeaderCustomers = () => {
         </button>
 
         {/* ปุ่ม Hamburger (แสดงเฉพาะ Mobile) */}
-        <button 
+        <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="md:hidden p-2 bg-white/10 rounded-lg hover:bg-white/20 transition"
         >
@@ -134,7 +138,7 @@ const HeaderCustomers = () => {
       {/* Mobile Menu Dropdown (แสดงเมื่อกด Hamburger) */}
       {isMenuOpen && (
         <div className="absolute top-20 left-0 w-full bg-[#0d3d30] border-t border-white/10 p-4 flex flex-col gap-3 md:hidden z-10 shadow-2xl">
-          <Link href="/"><button onClick={() => setIsMenuOpen(false)}>หน้าหลัก</button></Link>
+          <Link href="/" onClick={() => setIsMenuOpen(false)}><button className={`${sidebarLinkClass(`/`)} w-full justify-start`}>หน้าหลัก</button></Link>
           <Link href={`/shop/${shop_slug}`} onClick={() => setIsMenuOpen(false)}>
             <button className={`${sidebarLinkClass(`/shop/${shop_slug}`)} w-full justify-start`}>
               หน้าร้าน
