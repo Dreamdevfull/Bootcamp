@@ -1,47 +1,48 @@
 "use client"
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '@/app/components/layout/header'
 import Image from "next/image"
 import Link from 'next/link'
 import { FilterSearchAndDropdown } from '../components/ui/filter'
 import { PaginationCrad } from '../components/ui/paginationcrad'
 import CradShop from "@/app/components/cradcustomer/cradshop"
-import { Getshop } from '../types/model'
+import { Shop } from '../types/model'  // ✅ use Shop, not User
 import { useRouter } from 'next/navigation'
 
-const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
-  const { shop_slug } = use(params);
-    const [data, setData] = useState<Getshop | null>(null);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
-    const router = useRouter()
-    const [loading, setLoading] = useState(true)
-    const [searchTerm, setSearchTerm] = useState("");
-    const [sortOrder, setSortOrder] = useState("all");
-    
-    const API_URL = process.env.NEXT_PUBLIC_API_URL
-    useEffect(() => {
-      fetch(`${API_URL}/shop/`)
-        .then(res => res.json())
-        .then((data: Getshop) => {
-          setData(data)
-        })
-        .finally(() => setLoading(false))
-    }, [shop_slug])
-  
-    
-  
-    const allProducts = data?.products ?? []
-    const totalItems = allProducts.length
-    const paginatedProducts = allProducts.slice(
-      currentPage * pageSize,
-      (currentPage + 1) * pageSize
-    )
+const ShopPage = () => {  // ✅ removed params — not a dynamic route
+  const [data, setData] = useState<Shop[]>([])  // ✅ Shop array
+  const [currentPage, setCurrentPage] = useState(0)
+  const [pageSize, setPageSize] = useState(10)
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [sortOrder, setSortOrder] = useState("all")
+  const [total, setTotal] = useState(0)
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+  useEffect(() => {
+    fetch(`${API_URL}/shops`)
+      .then(res => res.json())
+      .then((result: { data: Shop[], total: number }) => {
+        setData(result.data)   // ✅ extract the array
+        setTotal(result.total) // ✅ use server total for pagination
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  // Then use total from server instead of data.length
+  const paginatedShops = data.slice(
+    currentPage * pageSize,
+    (currentPage + 1) * pageSize
+  )
+
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee]">
       <p className="text-gray-400">กำลังโหลด...</p>
     </div>
   )
+
   return (
     <main className="bg-[#F5F3EE] dark:bg-[#1a1a18] min-h-screen flex flex-col">
       <Header />
@@ -68,15 +69,19 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
       </div>
       <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
         <div className="mb-5">
-          <FilterSearchAndDropdown onFilterType={(value) => setSortOrder(value) } onSearch={(value) => setSearchTerm(value)} onSortPrice={(value) => setSortOrder(value)}  />
+          <FilterSearchAndDropdown
+            onFilterType={(value) => setSortOrder(value)}
+            onSearch={(value) => setSearchTerm(value)}
+            onSortPrice={(value) => setSortOrder(value)}
+          />
         </div>
-        {data?.products && data.products.length > 0 ? (
-          <CradShop products={paginatedProducts} shop_slug={shop_slug} />
+        {data.length > 0 ? (
+          <CradShop shops={paginatedShops} />
         ) : (
           <div className="text-center py-10 text-gray-400">ไม่มีร้านค้า</div>
         )}
         <PaginationCrad
-          totalItems={totalItems}
+          totalItems={total}  // ✅ from server, not data.length
           pageSize={pageSize}
           onPageSizeChange={(size) => { setPageSize(size); setCurrentPage(0) }}
           currentPage={currentPage}
