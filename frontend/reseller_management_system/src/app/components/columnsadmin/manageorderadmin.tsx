@@ -106,13 +106,13 @@ export const ManageOrderAdmin=  (onSuccess: () => void): ColumnDef<Orders>[] => 
 
       if (status === "pending") {
         text = "รอการชําระเงิน";
-        color = "text-[#633806] border border-[#fac775] bg-[#faeeda] rounded-md px-2 py-1";
+        color = "text-amber-700 dark:text-amber-300 border-2 border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-950 rounded-md px-2 py-1 font-medium";
       } else if (status === "completed") {
         text = "จัดส่งสำเร็จ";
-        color = "text-[#085041] border border-[#9fe1cb] bg-[#e1f5ee] rounded-md px-2 py-1";
+        color = "text-emerald-700 dark:text-emerald-300 border-2 border-emerald-400 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-950 rounded-md px-2 py-1 font-medium";
       } else if (status === "shipped") {
         text = "รอจัดส่ง";
-        color = "text-[#791f1f] border border-[#f7c1c1] bg-[#fcebeb] rounded-md px-2 py-1";
+        color = "text-rose-700 dark:text-rose-300 border-2 border-rose-400 dark:border-rose-600 bg-rose-50 dark:bg-rose-950 rounded-md px-2 py-1 font-medium";
       }
 
       return (
@@ -130,7 +130,7 @@ export const ManageOrderAdmin=  (onSuccess: () => void): ColumnDef<Orders>[] => 
 
       if (status === "pending") {
         return(
-          <div className="text-xs text-amber-600 font-medium italic">
+          <div className="flex justify-center text-amber-600 dark:text-amber-400">
             รอการชําระเงิน
           </div>
         )
@@ -143,7 +143,7 @@ export const ManageOrderAdmin=  (onSuccess: () => void): ColumnDef<Orders>[] => 
         );
       } else if (status === "completed") {
         return (
-          <div className="flex justify-center text-[#085041]/70">
+          <div className="flex justify-center text-emerald-700/70 dark:text-emerald-400/70">
             จัดส่งสำเร็จ
           </div>
         );
