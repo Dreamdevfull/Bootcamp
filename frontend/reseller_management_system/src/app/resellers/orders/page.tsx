@@ -33,9 +33,8 @@ const OrdersPage = () => {
         setLoading(false);
       }
     };
-
-    fetchData();
-  })
+fetchData();
+  }, []);
 
   const filteredOrders = useMemo(() => {
     return data.filter((order) => {

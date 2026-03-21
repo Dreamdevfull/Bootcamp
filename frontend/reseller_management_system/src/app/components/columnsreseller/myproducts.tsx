@@ -14,6 +14,7 @@ function ActionCell({ id, image_url, cost_price, min_price, name, selling_price,
   min_price: number;
   selling_price: number;
   onSuccess: () => void;
+  
 }) {
   const [open, setOpen] = React.useState(false);
   return (
