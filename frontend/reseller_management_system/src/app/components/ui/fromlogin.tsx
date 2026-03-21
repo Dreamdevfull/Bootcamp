@@ -94,7 +94,7 @@ const FromLogin = () => {
         
         <div className="w-full">
           <label htmlFor="email" className="block text-[16px] text-[#000000] mb-1 mt-16">
-            อีเมล 
+            อีเมล <span className='text-red-500'>*</span>
           </label>
           <input
             id="email"
