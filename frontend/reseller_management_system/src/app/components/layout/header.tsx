@@ -83,6 +83,7 @@ const Header = () => {
         <div className="hidden md:flex gap-4">
             <Link href="/"><button className={sidebarLinkClass("/")}>หน้าหลัก</button></Link>
             <Link href="/shop"><button className={sidebarLinkClass("/shop")}>ร้านค้า</button></Link>
+            <Link href="/tracking"><button className={sidebarLinkClass("/tracking")}>ติดตามสถานะ</button></Link>
             <Link href="/login"><button className={sidebarLinkClass("/login")}>เข้าสู่ระบบ</button></Link>
             <Link href="/register"><button className={sidebarLinkClass("/register")}>สมัครตัวแทน</button></Link>
         </div>
@@ -103,6 +104,9 @@ const Header = () => {
           </Link>
           <Link href="/shop" onClick={() => setIsOpen(false)}>
             <button className={sidebarLinkClass("/shop")}>ร้านค้า</button>
+          </Link>
+          <Link href="/tracking"onClick={() => setIsOpen(false)}>
+            <button className={sidebarLinkClass("/tracking")}>ติดตามสถานะ</button>
           </Link>
           <Link href="/login" onClick={() => setIsOpen(false)}>
             <button className={sidebarLinkClass("/login")}>เข้าสู่ระบบ</button>
