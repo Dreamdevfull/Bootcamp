@@ -1,6 +1,7 @@
 package repositorys
 
 import (
+	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"gorm.io/gorm"
 )
@@ -14,6 +15,7 @@ type OrderRepository interface {
 	FindOrderByID(id uint) (*models.Orders, error)
 	UpdateOrderStatus(id uint, status string) error
 	FindByOrderNumber(orderNumber string) (*models.Orders, error)
+	GetDashBoardStats(userID uint) (*dto.DashboardStats, error)
 }
 
 type orderRepository struct {
@@ -69,4 +71,29 @@ func (r *orderRepository) FindByOrderNumber(orderNumber string) (*models.Orders,
 		First(&order).Error
 
 	return &order, err
+}
+
+func (r *orderRepository) GetDashBoardStats(userID uint) (*dto.DashboardStats, error) {
+	var stats dto.DashboardStats
+
+	query := r.db.Model(&models.Orders{}).
+		Select(`
+        COALESCE(SUM(CASE WHEN orders.status IN ('shipped', 'completed') THEN orders.total_amount ELSE 0 END), 0) as total_sales,
+        COALESCE(SUM(CASE WHEN orders.status IN ('shipped', 'completed') THEN orders.reseller_profit ELSE 0 END), 0) as total_profit,
+        COUNT(orders.id) as total_orders,
+        COUNT(CASE WHEN orders.status = 'pending' THEN orders.id END) as pending_orders, 
+        COUNT(CASE WHEN orders.status IN ('shipped', 'completed') THEN orders.id END) as completed_orders,
+        MAX(orders.created_at) as updated_at
+    `)
+
+	if userID > 0 {
+		query = query.Joins("JOIN shops ON shops.id = orders.shop_id").
+			Where("shops.user_id = ?", userID)
+	}
+
+	err := query.Scan(&stats).Error
+	if err != nil {
+		return nil, err
+	}
+	return &stats, err
 }

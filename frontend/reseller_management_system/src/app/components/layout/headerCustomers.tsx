@@ -57,6 +57,8 @@ import { useCart } from "@/app/components/cradcustomer/cartcontext"
 import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
+import ThemeToggle from "../drakmode/ThemeToggle"
+
 
 const HeaderCustomers = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -72,7 +74,7 @@ const HeaderCustomers = () => {
 
   return (
     <nav className="relative w-full h-20 bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white flex items-center justify-between px-4 md:px-8 shadow-md">
-      
+      <ThemeToggle/>
       {/* ฝั่งซ้าย: Logo และ ชื่อหัวข้อ (แสดงเสมอ) */}
       <div className="flex items-center gap-3 z-20">
         <div className="w-10 h-10 bg-white/20 rounded-lg shrink-0">
@@ -89,6 +91,7 @@ const HeaderCustomers = () => {
         
         {/* เมนูสำหรับ PC (ย้ายมาไว้ด้านขวา) */}
         <div className="hidden md:flex gap-3">
+          <Link href="/"><button className={sidebarLinkClass("/")}>หน้าหลัก</button></Link>
           <Link href={`/shop/${shop_slug}`}>
             <button className={`${sidebarLinkClass(`/shop/${shop_slug}`)} px-4`}>หน้าร้าน</button>
           </Link>
@@ -131,6 +134,7 @@ const HeaderCustomers = () => {
       {/* Mobile Menu Dropdown (แสดงเมื่อกด Hamburger) */}
       {isMenuOpen && (
         <div className="absolute top-20 left-0 w-full bg-[#0d3d30] border-t border-white/10 p-4 flex flex-col gap-3 md:hidden z-10 shadow-2xl">
+          <Link href="/"><button onClick={() => setIsMenuOpen(false)}>หน้าหลัก</button></Link>
           <Link href={`/shop/${shop_slug}`} onClick={() => setIsMenuOpen(false)}>
             <button className={`${sidebarLinkClass(`/shop/${shop_slug}`)} w-full justify-start`}>
               หน้าร้าน

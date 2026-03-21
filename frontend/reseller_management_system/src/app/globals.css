@@ -139,3 +139,5 @@
 .swal-deny-custom:hover {
   background-color: #F5F3EE !important;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));

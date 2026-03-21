@@ -47,6 +47,7 @@ import ButtonLogout from '@/app/components/ui/admin/button/logout';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react'; 
+import ThemeToggle from '../drakmode/ThemeToggle';
 
 interface admin {
   id: number;
@@ -99,10 +100,11 @@ const HeaderAdmin = () => {
     hover:bg-[#1a6b5a] hover:text-white justify-center w-full md:w-32 mb-3
     ${pathname === path ? "bg-[#1a6b5a] text-white" : "text-white/90"}`;
 
-    const firstLetter = data?.shop_name.charAt(0).toUpperCase();
+  const firstLetter = data?.shop_name.charAt(0).toUpperCase();
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-[#0d3d30] text-white shadow-md">
+      <ThemeToggle/>
       {/* Container หลัก */}
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">

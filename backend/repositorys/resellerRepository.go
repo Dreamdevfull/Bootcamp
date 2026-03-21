@@ -23,6 +23,7 @@ type ResellerRepository interface {
 	// CreateWallet(wallet *models.Wallet) error
 	GetProductOwner(productID uint) (uint, error)
 	GetOrderByID(orderID uint, userID uint) (models.Orders, error)
+	GetOrderDetailsForAdmin(orderID uint) (models.Orders, error)
 }
 
 type resellerRepository struct {
@@ -195,4 +196,18 @@ func (r *resellerRepository) GetProductOwner(productID uint) (uint, error) {
 
 	// ถ้าไม่เจอ (เช่น สินค้ายังว่าง) GORM จะคืน error "sql: no rows in result set"
 	return shopID, err
+}
+
+func (r *resellerRepository) GetOrderDetailsForAdmin(orderID uint) (models.Orders, error) {
+	var order models.Orders
+
+	// Preload ทุกอย่างที่จำเป็น: รายการสินค้า, ข้อมูลสินค้า (เพื่อเอารูป/ราคาทุน), และข้อมูลร้านค้า
+	err := r.db.Model(&models.Orders{}).
+		Preload("OrderItems"). // ดึงรายการสินค้าในออเดอร์
+		Preload("OrderItems.Product").
+		Preload("Shop").
+		Where("id = ?", orderID).
+		First(&order).Error
+
+	return order, err
 }

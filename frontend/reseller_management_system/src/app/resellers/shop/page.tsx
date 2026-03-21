@@ -5,7 +5,7 @@ import Main from '@/app/components/layout/main'
 import { ProductsColumn } from '@/app/components/columnsreseller/myproducts';
 import { ShopProducts as ShopProductsType } from '@/app/types/model';
 import { DataTable } from '@/app/components/ui/datatable';
-import { FilterSearchAndDropdown } from '@/app/components/ui/filter';
+import { FilterSearchAndDropdown1 } from '@/app/components/ui/search/filter1';
 import { useRouter } from 'next/navigation';
 
 const Shoppage = () => {
@@ -72,10 +72,10 @@ const Shoppage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3EE]">
+    <div className="min-h-screen bg-[#F5F3EE] dark:bg-[#1a1a18]">
       <HeaderReseller />
       <Main main={mockmain} />
-     <FilterSearchAndDropdown 
+     <FilterSearchAndDropdown1 
           onSearch={setSearchTerm}
           onSortPrice={setSortOrder}
           onFilterType={() => {}} 

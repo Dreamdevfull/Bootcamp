@@ -4,12 +4,13 @@ const adminRoutes = ["/admin"];
 const resellerRoutes = ["/resellers"];
 const authRoutes = ["/login", "/register", "/"];
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("jwt")?.value;
 
   console.log("Token in Middleware:", token ? "Found" : "Not Found");
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
   if (authRoutes.some((r) => pathname === r)) {
     if (token) {
@@ -54,7 +55,7 @@ export default async function proxy(req: NextRequest) {
   }
 
   const res = await fetch(`${API_BASE}/api/auth/me`, {
-    headers: { Cookie: `jwt=${token}` },
+    headers: { Cookie: `jwt=${token}`, Authorization: `Bearer ${token}` },
   });
 
   if (!res.ok) {

@@ -5,7 +5,7 @@ import HeaderReseller from "@/app/components/layout/headerReseller";
 import Main from "@/app/components/layout/main";
 import { DataTable } from "@/app/components/ui/datatable";
 import { OrdersColumn as columns } from "@/app/components/columnsreseller/orders";
-import { FilterSearchAndDropdown } from "@/app/components/ui/filter";
+import { FilterSearchAndDropdown5 } from "@/app/components/ui/search/filter5";
 
 const mockmain = {
   text1: "ออเดอร์ของฉัน",
@@ -62,11 +62,11 @@ const OrdersPage = () => {
   }, [data, searchTerm, statusFilter, priceSort]);
 
   return (
-    <div className="min-h-screen bg-[#F5F3EE]">
+    <div className="min-h-screen bg-[#F5F3EE] dark:bg-[#1a1a18]">
       <HeaderReseller />
       <Main main={mockmain} />
 
-      <FilterSearchAndDropdown
+      <FilterSearchAndDropdown5
         onSearch={setSearchTerm}
         onFilterType={setStatusFilter}
         onSortPrice={setPriceSort}

@@ -14,6 +14,7 @@ type UserRepository interface {
 	FindResellers() ([]models.Users, error)
 	UpdateStatus(id string, status string) error
 	GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, error)
+	GetResellers() ([]models.Users, error)
 }
 
 type userRepository struct {
@@ -81,4 +82,12 @@ func (r *userRepository) GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, err
 	return &result, err
 }
 
-//ddd
+func (r *userRepository) GetResellers() ([]models.Users, error) {
+	var resellers []models.Users
+	// ดึงเฉพาะ Field ที่จำเป็นเพื่อความปลอดภัย (ห้ามดึง Password)
+	err := r.db.Where("role = ? AND status = ?", "reseller", "approved").
+		Select("id, name, shop_name, phone, address, email").
+		Find(&resellers).Error
+
+	return resellers, err
+}

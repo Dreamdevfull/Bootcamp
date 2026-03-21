@@ -45,7 +45,7 @@ export function DataTable<TData, TValue>({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-40 text-gray-400">
+      <div className="flex justify-center items-center h-40 text-gray-400 dark:text-gray-500">
         กำลังโหลด...
       </div>
     )
@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="hover:bg-gray-200">
+                <TableRow key={row.id} className="hover:bg-gray-200 dark:hover:bg-gray-700">
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -81,7 +81,7 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center h-24 text-gray-400">
+                <TableCell colSpan={columns.length} className="text-center h-24 text-gray-400 dark:text-gray-500">
                   ไม่พบข้อมูล
                 </TableCell>
               </TableRow>

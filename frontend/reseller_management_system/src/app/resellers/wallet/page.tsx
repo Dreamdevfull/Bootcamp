@@ -38,10 +38,10 @@ const WalletLogPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F5F3EE]">
+    <div className="min-h-screen bg-[#F5F3EE] dark:bg-[#1a1a18]">
       <HeaderReseller />
       {/* <h1 className='mx-7.5 mt-5 text-4xl font-bold text-[#0d3d30]'>กระเป๋าเงินร้านค้าของคุณ</h1> */}
-      <h1 className="mx-4 sm:mx-7.5 mt-5 text-2xl sm:text-3xl md:text-4xl font-bold text-[#0d3d30] transition-all">
+      <h1 className="mx-4 sm:mx-7.5 mt-5 text-2xl sm:text-3xl md:text-4xl font-bold text-[#0d3d30] dark:text-emerald-400 transition-all">
         กระเป๋าเงินร้านค้าของคุณ
       </h1>
       <CardWallet data={wallet} loading={loading} />

@@ -2,7 +2,7 @@
 import { Catalog as CatalogType } from '@/app/types/model'
 import AddProducts from '../ui/popup/popresellers/addproducts'
 import React, { useState, useMemo} from 'react'
-import { FilterSearchAndDropdown } from '../ui/filter'
+import { FilterSearchAndDropdown1 } from '../ui/search/filter1'
 import { PaginationCrad } from '../ui/paginationcrad'
  
 interface CatalogCardProps {
@@ -79,11 +79,11 @@ const CatalogCrad = ({ data, loading, onSuccess }: CatalogCardProps) => {
   };
 
   return (
-    <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
-      <section className='bg-white p-6 max-h-auto rounded-2xl shadow-md border border-gray-100'>
+    <main className='bg-[#f5f3ee] dark:bg-gray-950 min-h-screen flex flex-col transition-colors duration-200'>
+      <section className='bg-white dark:bg-gray-800 p-6 max-h-auto rounded-2xl shadow-md border-2 border-gray-100 dark:border-gray-700 transition-colors duration-200'>
           {/* search bar */}
         <div className='mb-6'>
-         <FilterSearchAndDropdown 
+         <FilterSearchAndDropdown1 
             onSearch={(value) => { setSearchTerm(value); setCurrentPage(0); }}
             onSortPrice={setSortOrder}
             onFilterType={() => {}} 
@@ -91,15 +91,15 @@ const CatalogCrad = ({ data, loading, onSuccess }: CatalogCardProps) => {
         </div>
  
         {loading ? (
-          <div className="text-center py-10 text-gray-400">กำลังโหลด...</div>
+          <div className="text-center py-10 text-gray-400 dark:text-gray-500">กำลังโหลด...</div>
         ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-10 text-gray-400">ไม่มีสินค้าส่วนกลาง</div>
+          <div className="text-center py-10 text-gray-400 dark:text-gray-500">ไม่มีสินค้าส่วนกลาง</div>
         ) : (
           <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5'>
             {paginatedProducts.map((item) => (
               <div
                 key={item.id}
-                className='bg-white p-4 border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition duration-200'
+                className='bg-white dark:bg-gray-800 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition duration-200'
               >
                 {item.image_url ? (
                   <img
@@ -108,7 +108,7 @@ const CatalogCrad = ({ data, loading, onSuccess }: CatalogCardProps) => {
                     className="w-full h-50 object-cover rounded-lg mb-3 border shadow-sm"
                   />
                 ) : (
-                  <div className="w-full h-50 bg-gray-200 rounded-lg mb-3 flex items-center justify-center text-gray-400">
+                  <div className="w-full h-50 bg-gray-200 dark:bg-gray-700 rounded-lg mb-3 flex items-center justify-center text-gray-400 dark:text-gray-500">
                     ไม่มีรูป
                   </div>
                 )}
@@ -117,20 +117,20 @@ const CatalogCrad = ({ data, loading, onSuccess }: CatalogCardProps) => {
                   <p title={item.name} className="text-sm font-medium line-clamp-2">{truncateText(item.name ?? "-", 33)}</p>
  
                   <div className="flex justify-between items-center">
-                    <span className="text-[#1a6b5a] font-semibold text-lg">
+                    <span className="text-[#1a6b5a] dark:text-emerald-400 font-semibold text-lg">
                       ฿{item.min_price}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                       เหลือ {item.stock}
                     </span>
                   </div>
  
                   {item.is_mine ? (
-                    <button disabled className='text-[#1a6b5a] w-full border border-[#1a6b5a] bg-[#e6f4f0] rounded-lg px-5 py-2 cursor-not-allowed'>
+                    <button disabled className='text-emerald-700 dark:text-emerald-400 w-full border-2 border-emerald-600 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950 rounded-lg px-5 py-2 cursor-not-allowed'>
                       ✓ เพิ่มแล้ว
                     </button>
                   ) : item.is_added ? (
-                    <button disabled className='text-gray-400 w-full border bg-gray-100 rounded-lg px-5 py-2 cursor-not-allowed'>
+                    <button disabled className='text-gray-400 dark:text-gray-500 w-full border-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-lg px-5 py-2 cursor-not-allowed'>
                       ถูกร้านอื่นเพิ่มแล้ว
                     </button>
                   ) : (

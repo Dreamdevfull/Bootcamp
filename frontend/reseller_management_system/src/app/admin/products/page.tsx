@@ -9,7 +9,7 @@ import {
 import Main from "@/app/components/layout/main";
 import { Product as ProductType } from "@/app/types/model";
 import PopAddProducts from "@/app/components/ui/popup/popadmin/addproducts";
-import { FilterSearchAndDropdown } from "@/app/components/ui/filter";
+import { FilterSearchAndDropdown1 } from "@/app/components/ui/search/filter1";
 
 const ProductsPage = () => {
   const [data, setData] = useState<ProductType[]>([]);
@@ -88,11 +88,11 @@ const ProductsPage = () => {
   const columns = productColumns(fetchData);
 
   return (
-    <div className="min-h-screen bg-[#F5F3EE]">
+    <div className="min-h-screen bg-[#F5F3EE] dark:bg-[#1a1a18] transition-colors duration-200">
       <HeaderAdmin />
       <Main main={mockmain} />
 
-      <FilterSearchAndDropdown
+      <FilterSearchAndDropdown1
         onSearch={setSearchTerm}
         onSortPrice={setSortOrder}
         onFilterType={setTypeFilter}

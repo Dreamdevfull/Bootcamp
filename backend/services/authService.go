@@ -88,11 +88,11 @@ func (s *AuthService) Login(input dto.LoginRequest) (*dto.LoginResponse, error) 
 	if user.Role == "reseller" {
 
 		if user.Status == "pending" {
-			return nil, errors.New("your account is pending approval")
+			return nil, errors.New("บัญชีรออนุมัติ กรุณารอการติดต่อ")
 		}
 
 		if user.Status == "rejected" {
-			return nil, errors.New("your registration has been rejected")
+			return nil, errors.New("บัญชีนี้ไม่ได้รับการอนุมัติ")
 		}
 	}
 
@@ -115,9 +115,10 @@ func (s *AuthService) Login(input dto.LoginRequest) (*dto.LoginResponse, error) 
 		Message: "Login successful",
 		Token:   t,
 		User: dto.UserSummary{
-			ID:   user.Id,
-			Name: user.Name,
-			Role: user.Role,
+			ID:     user.Id,
+			Name:   user.Name,
+			Role:   user.Role,
+			Status: user.Status,
 		},
 	}, nil
 }
