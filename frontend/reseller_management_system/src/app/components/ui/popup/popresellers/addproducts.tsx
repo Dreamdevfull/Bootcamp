@@ -6,7 +6,7 @@ export default function AddProducts({ open, onClose, id, name, image_url, cost_p
   open: boolean;
   onClose: () => void;
   id: number;
-  name: string;
+  name?: string | undefined;
   image_url: string;
   cost_price: number;
   min_price: number;
@@ -47,6 +47,7 @@ export default function AddProducts({ open, onClose, id, name, image_url, cost_p
 
   if (!open) return null
 
+  console.log({ id, name })
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/20 z-50">
     <div
