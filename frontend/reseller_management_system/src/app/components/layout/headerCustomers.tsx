@@ -38,7 +38,12 @@ const HeaderCustomers = () => {
           className="flex items-center gap-2 bg-[#EF9F27] text-black border border-black px-6 py-2 rounded-lg hover:bg-[#BA7517] transition cursor-pointer relative"
         >
           🛒
-          <span className="text-[18px]">ตะกร้า ({totalItems})</span>
+          <span className="text-[18px]">ตะกร้า (
+            <span className={
+              totalItems === 0 ? "text-black" : totalItems >= 1 ? "text-red-500" : "text-red" }>
+                {totalItems}
+            </span>)
+          </span>
         </button>
       </div>
     </nav>
