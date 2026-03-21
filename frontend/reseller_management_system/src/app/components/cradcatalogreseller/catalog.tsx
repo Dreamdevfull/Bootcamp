@@ -8,14 +8,16 @@ import { PaginationCrad } from '../ui/paginationcrad'
 interface CatalogCardProps {
   data: CatalogType[]
   loading: boolean
+  onSuccess: () => void;
 }
  
-function ActionCell({ id, name, image_url, cost_price, min_price }: {
+function ActionCell({ id, name, image_url, cost_price, min_price,onSuccess }: {
   id: number;
   name: string;
   image_url: string;
   cost_price: number;
   min_price: number;
+  onSuccess: () => void;
 }) {
   const [open, setOpen] = React.useState(false);
   return (
@@ -35,12 +37,13 @@ function ActionCell({ id, name, image_url, cost_price, min_price }: {
         cost_price={cost_price}
         name={name}
         min_price={min_price}
+        onSuccess={onSuccess}
       />
     </div>
   );
 }
  
-const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
+const CatalogCrad = ({ data, loading, onSuccess }: CatalogCardProps) => {
   const [currentPage, setCurrentPage] = useState(0)
   const [pageSize, setPageSize] = useState(5)  
   const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -137,6 +140,7 @@ const CatalogCrad = ({ data, loading }: CatalogCardProps) => {
                       image_url={item.image_url}
                       cost_price={item.cost_price}
                       min_price={item.min_price}
+                      onSuccess={onSuccess}
                     />
                   )}
                 </div>

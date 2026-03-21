@@ -89,9 +89,14 @@ export interface OrderReseller {
   order_id: number;
   order_number: string;
   customer_name: string;
+  customer_phone: string; 
+  shipping_address: string;
   items: {
     product_name: string;
+    image_url: string;
     quantity: number;
+    price: number;
+
   }[];
   total_amount: number;
   my_profit: number;
