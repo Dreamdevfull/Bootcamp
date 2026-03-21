@@ -4,7 +4,7 @@ import { useState, useEffect, use, useMemo } from "react"
 import { Getshop } from "@/app/types/model"
 import CradShopslug from "@/app/components/cradcustomer/cradshopslug"
 import HeaderCustomers from "@/app/components/layout/headerCustomers"
-import { FilterSearchAndDropdown } from "@/app/components/ui/filter"
+import { FilterSearchAndDropdown1 } from "@/app/components/ui/search/filter1"
 import { PaginationCrad } from "@/app/components/ui/paginationcrad"
 import { useRouter } from "next/navigation"
 
@@ -12,7 +12,7 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
   const { shop_slug } = use(params);
   const [data, setData] = useState<Getshop | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,14 +28,47 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
       .finally(() => setLoading(false))
   }, [shop_slug])
 
-  
+  const filteredProducts = (() => {
+    if (!data?.products) return []
 
-  const allProducts = data?.products ?? []
-  const totalItems = allProducts.length
-  const paginatedProducts = allProducts.slice(
+    let result = [...data.products]
+
+    if (searchTerm.trim() !== "") {
+      result = result.filter((p) =>
+        p.product_name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    if (sortOrder === "lowToHigh") {
+      result.sort((a, b) => a.selling_price - b.selling_price)
+    } else if (sortOrder === "highToLow") {
+      result.sort((a, b) => b.selling_price - a.selling_price)
+    } else {
+      result.sort((a, b) => b.product_id - a.product_id)
+    }
+
+    return result
+  })()
+
+  
+  const totalItems = filteredProducts.length;
+  const paginatedProducts = filteredProducts.slice(
     currentPage * pageSize,
     (currentPage + 1) * pageSize
-  )
+  );
+
+  // เมื่อพิมพ์ค้นหา ให้กลับไปหน้า 1 เสมอ
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [searchTerm, sortOrder]);
+  
+
+  // const allProducts = data?.products ?? []
+  // const totalItems = allProducts.length
+  // const paginatedProducts = allProducts.slice(
+  //   currentPage * pageSize,
+  //   (currentPage + 1) * pageSize
+  // )
 if (loading) return (
   <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee]">
     <p className="text-gray-400">กำลังโหลด...</p>
@@ -47,13 +80,17 @@ if (loading) return (
       <main className='bg-[#f5f3ee] min-h-screen flex flex-col'>
         <HeaderCustomers />
         <section className='w-full h-[200px] bg-gradient-to-r from-[#0d3d30] via-[#1a6b5a] to-[#1d9e75]'>
-          <h1 className='text-white text-center text-[40px] pt-8'>ยินดีต้องรับเข้าสู่ร้าน</h1>
+          <h1 className='text-white text-center text-[40px] pt-8'>ยินดีต้อนรับเข้าสู่ร้าน</h1>
           <p className='text-white text-center text-[40px] pt-2'>{data?.shop_name}</p>
 
         </section>
         <section className='bg-white max-h-auto p-6 m-3 rounded-2xl shadow-md border border-gray-100'>
           <div className="mb-5">
-            <FilterSearchAndDropdown />
+          <FilterSearchAndDropdown1 
+                onSearch={(value) => setSearchTerm(value)} 
+                onSortPrice={(value) => setSortOrder(value)}
+                onFilterType={() => {}} 
+              />
           </div>
           {data?.products && data.products.length > 0 ? (
             <CradShopslug products={paginatedProducts} shop_slug={shop_slug} />

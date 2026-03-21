@@ -12,6 +12,7 @@ type ShopRepository interface {
 	GetShopProducts(shopId uint) ([]models.ShopProducts, error)
 	GetShopProductsByShopID(shopID uint) ([]models.ShopProducts, error)
 	GetByID(id uint) (*models.Shops, error)
+	FindAllActiveShops() ([]models.Shops, error)
 }
 
 type shopRepository struct {
@@ -65,4 +66,14 @@ func (r *shopRepository) GetByID(id uint) (*models.Shops, error) {
 	var shop models.Shops
 	err := r.db.First(&shop, id).Error
 	return &shop, err
+}
+
+func (r *shopRepository) FindAllActiveShops() ([]models.Shops, error) {
+	var shops []models.Shops
+	// ดึงข้อมูลร้านค้า โดยพ่วงข้อมูล User (เจ้าของ) ที่สถานะเป็น 'approved' มาด้วย
+	err := r.db.Preload("User").
+		Joins("JOIN users ON users.id = shops.user_id").
+		Where("users.status = ? AND users.role = ?", "approved", "reseller").
+		Find(&shops).Error
+	return shops, err
 }

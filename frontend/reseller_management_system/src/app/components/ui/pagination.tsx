@@ -22,13 +22,17 @@ export function Pagination<TData>({ table, totalItems, pageSize, onPageSizeChang
   return (
     <div className="flex items-center justify-between px-2 py-4">
       <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           หน้า {currentPage + 1} / {pageCount} ({totalItems} รายการ)
         </span>
         <select
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="text-sm border rounded px-2 py-1 text-gray-600 hover:bg-gray-100"
+          className="text-sm border-2 rounded px-2 py-1 
+            text-gray-600 dark:text-gray-300 
+            border-gray-300 dark:border-gray-600 
+            hover:bg-gray-100 dark:hover:bg-gray-700 
+            transition"
         >
           {[5, 10, 20, 50].map((size) => (
             <option key={size} value={size}>{size} / หน้า</option>
@@ -42,8 +46,8 @@ export function Pagination<TData>({ table, totalItems, pageSize, onPageSizeChang
           disabled={currentPage === 0}
           className={`px-2 py-1 rounded border text-sm transition-colors ${
             table.getCanPreviousPage()
-              ? "text-gray-700 hover:bg-gray-100 cursor-pointer"
-              : "text-gray-300 cursor-not-allowed"
+              ? "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+              : "text-gray-300 dark:text-gray-600 cursor-not-allowed"
           }`}
         >
           {"<"}
@@ -51,15 +55,15 @@ export function Pagination<TData>({ table, totalItems, pageSize, onPageSizeChang
 
         {getPageNumbers().map((page, idx) =>
           page === "..." ? (
-            <span key={`dots-${idx}`} className="px-2 py-1 text-sm text-gray-400">...</span>
+            <span key={`dots-${idx}`} className="px-2 py-1 text-sm text-gray-400 dark:text-gray-500">...</span>
           ) : (
             <button
               key={page}
               onClick={() => table.setPageIndex(Number(page))}
               className={`px-3 py-1 rounded border text-sm ${
                 currentPage === page 
-                ? "bg-[#1a6b5a] text-white border-primary" 
-                : "hover:bg-gray-100"
+                ? "bg-[#1a6b5a] text-white border-emerald-700 dark:bg-emerald-800 dark:border-emerald-600" 
+                : "hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               {Number(page) + 1}
@@ -76,8 +80,8 @@ export function Pagination<TData>({ table, totalItems, pageSize, onPageSizeChang
           disabled={currentPage === pageCount - 1}
           className={`px-2 py-1 rounded border text-sm transition-colors ${
             currentPage !== pageCount - 1
-              ? "text-gray-700 hover:bg-gray-100 cursor-pointer"
-              : "text-gray-300 cursor-not-allowed"
+              ? "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+              : "text-gray-300 dark:text-gray-600 cursor-not-allowed"
           }`}
         >
           {">"}

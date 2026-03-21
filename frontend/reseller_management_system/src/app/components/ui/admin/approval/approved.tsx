@@ -23,7 +23,11 @@ const ApprovedButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-      className="text-[#ffffffff] border border-[] bg-[#0d3d30] hover:bg-[#0d3d30]/80 rounded-sm p-2 cursor-pointer"
+      className="text-white border-2 border-emerald-800 dark:border-emerald-700
+        bg-[#0d3d30] dark:bg-emerald-900
+        hover:bg-[#0d3d30]/80 dark:hover:bg-emerald-800
+        rounded-sm p-2 cursor-pointer transition
+        focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
     >
       อนุมัติ
     </button>

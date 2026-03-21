@@ -13,7 +13,7 @@ export function PaginationCrad({ totalItems, pageSize, onPageSizeChange, current
   const goToPage = (page: number) => onPageChange(page)
 
   const getPageNumbers = () => {
-    if (pageCount <= 5) return Array.from({ length: pageCount }, (_, i) => i)
+    if (pageCount <= 10) return Array.from({ length: pageCount }, (_, i) => i)
     if (currentPage <= 2) return [0, 1, 2, "...", pageCount - 1]
     if (currentPage >= pageCount - 3) return [0, "...", pageCount - 3, pageCount - 2, pageCount - 1]
     return [0, "...", currentPage - 1, currentPage, currentPage + 1, "...", pageCount - 1]
@@ -30,7 +30,7 @@ export function PaginationCrad({ totalItems, pageSize, onPageSizeChange, current
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
           className="text-sm border rounded px-2 py-1 text-gray-600 hover:bg-gray-100"
         >
-          {[5, 10, 20, 50].map((size) => (
+          {[10, 20, 50].map((size) => (
             <option key={size} value={size}>{size} / หน้า</option>
           ))}
         </select>

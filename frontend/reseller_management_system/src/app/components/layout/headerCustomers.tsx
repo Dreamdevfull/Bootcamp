@@ -1,31 +1,31 @@
 // "use client"
-// import React from 'react'
-// import Image from "next/image";
-// import { usePathname } from 'next/navigation';
-// import Link from 'next/link';
+// import { useCart } from "@/app/components/cradcustomer/cartcontext"
+// import { usePathname, useRouter } from "next/navigation"
+// import Link from "next/link"
+// import Image from "next/image"
 
 // const HeaderCustomers = () => {
-//   const pathname = usePathname();
+//   const pathname = usePathname()
+//   const router = useRouter()
 //   const shop_slug = pathname.split("/")[2] ?? ""
+//   const { totalItems } = useCart()  // ✅ ดึง totalItems
+
 //   const sidebarLinkClass = (path: string) =>
 //     `flex mb-0.5 items-center p-2 rounded-lg font-medium w-30 justify-center border border-white/30 hover:bg-[#1a6b5a] hover:text-white transition cursor-pointer ${
-//     pathname === path ? "bg-[#1a6b5a] text-white" : ""}`;
+//       pathname === path ? "bg-[#1a6b5a] text-white" : ""}`
+
 //   return (
 //     <nav className="w-full h-20 bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white flex items-center justify-between px-8 shadow-md">
 //       <div className="flex items-center gap-3">
 //         <div className="w-10 h-10 bg-white/20 rounded-lg">
-//           <Image
-//             src="/bear.webp"
-//             alt="TinyStore Logo"
-//             width={40}
-//             height={40}
-//           />
+//           <Image src="/bear.webp" alt="TinyStore Logo" width={40} height={40} />
 //         </div>
 //         <div>
 //           <h1 className="text-xl font-bold">TinyStore</h1>
 //           <p className="text-xs text-gray-300">Reseller Management System</p>
 //         </div>
 //       </div>
+
 //       <div className="flex gap-4">
 //         <Link href={`/shop/${shop_slug}`}>
 //           <button className={sidebarLinkClass(`/shop/${shop_slug}`)}>หน้าร้าน</button>
@@ -33,10 +33,18 @@
 //         <Link href={`/shop/${shop_slug}/tracking`}>
 //           <button className={sidebarLinkClass(`/shop/${shop_slug}/tracking`)}>ติดตามสินค้า</button>
 //         </Link>
-//         <Link href={`/shop/${shop_slug}/basket`}>
-//         <button type="button" className="flex items-center gap-2 bg-[#ef9f27] text-white border px-6 py-2 rounded-lg hover:bg-[#BA7517] transition cursor-pointer">
-//           <span className="text-[18px]">🛒ตะกร้า (8) </span>
-//         </button></Link>
+//         <button
+//           onClick={() => router.push(`/shop/${shop_slug}/basket`)}
+//           className="flex items-center gap-2 bg-[#EF9F27] text-black border border-black px-6 py-2 rounded-lg hover:bg-[#BA7517] transition cursor-pointer relative"
+//         >
+//           🛒
+//           <span className="text-[18px]">ตะกร้า (
+//             <span className={
+//               totalItems === 0 ? "text-black" : totalItems >= 1 ? "text-red-500" : "text-red" }>
+//                 {totalItems}
+//             </span>)
+//           </span>
+//         </button>
 //       </div>
 //     </nav>
 //   )
@@ -44,80 +52,98 @@
 
 // export default HeaderCustomers
 "use client"
-import React, { useState } from 'react'
-import Image from "next/image";
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import { Menu, X } from 'lucide-react'; // อย่าลืมติดตั้ง lucide-react
+import { useState } from "react"
+import { useCart } from "@/app/components/cradcustomer/cartcontext"
+import { usePathname, useRouter } from "next/navigation"
+import Link from "next/link"
+import Image from "next/image"
+import ThemeToggle from "../drakmode/ThemeToggle"
+
 
 const HeaderCustomers = () => {
-  const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const router = useRouter()
   const shop_slug = pathname.split("/")[2] ?? ""
-
+  const { totalItems } = useCart();
+  
   const sidebarLinkClass = (path: string) =>
-    `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 
-    hover:bg-[#1a6b5a] hover:text-white justify-center w-full md:w-30 
-    ${pathname === path ? "bg-[#1a6b5a] text-white" : ""}`;
+    `flex items-center p-2 rounded-lg font-medium transition cursor-pointer border border-white/30 hover:bg-[#1a6b5a] hover:text-white ${
+      pathname === path ? "bg-[#1a6b5a] text-white" : ""
+    }`
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white shadow-md">
-      {/* Main Container */}
-      <div className="flex items-center justify-between px-4 md:px-8 h-20">
-        
-        {/* Logo Section */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-lg overflow-hidden">
-            <Image
-              src="/bear.webp"
-              alt="TinyStore Logo"
-              width={40}
-              height={40}
-            />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold">TinyStore</h1>
-            <p className="text-[10px] md:text-xs text-gray-300">Reseller Management System</p>
-          </div>
+    <nav className="relative w-full h-20 bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white flex items-center justify-between px-4 md:px-8 shadow-md">
+      <ThemeToggle/>
+      {/* ฝั่งซ้าย: Logo และ ชื่อหัวข้อ (แสดงเสมอ) */}
+      <div className="flex items-center gap-3 z-20">
+        <div className="w-10 h-10 bg-white/20 rounded-lg shrink-0">
+          <Image src="/bear.webp" alt="TinyStore Logo" width={40} height={40} />
         </div>
-
-        {/* Desktop Menu (md ขึ้นไป) */}
-        <div className="hidden md:flex items-center gap-4">
-          <Link href={`/shop/${shop_slug}`}>
-            <button className={sidebarLinkClass(`/shop/${shop_slug}`)}>หน้าร้าน</button>
-          </Link>
-          <Link href={`/shop/${shop_slug}/tracking`}>
-            <button className={sidebarLinkClass(`/shop/${shop_slug}/tracking`)}>ติดตามสินค้า</button>
-          </Link>
-          <Link href={`/shop/${shop_slug}/basket`}>
-            <button type="button" className="flex items-center gap-2 bg-[#ef9f27] text-white px-6 py-2 rounded-lg hover:bg-[#BA7517] transition cursor-pointer">
-              <span className="text-[16px]">🛒ตะกร้า (8)</span>
-            </button>
-          </Link>
-        </div>
-
-        {/* Mobile Buttons (แสดงเฉพาะหน้าจอเล็ก) */}
-        <div className="md:hidden flex items-center gap-3">
-          {/* แสดงปุ่มตะกร้าขนาดเล็กในมือถือเพื่อให้กดง่าย */}
-          <Link href={`/shop/${shop_slug}/basket`}>
-            <button className="bg-[#ef9f27] p-2 rounded-lg text-white">
-              🛒 (8)
-            </button>
-          </Link>
-          <button onClick={() => setIsOpen(!isOpen)} className="p-1">
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+        <div>
+          <h1 className="text-lg md:text-xl font-bold leading-tight">TinyStore</h1>
+          <p className="text-[10px] md:text-xs text-gray-300">Reseller Management System</p>
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
-      {isOpen && (
-        <div className="md:hidden bg-[#0d3d30] border-t border-white/10 px-4 py-4 flex flex-col gap-3">
-          <Link href={`/shop/${shop_slug}`} onClick={() => setIsOpen(false)}>
-            <button className={sidebarLinkClass(`/shop/${shop_slug}`)}>หน้าร้าน</button>
+      {/* ฝั่งขวา: เมนู PC + ตะกร้า + Hamburger */}
+      <div className="flex items-center gap-2 md:gap-4 z-20">
+        
+        {/* เมนูสำหรับ PC (ย้ายมาไว้ด้านขวา) */}
+        <div className="hidden md:flex gap-3">
+          <Link href="/"><button className={sidebarLinkClass("/")}>หน้าหลัก</button></Link>
+          <Link href={`/shop/${shop_slug}`}>
+            <button className={`${sidebarLinkClass(`/shop/${shop_slug}`)} px-4`}>หน้าร้าน</button>
           </Link>
-          <Link href={`/shop/${shop_slug}/tracking`} onClick={() => setIsOpen(false)}>
-            <button className={sidebarLinkClass(`/shop/${shop_slug}/tracking`)}>ติดตามสินค้า</button>
+          <Link href={`/shop/${shop_slug}/tracking`}>
+            <button className={`${sidebarLinkClass(`/shop/${shop_slug}/tracking`)} px-4`}>ติดตามสินค้า</button>
+          </Link>
+        </div>
+
+        {/* ปุ่มตะกร้า (แสดงทั้ง PC และ Mobile) */}
+        <button
+          onClick={() => router.push(`/shop/${shop_slug}/basket`)}
+          className="flex items-center gap-2 bg-[#EF9F27] text-black border border-black px-3 md:px-6 py-2 rounded-lg hover:bg-[#BA7517] transition cursor-pointer relative text-sm md:text-base"
+        >
+          🛒
+          <span className="font-bold">
+            ตะกร้า (
+            <span className={totalItems === 0 ? "text-black" : "text-red-600 font-extrabold"}>
+              {totalItems}
+            </span>)
+          </span>
+        </button>
+
+        {/* ปุ่ม Hamburger (แสดงเฉพาะ Mobile) */}
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="md:hidden p-2 bg-white/10 rounded-lg hover:bg-white/20 transition"
+        >
+          {isMenuOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Menu Dropdown (แสดงเมื่อกด Hamburger) */}
+      {isMenuOpen && (
+        <div className="absolute top-20 left-0 w-full bg-[#0d3d30] border-t border-white/10 p-4 flex flex-col gap-3 md:hidden z-10 shadow-2xl">
+          <Link href="/"><button onClick={() => setIsMenuOpen(false)}>หน้าหลัก</button></Link>
+          <Link href={`/shop/${shop_slug}`} onClick={() => setIsMenuOpen(false)}>
+            <button className={`${sidebarLinkClass(`/shop/${shop_slug}`)} w-full justify-start`}>
+              หน้าร้าน
+            </button>
+          </Link>
+          <Link href={`/shop/${shop_slug}/tracking`} onClick={() => setIsMenuOpen(false)}>
+            <button className={`${sidebarLinkClass(`/shop/${shop_slug}/tracking`)} w-full justify-start`}>
+              ติดตามสินค้า
+            </button>
           </Link>
         </div>
       )}

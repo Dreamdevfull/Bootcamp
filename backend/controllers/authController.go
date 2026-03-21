@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"time"
+
 	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/services"
 
@@ -50,7 +52,15 @@ func (a *AuthController) Register(c fiber.Ctx) error {
 
 func (a *AuthController) Logout(c fiber.Ctx) error {
 
-	c.ClearCookie("jwt")
+	c.Cookie(&fiber.Cookie{
+		Name:     "jwt",
+		Value:    "",                         // ล้างค่าทิ้ง
+		Expires:  time.Now().Add(-time.Hour), // ตั้งวันหมดอายุย้อนหลัง
+		HTTPOnly: true,
+		Secure:   true,  // ต้องเป็น true เหมือนตอน Login
+		SameSite: "Lax", // ต้องเป็น Lax เหมือนตอน Login
+		Path:     "/",   // ต้องเป็น Path เดียวกัน
+	})
 
 	result, err := a.service.Logout()
 
@@ -141,9 +151,10 @@ func (a *AuthController) Login(c fiber.Ctx) error {
 		Name:     "jwt",
 		Value:    result.Token,
 		HTTPOnly: true,
-		Secure:   false,
+		Secure:   true,
 		SameSite: "Lax",
 		MaxAge:   86400,
+		Path:     "/",
 	})
 
 	return c.Status(200).JSON(result)

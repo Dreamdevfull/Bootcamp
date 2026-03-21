@@ -1,8 +1,10 @@
 "use client"
 import { useState } from "react"
 import { Getshop } from "@/app/types/model"
-import PopCustomersOrder from "../ui/popup/popcustomers/order"
+import PopCustomersOrder from "@/app/components/ui/popup/popcustomers/order"
 import React from "react"
+import { useCart } from "@/app/components/cradcustomer/cartcontext"
+
 
 type Product = Getshop["products"][number]
 
@@ -26,6 +28,7 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
+  const { addToCart } = useCart()
 
   const truncateText = (text: string | null | undefined, maxLength: number) => {
     if (!text) return '-'
@@ -82,7 +85,7 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
       {/* ปุ่ม + - */}
       <div className={`flex items-center justify-between mt-auto bg-[#F5F3EE] px-3 py-1 rounded-md ${outOfStock ? "opacity-40" : ""}`}>
         <button
-          className="bg-[#1A6B5A]/40 hover:bg-[#1A6B5A] text-white rounded w-7 h-7 transition disabled:opacity-40"
+          className="w-7 h-7 flex items-center justify-center rounded bg-[#1A6B5A] hover:bg-[#0D3D30] text-white shadow-sm transition cursor-pointer disabled:opacity-30"
           onClick={() => setCount(c => Math.max(1, c - 1))}
           disabled={count === 1 || outOfStock}
         >-</button>
@@ -102,7 +105,17 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
           </div>
         ) : (
           <>
-            <button className="flex-1 bg-[#E1F5EE] border border-[#9FE1CB] text-[#085041] rounded-lg py-2 text-sm hover:bg-[#9FE1CB] cursor-pointer transition">
+            <button
+              onClick={() => addToCart({
+                product_id: item.product_id,
+                product_name: item.product_name,
+                selling_price: item.selling_price,
+                image_url: item.image_url,
+                stock: item.stock,
+                description: item.description,
+              }, count)}
+              className="flex-1 bg-[#E1F5EE] border border-[#9FE1CB] text-[#085041] rounded-lg py-2 text-sm hover:bg-[#9FE1CB] cursor-pointer transition"
+            >
               🛒 เพิ่มลงตะกร้า
             </button>
             <button
@@ -117,6 +130,7 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
 
       {!outOfStock && (
         <PopCustomersOrder
+          key={isOpen ? count : "closed"}
           open={isOpen}
           onClose={handleClose}
           product={{

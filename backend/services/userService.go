@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"github.com/Dreamdevfull/Bootcamp/repositorys"
 )
@@ -11,22 +12,24 @@ import (
 type UserService interface {
 	GetResellers() ([]models.Users, error)
 	UpdateResellerStatus(id string, status string) error
+	GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, error)
+	GetAllActiveResellers() ([]models.Users, error)
 }
 
 type userService struct {
-	resellerRepo repositorys.UserRepository
-	walletRepo   repositorys.WalletRepository
+	userRepo   repositorys.UserRepository
+	walletRepo repositorys.WalletRepository
 }
 
 func NewUserService(r repositorys.UserRepository, w repositorys.WalletRepository) UserService {
 	return &userService{
-		resellerRepo: r,
-		walletRepo:   w,
+		userRepo:   r,
+		walletRepo: w,
 	}
 }
 
 func (s *userService) GetResellers() ([]models.Users, error) {
-	return s.resellerRepo.FindResellers()
+	return s.userRepo.FindResellers()
 }
 
 func (s *userService) UpdateResellerStatus(id string, status string) error {
@@ -40,7 +43,7 @@ func (s *userService) UpdateResellerStatus(id string, status string) error {
 		return errors.New("invalid status: must be pending, approved, or rejected")
 	}
 
-	err := s.resellerRepo.UpdateStatus(id, status)
+	err := s.userRepo.UpdateStatus(id, status)
 	if err != nil {
 		return err
 	}
@@ -62,4 +65,17 @@ func (s *userService) UpdateResellerStatus(id string, status string) error {
 	}
 
 	return nil
+}
+
+func (s *userService) GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, error) {
+
+	return s.userRepo.GetUserRoleAndShop(userID)
+}
+
+func (s *userService) GetAllActiveResellers() ([]models.Users, error) {
+	resellers, err := s.userRepo.GetResellers()
+	if err != nil {
+		return nil, err
+	}
+	return resellers, nil
 }

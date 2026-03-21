@@ -29,8 +29,7 @@ const statusColor: Record<string, string> = {
   completed: "bg-[#E1F5EE] text-[#085041] border-[#9FE1CB]",
 }
 
-const TrackingPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
-  const { shop_slug } = use(params)
+const TrackingPage = () => {
   const searchParams = useSearchParams()
   const [orderNumber, setOrderNumber] = useState(searchParams.get("order") ?? "")
   const [result, setResult] = useState<TrackingResult | null>(null)
@@ -220,12 +219,6 @@ const TrackingPage = ({ params }: { params: Promise<{ shop_slug: string }> }) =>
             กรอกเลขออเดอร์เพื่อติดตามสถานะ
           </div>
         )}
-
-        <div className="mt-4 text-center">
-          <Link href={`/shop/${shop_slug}`} className="text-sm text-[#1A6B5A] hover:underline">
-            ← กลับไปช้อปต่อ
-          </Link>
-        </div>
 
       </div>
     </div>

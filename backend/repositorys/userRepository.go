@@ -3,6 +3,7 @@ package repositorys
 import (
 	"errors"
 
+	"github.com/Dreamdevfull/Bootcamp/dto"
 	"github.com/Dreamdevfull/Bootcamp/models"
 	"gorm.io/gorm"
 )
@@ -12,6 +13,8 @@ type UserRepository interface {
 	Create(user *models.Users) error
 	FindResellers() ([]models.Users, error)
 	UpdateStatus(id string, status string) error
+	GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, error)
+	GetResellers() ([]models.Users, error)
 }
 
 type userRepository struct {
@@ -43,7 +46,8 @@ func (r *userRepository) FindResellers() ([]models.Users, error) {
 	var resellers []models.Users
 
 	err := r.db.Select("id", "name", "email", "phone", "status", "address", "created_at").
-		Where("role = ?", "reseller").
+		Where("role = ? AND status != ?", "reseller", "rejected").
+		Order("created_at DESC").
 		Find(&resellers).Error
 
 	return resellers, err
@@ -63,4 +67,27 @@ func (r *userRepository) UpdateStatus(id string, status string) error {
 	}
 
 	return nil
+}
+
+func (r *userRepository) GetUserRoleAndShop(userID uint) (*dto.UserShopInfo, error) {
+
+	var result dto.UserShopInfo
+
+	err := r.db.Table("users").
+		Select("users.role, shops.shop_name").
+		Joins("left join shops on shops.user_id = users.id").
+		Where("users.id = ?", userID).
+		Scan(&result).Error
+
+	return &result, err
+}
+
+func (r *userRepository) GetResellers() ([]models.Users, error) {
+	var resellers []models.Users
+	// ดึงเฉพาะ Field ที่จำเป็นเพื่อความปลอดภัย (ห้ามดึง Password)
+	err := r.db.Where("role = ? AND status = ?", "reseller", "approved").
+		Select("id, name, shop_name, phone, address, email").
+		Find(&resellers).Error
+
+	return resellers, err
 }
