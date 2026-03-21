@@ -32,7 +32,7 @@ const CatalogPage = () => {
     fetchData();
   },[]);
   return (
-    <div className="min-h-screen bg-[#F5F3EE]">
+    <div className="min-h-screen bg-[#F5F3EE] dark:bg-[#1a1a18]">
       <HeaderReseller/>
       <Main main={mockmain}/>
       <div className='px-8 py-5'>
