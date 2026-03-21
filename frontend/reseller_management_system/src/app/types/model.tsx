@@ -37,6 +37,18 @@ export interface Orders {
   }[];
 }
 
+export interface ShopStats {
+  data: {
+    total_sales: number;
+    total_profit: number;
+    total_orders: number;
+    pending_orders: number;
+    completed_orders: number;
+    updated_at: string;
+  };
+  status: string;
+}
+
 export interface Approval {
   id: number;
   name: string;
@@ -132,15 +144,4 @@ export interface Getshop {
     selling_price: number;
     stock: number;
   }[]
-}
-export interface ShopStats {
-  data: {
-    total_sales: number;
-    total_profit: number;
-    total_orders: number;
-    pending_orders: number;
-    completed_orders: number;
-    updated_at: string;
-  };
-  status: string;
 }
