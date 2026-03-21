@@ -213,6 +213,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import PopCustomersOrder from "@/app/components/ui/popup/popcustomers/order"
+import ThemeToggle from "@/app/components/drakmode/ThemeToggle"
 
 const BasketPage = () => {
   const pathname = usePathname()
@@ -234,7 +235,7 @@ const BasketPage = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F3EE] dark:bg-gray-950 font-sans transition-colors duration-200">
-
+      <ThemeToggle/>
       {/* Header */}
       <header className="bg-gradient-to-r from-[#0D3D30] via-[#1A6B5A] to-[#1D9E75] dark:from-gray-900 dark:via-emerald-950 dark:to-emerald-900 text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
