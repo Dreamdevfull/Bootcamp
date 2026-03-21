@@ -88,7 +88,7 @@ const ProductsPage = () => {
   const columns = productColumns(fetchData);
 
   return (
-    <div className="min-h-screen bg-[#F5F3EE] dark:bg-gray-950 transition-colors duration-200">
+    <div className="min-h-screen bg-[#F5F3EE] dark:bg-[#1a1a18] transition-colors duration-200">
       <HeaderAdmin />
       <Main main={mockmain} />
 

@@ -700,7 +700,7 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className='min-h-screen bg-[#F5F3EE] dark:bg-gray-950 transition-colors duration-200'>
+    <div className='min-h-screen bg-[#F5F3EE] dark:bg-[#1a1a18] transition-colors duration-200'>
       <HeaderAdmin />
 
       <div className="flex items-center gap-3 mx-8 mt-6 mb-2">

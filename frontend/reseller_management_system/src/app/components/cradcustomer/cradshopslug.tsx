@@ -38,7 +38,7 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
   const outOfStock = item.stock === 0
 
   return (
-    <div className='bg-white p-4 border border-[#D3D1C7] rounded-xl shadow-sm hover:shadow-md flex flex-col h-full transition duration-200'>
+    <div className='bg-white dark:bg-gray-800 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md flex flex-col h-full transition duration-200'>
 
       {/* รูปสินค้า */}
       <div className="relative w-full h-50 mb-3">
@@ -49,15 +49,15 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
             className={`w-full h-full object-cover rounded-lg ${outOfStock ? "opacity-60" : ""}`}
           />
         ) : (
-          <div className={`w-full h-full bg-[#F5F3EE] rounded-lg flex items-center justify-center text-[#888780] ${outOfStock ? "opacity-60" : ""}`}>
+          <div className={`w-full h-full bg-[#F5F3EE] dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 ${outOfStock ? "opacity-60" : ""}`}>
             ไม่มีรูป
           </div>
         )}
 
         {/* overlay สินค้าหมด */}
         {outOfStock && (
-          <div className="absolute inset-0 bg-[#2C2C2A]/50 rounded-lg flex items-center justify-center">
-            <span className="font-bold text-sm px-3 py-1 rounded-full bg-[#FCEBEB] text-[#791F1F] border border-[#F7C1C1]">
+          <div className="absolute inset-0 bg-gray-900/50 dark:bg-black/70 rounded-lg flex items-center justify-center">
+            <span className="font-bold text-sm px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border-2 border-rose-300 dark:border-rose-700">
               สินค้าหมด
             </span>
           </div>
@@ -65,33 +65,33 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
       </div>
 
       {/* ชื่อสินค้า */}
-      <p className="text-sm font-medium line-clamp-2 text-[#2C2C2A]" title={item.product_name}>
+      <p className="text-sm font-medium line-clamp-2 text-gray-800 dark:text-gray-100" title={item.product_name}>
         {truncateText(item.product_name ?? "-", 30)}
       </p>
 
       {/* คำอธิบาย */}
-      <p className="text-[#888780] text-sm" title={item.description}>
+      <p className="text-gray-500 dark:text-gray-400 text-sm" title={item.description}>
         {truncateText(item.description ?? "-", 60)}
       </p>
 
       {/* ราคา + stock */}
       <div className="flex justify-between items-center mt-2">
-        <span className="text-[#1A6B5A] font-semibold text-lg">฿{item.selling_price}</span>
-        <span className={`text-xs ${outOfStock ? "text-[#791F1F]" : "text-[#888780]"}`}>
+        <span className="text-emerald-700 dark:text-emerald-400 font-semibold text-lg">฿{item.selling_price}</span>
+        <span className={`text-xs ${outOfStock ? "text-rose-700 dark:text-rose-400" : "text-gray-500 dark:text-gray-400"}`}>
           {outOfStock ? "หมด" : `เหลือ ${item.stock}`}
         </span>
       </div>
 
       {/* ปุ่ม + - */}
-      <div className={`flex items-center justify-between mt-auto bg-[#F5F3EE] px-3 py-1 rounded-md ${outOfStock ? "opacity-40" : ""}`}>
+      <div className={`flex items-center justify-between mt-auto bg-[#F5F3EE] dark:bg-gray-700 px-3 py-1 rounded-md ${outOfStock ? "opacity-40" : ""}`}>
         <button
-          className="w-7 h-7 flex items-center justify-center rounded bg-[#1A6B5A] hover:bg-[#0D3D30] text-white shadow-sm transition cursor-pointer disabled:opacity-30"
+          className="w-7 h-7 flex items-center justify-center rounded bg-emerald-700 dark:bg-emerald-800 hover:bg-emerald-900 dark:hover:bg-emerald-900 text-white shadow-sm transition cursor-pointer disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
           onClick={() => setCount(c => Math.max(1, c - 1))}
           disabled={count === 1 || outOfStock}
         >-</button>
-        <span className='text-[#085041] font-medium'>{count}</span>
+        <span className='text-emerald-700 dark:text-emerald-400 font-medium'>{count}</span>
         <button
-          className="bg-[#1A6B5A] hover:bg-[#1A6B5A]/70 text-white rounded w-7 h-7 transition disabled:opacity-40"
+          className="bg-emerald-700 dark:bg-emerald-800 hover:bg-emerald-700/70 dark:hover:bg-emerald-700 text-white rounded w-7 h-7 transition disabled:opacity-40 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
           onClick={() => setCount(c => Math.min(item.stock, c + 1))}
           disabled={count === item.stock || outOfStock}
         >+</button>
@@ -100,7 +100,7 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
       {/* ปุ่มซื้อ */}
       <div className="flex gap-2 mt-3">
         {outOfStock ? (
-          <div className="flex-1 bg-[#FCEBEB] border border-[#F7C1C1] text-[#791F1F] rounded-lg py-2 text-sm text-center font-medium">
+          <div className="flex-1 bg-rose-50 dark:bg-rose-950 border-2 border-rose-300 dark:border-rose-700 text-rose-700 dark:text-rose-300 rounded-lg py-2 text-sm text-center font-medium">
             สินค้าหมด
           </div>
         ) : (
@@ -114,13 +114,13 @@ function ProductItem({ item, shop_slug }: { item: Product, shop_slug: string }) 
                 stock: item.stock,
                 description: item.description,
               }, count)}
-              className="flex-1 bg-[#E1F5EE] border border-[#9FE1CB] text-[#085041] rounded-lg py-2 text-sm hover:bg-[#9FE1CB] cursor-pointer transition"
+              className="flex-1 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 rounded-lg py-2 text-sm hover:bg-emerald-100 dark:hover:bg-emerald-900 cursor-pointer transition focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
             >
               🛒 เพิ่มลงตะกร้า
             </button>
             <button
               onClick={() => setIsOpen(true)}
-              className="flex-1 bg-[#EF9F27] text-white rounded-lg py-2 text-sm hover:bg-[#BA7517] cursor-pointer transition"
+              className="flex-1 bg-amber-500 dark:bg-amber-600 text-white rounded-lg py-2 text-sm hover:bg-amber-600 dark:hover:bg-amber-700 cursor-pointer transition focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
             >
               ซื้อสินค้า
             </button>
