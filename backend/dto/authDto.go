@@ -25,9 +25,10 @@ type LoginResponse struct {
 }
 
 type UserSummary struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
-	Role string `json:"role"`
+	ID     uint   `json:"id"`
+	Name   string `json:"name"`
+	Role   string `json:"role"`
+	Status string `json:"status"`
 }
 
 type LogoutResponse struct {
