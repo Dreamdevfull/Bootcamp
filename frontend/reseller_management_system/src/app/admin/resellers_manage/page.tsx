@@ -5,7 +5,7 @@ import { DataTable } from '@/app/components/ui/datatable'
 import { getResellerColumns } from '@/app/components/columnsadmin/resellersmanage';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Approval as ApprovalType } from '@/app/types/model';
-import { FilterSearchAndDropdown } from '@/app/components/ui/filter';
+import { FilterSearchAndDropdown } from '@/app/components/ui/search/filter';
 
 const mockmain = {
   text1: "อนุมัติตัวแทน",

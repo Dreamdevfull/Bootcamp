@@ -9,7 +9,7 @@ import {
 import Main from "@/app/components/layout/main";
 import { Product as ProductType } from "@/app/types/model";
 import PopAddProducts from "@/app/components/ui/popup/popadmin/addproducts";
-import { FilterSearchAndDropdown } from "@/app/components/ui/filter";
+import { FilterSearchAndDropdown } from "@/app/components/ui/search/filter";
 
 const ProductsPage = () => {
   const [data, setData] = useState<ProductType[]>([]);

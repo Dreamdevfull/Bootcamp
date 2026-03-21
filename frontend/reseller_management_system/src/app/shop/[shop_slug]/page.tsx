@@ -4,7 +4,7 @@ import { useState, useEffect, use, useMemo } from "react"
 import { Getshop } from "@/app/types/model"
 import CradShopslug from "@/app/components/cradcustomer/cradshopslug"
 import HeaderCustomers from "@/app/components/layout/headerCustomers"
-import { FilterSearchAndDropdown } from "@/app/components/ui/filter"
+import { FilterSearchAndDropdown } from "@/app/components/ui/search/filter"
 import { PaginationCrad } from "@/app/components/ui/paginationcrad"
 import { useRouter } from "next/navigation"
 
@@ -27,29 +27,28 @@ const ShopPage = ({ params }: { params: Promise<{ shop_slug: string }> }) => {
       })
       .finally(() => setLoading(false))
   }, [shop_slug])
-  const filteredProducts = useMemo(() => {
-    if (!data?.products) return [];
 
-    let result = [...data.products];
+  const filteredProducts = (() => {
+    if (!data?.products) return []
+
+    let result = [...data.products]
 
     if (searchTerm.trim() !== "") {
       result = result.filter((p) =>
         p.product_name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      )
     }
 
-   
     if (sortOrder === "lowToHigh") {
-      result.sort((a, b) => a.selling_price - b.selling_price);
+      result.sort((a, b) => a.selling_price - b.selling_price)
     } else if (sortOrder === "highToLow") {
-      result.sort((a, b) => b.selling_price - a.selling_price);
+      result.sort((a, b) => b.selling_price - a.selling_price)
     } else {
-      
-      result.sort((a, b) =>b.product_id - a.product_id);
+      result.sort((a, b) => b.product_id - a.product_id)
     }
 
-    return result;
-  }, [data?.products, searchTerm, sortOrder]);
+    return result
+  })()
 
   
   const totalItems = filteredProducts.length;

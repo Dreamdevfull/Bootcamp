@@ -2,7 +2,7 @@
 import { Catalog as CatalogType } from '@/app/types/model'
 import AddProducts from '../ui/popup/popresellers/addproducts'
 import React, { useState, useMemo} from 'react'
-import { FilterSearchAndDropdown } from '../ui/filter'
+import { FilterSearchAndDropdown } from '../ui/search/filter'
 import { PaginationCrad } from '../ui/paginationcrad'
  
 interface CatalogCardProps {
