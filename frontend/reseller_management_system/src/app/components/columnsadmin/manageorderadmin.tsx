@@ -8,11 +8,11 @@ const truncateText = (text: string | null | undefined, maxLength: number) => {
     if (!text) return '-'; 
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
-
+const headerStyle = "bg-gray-50 dark:bg-teal-900/20 py-3 font-semibold text-gray-700 dark:text-teal-100";
 export const ManageOrderAdmin=  (onSuccess: () => void): ColumnDef<Orders>[] => [
   {
     accessorKey: "create_at",
-    header: () => <div className="text-center">เวลาสั่งซื้อ</div>,
+    header: () => <div className="bg-gray-50 dark:bg-teal-900/20 text-center ">เวลาสั่งซื้อ</div>,
     cell: ({ row }) => {
       const date = row.original.created_at;
       console.log(date);
@@ -66,14 +66,14 @@ export const ManageOrderAdmin=  (onSuccess: () => void): ColumnDef<Orders>[] => 
   // },
   {
     id: "order_items",
-    header: () => <div>สินค้า(จำนวน)</div>,
+    header: () => <div >สินค้า(จำนวน)</div>,
     cell: ({ row }) => {
       const items = row.original.order_items
       const preview = items.slice(0, 2)
       const remaining = items.length - 2
 
       return (
-        <div>
+        <div className="flex flex-col justify-start min-h-[50px] leading-tight">
           {preview.map((item, index) => (
             <div key={index}
               title={item.product_name}>{truncateText(item.product_name ?? "-", 30)} ({item.quantity})
@@ -130,7 +130,7 @@ export const ManageOrderAdmin=  (onSuccess: () => void): ColumnDef<Orders>[] => 
 
       if (status === "pending") {
         return(
-          <div className="flex gap-2 justify-center text-[#633806]">
+          <div className="text-xs text-amber-600 font-medium italic">
             รอการชําระเงิน
           </div>
         )
