@@ -247,23 +247,14 @@ const FromLogin = () => {
 
   return (
     <main className="flex-1 flex justify-center items-center p-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-[503px] h-[472px] bg-white rounded-2xl shadow-md border border-gray-200 p-8"
-      >
-        <h1 className="text-[#0d3d30] text-[28px] text-center font-bold">
-          เข้าสู่ระบบ
-        </h1>
-        <p className="text-[#000000] text-[16px] text-center mt-2">
-          เข้าสู่ระบบเพื่อจัดการระบบทั้งหมด
-        </p>
-
+      
+      <form onSubmit={handleSubmit} className="w-[503px] h-[472px] bg-white dark:bg-gray-900 dark:border-gray-700 rounded-2xl shadow-md border border-gray-200 p-8">
+        <h1 className='text-[#0d3d30] dark:text-emerald-400 text-[28px] text-center font-bold'>เข้าสู่ระบบ</h1>
+        <p className='text-[#000000] dark:text-gray-300 text-[16px] text-center mt-2'>เข้าสู่ระบบเพื่อจัดการระบบทั้งหมด</p>
+        
         <div className="w-full">
-          <label
-            htmlFor="email"
-            className="block text-[16px] text-[#000000] mb-1 mt-16"
-          >
-            อีเมล <span className="text-red-500">*</span>
+          <label htmlFor="email" className="block text-[16px] text-[#000000] dark:text-gray-200 mb-1 mt-16">
+            อีเมล <span className='text-red-500 dark:text-red-400'>*</span>
           </label>
           <input
             id="email"
@@ -271,17 +262,14 @@ const FromLogin = () => {
             placeholder="test@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0d3d30] transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0d3d30] transition dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 dark:placeholder-gray-500 dark:focus:ring-emerald-500"
             required
           />
         </div>
 
         <div className="w-full">
-          <label
-            htmlFor="password"
-            className="block text-[16px] text-[#000000] mb-1 mt-4"
-          >
-            รหัสผ่าน <span className="text-red-500">*</span>
+          <label htmlFor="password" className="block text-[16px] text-[#000000] mb-1 mt-4 dark:text-gray-200">
+            รหัสผ่าน <span className='text-red-500 dark:text-red-400'>*</span>
           </label>
           <input
             id="password"
@@ -289,7 +277,7 @@ const FromLogin = () => {
             placeholder="*******"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0d3d30] transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0d3d30] transition dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 dark:placeholder-gray-500 dark:focus:ring-emerald-500"
             required
           />
         </div>
@@ -297,7 +285,7 @@ const FromLogin = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#1a6b5a] hover:bg-[#1a5a4a] text-white text-[20px] font-bold py-3 rounded-lg transition-all duration-300 shadow-md mt-14 cursor-pointer disabled:bg-gray-400"
+          className="w-full bg-[#1a6b5a] hover:bg-[#1a5a4a] text-white text-[20px] font-bold py-3 rounded-lg transition-all duration-300 shadow-md mt-14 cursor-pointer disabled:bg-gray-400 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:disabled:bg-gray-600 dark:focus:ring-emerald-400"
         >
           {loading ? "กำลังตรวจสอบ..." : "เข้าสู่ระบบ"}
         </button>
@@ -307,3 +295,200 @@ const FromLogin = () => {
 };
 
 export default FromLogin;
+// "use client"
+// import React, { useState } from 'react'
+// import { useRouter, useSearchParams } from "next/navigation"
+// import Swal from 'sweetalert2'
+
+// const FromLogin = () => {
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const router = useRouter();
+//   const [loading, setLoading] = useState(false);
+//   const searchParams = useSearchParams();
+//   const callbackUrl = searchParams.get("callbackUrl") || "";
+
+//   const URL = process.env.NEXT_PUBLIC_API_URL;
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault()
+//     setLoading(true)
+
+//     try {
+//       const res = await fetch(`${URL}/login`, {
+//         method: "POST",
+//         credentials: "include",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email, password }),
+//       })
+
+//       const result = await res.json()
+
+//       if (res.ok) {
+//         await Swal.fire({
+//           title: 'เข้าสู่ระบบสำเร็จ',
+//           icon: 'success',
+//           iconColor: '#1a6b5a',
+//           showConfirmButton: false,
+//           timer: 1500,
+//           padding: '3rem',
+//           color: '#0d3d30',
+//           background: '#ffffff',
+//           backdrop: `rgba(13, 61, 48, 0.4)`,
+//         });
+
+//         if (callbackUrl && callbackUrl.startsWith("/") && callbackUrl !== "/login") {
+//           router.push(callbackUrl);
+//           return;
+//         }
+
+//         const user = result.user;
+//         if (user.role === "admin") {
+//           router.push("/admin/dashboard");
+//         } else if (user.role === "reseller") {
+//           router.push("/resellers/dashboard");
+//         } else {
+//           Swal.fire({
+//             icon: 'error',
+//             title: 'บทบาทไม่ถูกต้อง',
+//             text: 'คุณไม่มีสิทธิ์เข้าถึงระบบนี้',
+//             confirmButtonColor: '#1a6b5a'
+//           });
+//           router.push("/");
+//         }
+//       } else {
+//         Swal.fire({
+//           icon: 'error',
+//           title: 'เข้าสู่ระบบไม่สำเร็จ',
+//           text: result.message || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
+//           confirmButtonColor: '#1a6b5a'
+//         });
+//       }
+//     } catch (err) {
+//       console.error("catch error:", err)
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'เกิดข้อผิดพลาด',
+//         text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง',
+//         confirmButtonColor: '#1a6b5a'
+//       });
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   return (
+//     <main className="flex-1 flex justify-center items-center p-4">
+//       <form
+//         onSubmit={handleSubmit}
+//         aria-label="แบบฟอร์มเข้าสู่ระบบ"
+//         className="w-full max-w-[503px] 
+//                    bg-white dark:bg-gray-900 
+//                    rounded-2xl shadow-md 
+//                    border-2 border-gray-200 dark:border-gray-700 
+//                    p-8"
+//       >
+//         {/* หัวข้อ */}
+//         <h1 className="text-[#0d3d30] dark:text-emerald-400 text-[28px] text-center font-bold">
+//           เข้าสู่ระบบ
+//         </h1>
+//         <p className="text-gray-600 dark:text-gray-300 text-[16px] text-center mt-2">
+//           เข้าสู่ระบบเพื่อจัดการระบบทั้งหมด
+//         </p>
+
+//         {/* อีเมล */}
+//         <div className="w-full mt-10">
+//           <label
+//             htmlFor="email"
+//             className="block text-[16px] font-semibold text-gray-700 dark:text-gray-200 mb-1"
+//           >
+//             อีเมล <span className="text-red-500 dark:text-red-400" aria-label="จำเป็น">*</span>
+//           </label>
+//           <input
+//             id="email"
+//             type="email"
+//             placeholder="test@example.com"
+//             value={email}
+//             onChange={(e) => setEmail(e.target.value)}
+//             autoComplete="email"
+//             aria-required="true"
+//             aria-label="กรอกอีเมลของคุณ"
+//             className="w-full px-4 py-3 text-[16px]
+//                        bg-white dark:bg-gray-800
+//                        text-gray-900 dark:text-gray-100
+//                        border-2 border-gray-300 dark:border-gray-600
+//                        rounded-lg
+//                        placeholder-gray-400 dark:placeholder-gray-500
+//                        focus:outline-none 
+//                        focus:ring-2 focus:ring-[#0d3d30] dark:focus:ring-emerald-500
+//                        focus:border-transparent
+//                        transition"
+//             required
+//           />
+//         </div>
+
+//         {/* รหัสผ่าน */}
+//         <div className="w-full mt-5">
+//           <label
+//             htmlFor="password"
+//             className="block text-[16px] font-semibold text-gray-700 dark:text-gray-200 mb-1"
+//           >
+//             รหัสผ่าน <span className="text-red-500 dark:text-red-400" aria-label="จำเป็น">*</span>
+//           </label>
+//           <input
+//             id="password"
+//             type="password"
+//             placeholder="กรอกรหัสผ่าน"
+//             value={password}
+//             onChange={(e) => setPassword(e.target.value)}
+//             autoComplete="current-password"
+//             aria-required="true"
+//             aria-label="กรอกรหัสผ่านของคุณ"
+//             className="w-full px-4 py-3 text-[16px]
+//                        bg-white dark:bg-gray-800
+//                        text-gray-900 dark:text-gray-100
+//                        border-2 border-gray-300 dark:border-gray-600
+//                        rounded-lg
+//                        placeholder-gray-400 dark:placeholder-gray-500
+//                        focus:outline-none
+//                        focus:ring-2 focus:ring-[#0d3d30] dark:focus:ring-emerald-500
+//                        focus:border-transparent
+//                        transition"
+//             required
+//           />
+//         </div>
+
+//         {/* ปุ่ม */}
+//         <button
+//           type="submit"
+//           disabled={loading}
+//           aria-busy={loading}
+//           aria-label={loading ? "กำลังตรวจสอบข้อมูล" : "เข้าสู่ระบบ"}
+//           className="w-full mt-10
+//                      bg-[#1a6b5a] hover:bg-[#155a4a] 
+//                      dark:bg-emerald-600 dark:hover:bg-emerald-700
+//                      disabled:bg-gray-400 dark:disabled:bg-gray-600
+//                      text-white text-[18px] font-bold 
+//                      py-3 rounded-lg 
+//                      transition-all duration-300 
+//                      shadow-md cursor-pointer
+//                      focus:outline-none focus:ring-4 
+//                      focus:ring-[#0d3d30] dark:focus:ring-emerald-400
+//                      focus:ring-offset-2"
+//         >
+//           {loading ? (
+//             <span className="flex items-center justify-center gap-2">
+//               <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+//                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+//                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+//               </svg>
+//               กำลังตรวจสอบ...
+//             </span>
+//           ) : "เข้าสู่ระบบ"}
+//         </button>
+//       </form>
+//     </main>
+//   )
+// }
+
+// export default FromLogin;

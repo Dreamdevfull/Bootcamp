@@ -11,6 +11,7 @@ type Shops struct {
 	User_id   uint   `json:"users_id" gorm:"ForeignKey:users_id"`
 	Shop_name string `json:"shop_name"`
 	Shop_slug string `json:"shop_slug" gorm:"uniqueIndex:idx_shop_slug;not null"`
+	User      Users  `json:"user" gorm:"foreignKey:User_id"`
 }
 
 type Products struct {

@@ -111,7 +111,12 @@ const SoftDeleteButton = ({ id, onSuccess }: Props) => {
   return (
     <button
       onClick={handleClick}
-      className="bg-[#FCEBEB] text-[#791F1F] border border-[#F7C1C1] rounded-lg hover:bg-[#F7C1C1] transition cursor-pointer px-4 py-2"
+      className="bg-rose-50 dark:bg-rose-950
+        text-rose-700 dark:text-rose-300
+        border-2 border-rose-300 dark:border-rose-700
+        rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900
+        transition cursor-pointer px-4 py-2
+        focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-2"
     >
       ลบ
     </button>

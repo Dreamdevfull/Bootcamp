@@ -136,20 +136,19 @@ function ActionCell({ id, name, image_url, description, cost_price, min_price, s
   
   return (
     <div className="flex items-center justify-center gap-2">
-      <button 
-        onClick={() => setOpen(true)} 
-        className='text-[#ffffff] border bg-[#1b9e75] hover:bg-[#1a6b5a] hover:text-[#FAEEDA] rounded-lg px-5 py-2 cursor-pointer transition'
-      >
+      <button onClick={() => setOpen(true)} className='text-white border-2 border-emerald-600 dark:border-emerald-500
+        bg-emerald-600 dark:bg-emerald-700
+        hover:bg-emerald-700 dark:hover:bg-emerald-800
+        hover:text-amber-100
+        rounded-lg px-5 py-2 cursor-pointer transition
+        focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2'>
         แก้ไข
       </button>
       <PopEditProducts 
         id={id}
         open={open}
-        onClose={() => setOpen(false)}
-        onSuccess={() => {
-          setOpen(false);
-          onSuccess();
-        }}
+        onClose={() => { setOpen(false); }}
+        onSuccess={onSuccess}
         image_url={image_url}
         description={description}
         cost_price={cost_price}
@@ -164,8 +163,8 @@ function ActionCell({ id, name, image_url, description, cost_price, min_price, s
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const truncateText = (text: string | null | undefined, maxLength: number) => {
-    if (!text) return '-'; 
-    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  if (!text) return '-';
+  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 };
 
 export const productColumns = (onSuccess: () => void): ColumnDef<ProductType>[] => [
@@ -229,20 +228,8 @@ export const productColumns = (onSuccess: () => void): ColumnDef<ProductType>[] 
     header: () => <div className="text-center">จัดการ</div>, 
     cell: ({ row }) => (
       <div className="flex items-center justify-center gap-2">
-       
-        <ActionCell 
-            id={row.original.id} 
-            name={row.original.name} 
-            image_url={row.original.image_url} 
-            description={row.original.description} 
-            cost_price={row.original.cost_price} 
-            min_price={row.original.min_price} 
-            stock={row.original.stock} 
-            onSuccess={onSuccess} 
-        />
-        
-        
-        <SoftDeleteButton id={row.original.id} onSuccess={onSuccess}/>
+        <ActionCell id={row.original.id} name={row.original.name} image_url={row.original.image_url} description={row.original.description} cost_price={row.original.cost_price} min_price={row.original.min_price} stock={row.original.stock} onSuccess={onSuccess} />
+        <SoftDeleteButton id={row.original.id} onSuccess={onSuccess} />
       </div>
     ),
   },

@@ -72,3 +72,18 @@ func (ctrl *UserController) GetMyStatus(c fiber.Ctx) error {
 
 	return c.Status(200).JSON(result)
 }
+
+func (ctrl *UserController) GetActiveResellers(c fiber.Ctx) error {
+	resellers, err := ctrl.service.GetAllActiveResellers()
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"error": "ไม่สามารถดึงข้อมูลร้านค้าตัวแทนได้",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status": "success",
+		"total":  len(resellers),
+		"data":   resellers,
+	})
+}

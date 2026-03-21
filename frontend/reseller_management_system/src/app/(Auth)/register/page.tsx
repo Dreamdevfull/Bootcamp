@@ -52,7 +52,7 @@ const RegisterPage = () => {
 
   return (
     <>
-    <div className="min-h-screen bg-[#F5F3EE]">
+    <div className="min-h-screen bg-[#F5F3EE] dark:bg-[#1a1a18]">
       <Header/>
       <div className="flex w-full max-w-lg mx-auto mt-2">
         <Suspense fallback={<div>Loading...</div>}>

@@ -47,7 +47,9 @@ import Image from "next/image";
 import Link from 'next/link';
 import { useState } from 'react'; // เพิ่ม useState สำหรับเปิด-ปิดเมนู
 import { Menu, X } from 'lucide-react'; // อย่าลืม npm install lucide-react
-import { ThemeToggle } from '../drakmode/ThemeToggle';
+import { ThemeProvider } from 'next-themes';
+import ThemeToggle from '../drakmode/ThemeToggle';
+
 
 const Header = () => {
   const pathname = usePathname();
@@ -58,9 +60,9 @@ const Header = () => {
     pathname === path ? "bg-[#1a6b5a] text-white" : ""}`;
 
   return (
-  <div>
     <nav className="sticky top-0 z-50 w-full bg-gradient-to-r from-[#1d9e75] via-[#1a6b5a] to-[#0d3d30] text-white shadow-md">
       {/* Main Container */}
+      <ThemeToggle/>
       <div className="flex items-center justify-between px-8 h-20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white/20 rounded-lg overflow-hidden">
@@ -80,6 +82,7 @@ const Header = () => {
         {/* Desktop Menu - ซ่อนเมื่อจอเล็ก (hidden) และแสดงเมื่อ md ขึ้นไป (md:flex) */}
         <div className="hidden md:flex gap-4">
             <Link href="/"><button className={sidebarLinkClass("/")}>หน้าหลัก</button></Link>
+            <Link href="/shop"><button className={sidebarLinkClass("/shop")}>ร้านค้า</button></Link>
             <Link href="/login"><button className={sidebarLinkClass("/login")}>เข้าสู่ระบบ</button></Link>
             <Link href="/register"><button className={sidebarLinkClass("/register")}>สมัครตัวแทน</button></Link>
         </div>
@@ -98,6 +101,9 @@ const Header = () => {
           <Link href="/" onClick={() => setIsOpen(false)}>
             <button className={sidebarLinkClass("/")}>หน้าหลัก</button>
           </Link>
+          <Link href="/shop" onClick={() => setIsOpen(false)}>
+            <button className={sidebarLinkClass("/shop")}>ร้านค้า</button>
+          </Link>
           <Link href="/login" onClick={() => setIsOpen(false)}>
             <button className={sidebarLinkClass("/login")}>เข้าสู่ระบบ</button>
           </Link>
@@ -107,7 +113,6 @@ const Header = () => {
         </div>
       )}
     </nav>
-  </div>
   )
 }
 
