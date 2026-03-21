@@ -38,39 +38,28 @@ func NewOrderService(
 func (s *orderService) GetOrders() ([]models.Orders, error) {
 	return s.repo.FindAll()
 }
-
 func (s *orderService) QuickComplete(orderID int) error {
-
 	order, err := s.repo.FindByID(orderID)
 	if err != nil {
 		return err
 	}
 
-	if order.Status == "completed" {
-		return errors.New("ออเดอร์นี้บันทึกกำไรไปเรียบร้อยแล้ว")
+	if order.Status != "pending" {
+		return errors.New("ออเดอร์นี้ไม่ได้อยู่ในสถานะรอดำเนินการ")
 	}
 
-	shop, err := s.shopRepo.GetByID(uint(order.Shop_id))
-	if err != nil {
-		return fmt.Errorf("ไม่พบร้านค้าที่เกี่ยวข้องกับออเดอร์นี้: %v", err)
-	}
-
-	items, err := s.repo.GetItemsByOrderID(orderID)
-	if err != nil {
-		return err
-	}
-
+	items, _ := s.repo.GetItemsByOrderID(orderID)
 	var totalProfit float64
 	for _, item := range items {
-		profitPerItem := item.Selling_price - item.Cost_price
-		totalProfit += profitPerItem * float64(item.Quantity)
+		totalProfit += (item.Selling_price - item.Cost_price) * float64(item.Quantity)
+	}
+
+	shop, _ := s.shopRepo.GetByID(uint(order.Shop_id))
+	if err := s.walletRepo.AddBalance(int(shop.User_id), totalProfit, uint(orderID)); err != nil {
+		return err
 	}
 
 	if err := s.repo.UpdateStatus(orderID, "completed"); err != nil {
-		return err
-	}
-
-	if err := s.walletRepo.AddBalance(int(shop.User_id), totalProfit, uint(orderID)); err != nil {
 		return err
 	}
 
@@ -133,8 +122,8 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		return nil, errors.New("ไม่พบออเดอร์")
 	}
 
-	if order.Status != "pending" {
-		return nil, errors.New("ออเดอร์นี้ได้ทำการชำระเงินเรียบร้อยแล้ว")
+	if order.Status == "shipped" || order.Status == "completed" {
+		return nil, errors.New("ออเดอร์นี้ได้ทำการส่งของหรือเสร็จสิ้นไปเรียบร้อยแล้ว")
 	}
 
 	for _, item := range order.OrderItems {
@@ -143,9 +132,7 @@ func (s *orderService) ConfirmPayment(orderID uint) (*models.Orders, error) {
 		}
 	}
 
-	// BR-28: อัปเดตสถานะเป็น completed (หรือตาม ENUM ที่คุณตั้ง)
-	order.Status = "shipped"
-	if err := s.repo.UpdateOrderStatus(orderID, order.Status); err != nil {
+	if err := s.repo.UpdateOrderStatus(orderID, "pending"); err != nil {
 		return nil, err
 	}
 

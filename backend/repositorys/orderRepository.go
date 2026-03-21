@@ -80,8 +80,8 @@ func (r *orderRepository) GetDashBoardStats(userID uint) (*dto.DashboardStats, e
 		Select(`
         COALESCE(SUM(CASE WHEN orders.status IN ('shipped', 'completed') THEN orders.total_amount ELSE 0 END), 0) as total_sales,
         COALESCE(SUM(CASE WHEN orders.status IN ('shipped', 'completed') THEN orders.reseller_profit ELSE 0 END), 0) as total_profit,
-        COUNT(orders.id) as total_orders, -- 🚩 ระบุให้ชัดว่าเป็น orders.id
-        COUNT(CASE WHEN orders.status = 'pending' THEN orders.id END) as pending_orders, -- 🚩 ระบุ orders.status ด้วย
+        COUNT(orders.id) as total_orders,
+        COUNT(CASE WHEN orders.status = 'pending' THEN orders.id END) as pending_orders, 
         COUNT(CASE WHEN orders.status IN ('shipped', 'completed') THEN orders.id END) as completed_orders,
         MAX(orders.created_at) as updated_at
     `)
