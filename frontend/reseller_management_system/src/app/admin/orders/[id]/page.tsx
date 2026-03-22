@@ -281,7 +281,7 @@ useEffect(() => {
       {/* Progress Section */}
       <section className="bg-white dark:bg-gray-800 rounded-sm p-4 sm:p-8 mt-3 mx-2 sm:mx-6 lg:mx-10 shadow-sm border-2 border-gray-200 dark:border-gray-700 flex flex-col">
         <div className="mb-6">
-          <Link href="/resellers/orders">
+          <Link href="/admin/orders">
             <button className="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200
                                border-2 border-gray-200 dark:border-gray-600
                                px-3 py-1 rounded
