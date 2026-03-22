@@ -672,7 +672,7 @@ const FromRegister = () => {
                         rounded-lg space-y-2">
           <div>
             <label htmlFor="shopName" className={classNamelabel}>
-              ชื่อร้าน <span className="text-red-500 dark:text-red-400" aria-label="จำเป็น">*</span>
+              ชื่อร้าน <span className="text-red-500 dark:text-red-400" aria-label="จำเป็น">*<span className="text-xs font-normal text-gray-400 ml-1">(ภาษาอังกฤษเท่านั้น)</span></span>
             </label>
             <input
               value={shop_name} onChange={handleShopNameChange}
